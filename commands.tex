@@ -1,0 +1,53 @@
+
+\newtheorem{thm}{Theorem}[chapter]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{example}[thm]{Example}
+\newtheorem*{conjecture}{Conjecture}
+\newtheorem*{ntbd}{Note (to be deleted)}
+\newtheorem*{qfv}{Question for Vic}
+
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+
+\theoremstyle{remark}
+\newtheorem*{question}{Question}
+\newtheorem*{remark}{Remark}
+\newtheorem{problem}{Problem}[chapter]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\newcommand{\lyxmathsym}[1]{\ifmmode\begingroup\def\b@ld{bold}
+  \text{\ifx\math@version\b@ld\bfseries\fi#1}\endgroup\else#1\fi}
+\providecommand{\LyX}{L\kern-.1667em\lower.25em\hbox{Y}\kern-.125emX\@}
+
+\newcommand{\rad}[1]{rad(#1)}
+\newcommand{\ann}[2]{ann_#1(#2)}
+
+
+%
+% the following command can be used to put a remark
+% in the margin of the thesis/paper
+% to include a remark, use \edz{remark}
+% size of the remark font can be changed, not it
+% is set to "scriptsize", can also be "tiny" or "small"
+% or others
+%
+\def\sideremark#1
+{
+\ifvmode\leavevmode\fi\vadjust
+  {\vbox to0pt
+    {\vss\hbox to0pt
+      {\hskip\hsize\hskip1em\vbox
+        {\hsize2cm
+%          \small
+          \scriptsize
+          \raggedright\pretolerance10000\noindent#1\hfill
+        }
+        \hss
+      }
+      \vbox to8pt{\vfil}\vss
+    }
+  }
+}

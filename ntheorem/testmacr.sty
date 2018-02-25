@@ -1,0 +1,251 @@
+% Trennzeichen f"ur Mengen 'such that'
+\newcommand{\st}{\ensuremath{\ |\ }}
+
+% I'm so lazy and like to be generic
+\newcommand{\wrt}{w.r.t.} 
+\newcommand{\ie}{i.e.}
+\newcommand{\eg}{e.g.}
+\newcommand{\cf}{c.f.}
+
+\newcommand{\ric}{\textsl{ric}}
+
+\def\itsf#1{{}\ifmmode\textit{\textsf{#1}}\else \textsf{#1}\fi}
+
+\newcommand{\dc}{\itsf{on delete cascade}}
+\newcommand{\dr}{\itsf{on delete restrict}}
+\newcommand{\dn}{\itsf{on delete set null}}
+\newcommand{\dd}{\itsf{on delete set default}}
+
+\newcommand{\DefIff}{~:\Leftrightarrow~}
+\newcommand{\Iff}{~\Leftrightarrow~}
+\newcommand{\Imp}{~\Rightarrow~}
+\newcommand{\pl}{\mathcal}
+
+\def\rulefont{\sf}
+
+% Def. von \N "uberschrieben
+\def\N{\ensuremath{\mathrm{I\! N}}}
+
+%% declare fonts
+
+\DeclareMathAlphabet{\mib}{OML}{cmm}{b}{it}
+
+%%% MISC
+%\def\pot#1{\ensuremath{2^{#1}}}                 % power set
+\def\pot#1{\ensuremath{{\cal P}(#1)}}           % power set
+\def\ext#1{\ensuremath{[\![#1]\!]}}             % extension
+
+% multivalued dependency
+\def\mvd{\ensuremath{\rightarrow\!\!\!\!\rightarrow}}  
+
+
+%%% semantics
+\def\sem#1{\ensuremath{[\![#1]\!]}}
+\def\wfm{\textit{\textbf{M}}}
+
+
+%%% DB- Theory:
+%%%
+
+\def\dom{\ensuremath{\mathbf{dom}}}             % underlying db domain
+\def\adom#1{\ensuremath{\mathit{adom(#1)}}}     % active domain
+
+\def\dbsch#1{\ensuremath{\mathbf{#1}}}          % database schema
+\def\db#1{\ensuremath{\mib{#1}}}                % database instance
+\def\rel#1{\ensuremath{\mathit{#1}}}            % relation schema / symbol
+\def\ar#1{\ensuremath{\mathit{arity(#1)}}}      % arity
+\def\inst#1{\ensuremath{\mathit{inst(#1)}}}     % set of instances
+
+
+\def\expp#1{\ensuremath{{\mathcal{E}}(#1)}}     % expressive power
+
+
+\def\Nat{\ensuremath{\mathsf{I\! N_0}}}         % Nat
+\def\ENat{\ensuremath{\mathsf{I\! N_0}}}        % Nat + 0
+
+\def\depgraph{\mathcal G}
+%%% logical constants
+\def\true{\ensuremath{\mathit{true}}}
+\def\false{\ensuremath{\mathit{false}}}
+\def\undef{\ensuremath{\mathit{undef}}}
+
+
+%%% Fixpoint Stuff
+\def\lfp{\textit{lfp}}
+\def\FP{\textit{FP}}
+\def\sFP{\textit{s-FP}}
+
+\def\LFP{\textrm{LFP}}
+\def\IFP{\textrm{IFP}}
+\def\PFP{\textrm{PFP}}
+
+
+%%% Complexity
+
+\def\cl#1{\ensuremath{\mathsf{#1}}}
+
+\def\ptime{\cl{PTIME}}
+\def\qptime{\cl{QPTIME}}
+\def\nptime{\cl{NPTIME}}
+\def\pspace{\cl{PSPACE}}
+\def\logspace{\cl{LOGSPACE}}
+
+
+%%% Statelog stuff %%%
+
+\def\state{\mbox{state}}
+\def\frame{\mbox{frame}}
+\def\imports{\mbox{imports}}
+\def\visible{\mbox{visible}}
+
+
+
+%\def\sterm#1{\textsf{[}\ensuremath{#1}\textsf{]}}             % state term
+\def\sterm#1{\ensuremath{[#1]}}             % state term
+
+\def\occurs{\raisebox{0.35ex}{\ensuremath{\bigtriangledown}}}   % occurs Operator
+
+
+%internal event = procedure call
+\def\intev{\raisebox{0.1ex}{\ensuremath{\triangledown}}}   
+%\def\intev{\raisebox{0.0ex}{\ensuremath{\circ}}}   
+\def\extev{\raisebox{0.1ex}{\ensuremath{\rhd}}}   % external event
+%\def\extev{\ensuremath{\blacktriangleright}}   % external event
+\def\action{\raisebox{0.1ex}{\ensuremath{\lhd}}}   % action
+%\def\action{\ensuremath{\blacktriangleleft}}   % action
+
+\newcommand{\MetaRel}[2]
+   {\vphantom{a}\ifmmode #1{:}{#2}\else 
+             \textbf {#1}:\ensuremath{\mathsf{#2}}\fi}
+   
+%\def\bot{\textbf{bot}}
+%\def\eot{\textbf{eot}}
+\def\initial{\textbf{initial:}}
+\def\always{\textbf{always:}}
+\def\final{\textbf{final:}}
+
+
+% serial conjunction
+\def\scon{\ensuremath{\otimes}}
+
+% assignment 'change-to'
+\def\cto{/}
+
+
+%\def\itorsf#1{{}\ifmmode\textit{#1}\else\textrm{\textsf{#1}}\fi}
+%\def\itorbf#1{{}\ifmmode\textit{#1}\else\textbf{\textsf{#1}}\fi}
+\def\itorsf#1{\textsf{#1}}
+\def\itorbf#1{\textsf{#1}}
+
+\def\ins{\itorbf{ins:}}
+\def\del{\itorbf{del:}}
+\def\mod{\itorbf{mod:}}
+\def\insd{\itorbf{insd:}}
+\def\deld{\itorbf{deld:}}
+\def\modd{\itorbf{modd:}}
+\def\aborted{\itorbf{aborted}}
+\def\committed{\itorbf{committed}}
+
+\def\BOT{\itorsf{BOT}}
+\def\EOT{\itorsf{EOT}}
+\def\running{\itorsf{running}}
+\def\alive{\itorsf{alive}}
+\def\abort{\itorsf{abort}}
+\def\commit{\itorsf{commit}}
+
+
+\def\proc{\textbf{proc}}
+\def\mainprg{\ifmmode {\rulefont \textbf {main}}\else \textbf{main}\fi}
+\def\endproc{\textbf{endproc}}
+\def\import{\ensuremath{\triangledown}}
+\def\export{\ensuremath{\vartriangle}}
+\def\private{\textbf{private}}
+
+\def\bnot{\textbf{\textsf{not}}}
+
+% logical connectives, syntax level
+
+\def\con{\ensuremath{\land}}
+\def\dis{\ensuremath{\lor}}
+\def\neg{\ensuremath{\lnot}}
+\def\eqv{\ensuremath{\leftrightarrow}}
+\def\imp{\ensuremath{\rightarrow}}
+
+% for logical rules
+\def\la{\ensuremath{\leftarrow}}
+\def\ra{\ensuremath{\rightarrow}}
+
+
+% P |- G
+\def\derives{\vdash}
+
+% logical connectives, meta leval
+
+\def\meqv{\Leftrightarrow}
+
+%%% temporal operators
+% past tl
+\def\Ap{\Box_p}                    % always 
+\def\Sp{\Diamond_p}                % sometime
+\def\prev{\mbox{\Large \raisebox{0.00ex}{$\bullet$}}}   % previous
+\def\since{\ \ensuremath{\mathbf{since}}\ }
+% future tl
+\def\Af{\Box}                    % always 
+\def\Sf{\Diamond}                % sometime 
+\def\next{\mbox{\Large \raisebox{0.00ex}{$\circ$}}}   % previous
+\def\until{\ \ensuremath{\mathbf{until}}\ }
+
+%%% Datalog-like languages %%%
+
+\def\statelog{Statelog} 
+\def\datalog{Datalog} 
+\def\templog{Templog}
+\def\datalogneg{\ensuremath{\datalog^{\neg}}}
+\def\datalognegneg{\ensuremath{\datalog^{\neg\neg}}}
+\def\datalognegasterix{\mbox{\datalog$^{\neg *}$}}
+\def\negdatalog{\mbox{$^{\neg}$\datalog}}
+\def\datalogones{{\datalog$_{\it 1S}$}}
+\def\datalogns{\mbox{\datalog$_{\it nS}$}}
+
+
+
+
+\def\ruleskip{\hspace*{2em}}
+\def\rs{\ruleskip}
+
+% comments and the like
+\def\mpar#1{\marginpar{\textsc{#1}}}
+\def\todo#1{***#1\marginpar{!todo!}***}
+
+\def\xsmash#1{\setbox0=\hbox{\ensuremath{#1}}\ht0=0pt\dp0=0pt\wd0=0pt\box0}
+
+\def\einruecktiefe#1{\setlength\leftmargini{#1}} 
+   % fuer itemize, description etc.
+
+\newcommand{\nodeconnections}[1]{\vbox to 0cm {#1}}
+
+\newenvironment{markeddisplaymath}[1]%
+{\parskip-0.05cm 
+ \begin{center} \begin{math} \hfill
+ \def\endmarkeddisplaymath{\hfill #1 \end{math}\vskip-0.05cm 
+ \end{center}}}
+{}
+
+
+\newenvironment{rules}%
+{\rulefont\begin{tabular}[b]{l}}%
+{\end{tabular}}
+
+\newenvironment{rules-tabbing}%
+{\rulefont\begin{tabbing}}%
+{\end{tabbing}}
+
+
+\newcommand{\I}{\texttt{I}}
+\newcommand{\II}{\texttt{I$\!$I}}
+
+
+% Local Variables:
+% TeX-master: "nmw"
+% TeX-command-default: "LaTeX"
+% End:

@@ -1,0 +1,62 @@
+\contentsline {LongTh}{{LongTh}{$\alpha $}{bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla }}{2}
+\contentsline {Proposition}{{Proposition}{1}{}}{2}
+\contentsline {Lemma}{{Lemma}{1}{}}{2}
+\contentsline {Definition}{{Definition}{1}{}}{2}
+\contentsline {Proof}{{Proof}{1}{}}{2}
+\contentsline {Proposition}{{Proposition}{2}{}}{3}
+\contentsline {Prop}{{Prop}{1}{}}{3}
+\contentsline {Prop}{{Prop}{2}{}}{3}
+\contentsline {Prop}{{Prop}{3}{}}{3}
+\theoremlistdo {Proposition}{Das ist die letzte Prop. vor Prop. \ref {PropDieNaechste}}
+\theoremlistdo {KappaTheorem}{\\Auch mal einen Kommentar zu KappaTheorem in die Liste}
+\contentsline {Prop}{{Prop}{4}{}}{3}
+\contentsline {Proposition}{{Proposition}{3}{\the \gaga }}{3}
+\contentsline {Proposition}{{Proposition}{4}{\the \gaga }}{4}
+\contentsline {KappaTheorem}{{\(\kappa \)-Theorem}{1}{1st \(\kappa \)-Theorem}}{4}
+\contentsline {Plain}{{Plain}{1}{title}}{5}
+\contentsline {Break}{{Break}{1}{title}}{5}
+\contentsline {mBreak}{{MarginBreak}{1}{title}}{5}
+\contentsline {cBreak}{{ChangeBreak}{1}{title}}{5}
+\contentsline {Plain}{{Plain}{2}{title}}{5}
+\contentsline {Break}{{Break}{2}{title}}{5}
+\contentsline {mBreak}{{MarginBreak}{2}{title}}{5}
+\contentsline {Break}{{Break}{3}{title}}{5}
+\contentsline {mBreak}{{MarginBreak}{3}{title}}{5}
+\contentsline {Break}{{Break}{4}{title}}{5}
+\contentsline {mBreak}{{MarginBreak}{4}{title}}{6}
+\contentsline {Break}{{Break}{5}{title}}{6}
+\contentsline {Example}{{Example}{1}{}}{6}
+\contentsline {Example}{{Example}{2}{}}{6}
+\contentsline {Example}{{Example}{3}{}}{7}
+\contentsline {XLemma}{{XLemma}{$\alpha $}{Whatsit ?}}{7}
+\contentsline {Example}{{Example}{4}{}}{7}
+\contentsline {Lemma}{{Lemma}{3}{}}{7}
+\contentsline {Definition}{{Definition}{2}{}}{7}
+\contentsline {Theorem}{{Theorem}{2}{}}{8}
+\contentsline {Proof}{{Proof}{2}{}}{8}
+\contentsline {Example}{{Example}{5}{}}{8}
+\contentsline {Theorem}{{Theorem}{3}{}}{8}
+\contentsline {Theorem}{{Theorem}{4}{}}{9}
+\contentsline {Definition}{{Definition}{3}{}}{9}
+\contentsline {Theorem}{{Theorem}{5}{}}{9}
+\contentsline {Proof}{{Proof}{3}{}}{9}
+\contentsline {Lemma}{{Lemma}{4}{}}{10}
+\contentsline {Proof}{{Proof}{4}{}}{10}
+\contentsline {Definition}{{Definition}{4}{}}{10}
+\contentsline {Theorem}{{Theorem}{6}{}}{11}
+\contentsline {Theorem}{{Theorem}{7}{}}{11}
+\contentsline {Definition}{{Definition}{5}{}}{11}
+\contentsline {Lemma}{{Lemma}{5}{}}{12}
+\contentsline {Lemma}{{Lemma}{6}{}}{12}
+\contentsline {Lemma}{{Lemma}{7}{}}{12}
+\contentsline {Corollary}{{Corollary}{0}{title in list}}{12}
+\contentsline {Satz}{{Satz}{1}{}}{12}
+\contentsline {Theorem}{{Theorem}{8}{Correctness}}{13}
+\contentsline {Proof}{{Proof}{5}{}}{13}
+\contentsline {Theorem}{{Theorem}{9}{Maximality}}{13}
+\contentsline {Proof}{{Proof}{6}{}}{13}
+\contentsline {Definition}{{Definition}{6}{}}{13}
+\contentsline {Theorem}{{DasNeueTheorem}{$\kappa $}{Termination}}{13}
+\contentsline {Lemma}{{Lemma}{8}{}}{13}
+\contentsline {Proof}{{Proof}{7}{}}{14}
+\contentsline {Theorem}{{DasNeueTheorem}{$\lambda $}{}}{14}

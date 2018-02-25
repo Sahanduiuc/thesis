@@ -1,0 +1,87 @@
+% thesis.tex
+
+% DOCUMENTCLASS [options]:
+%   docabstract: a separate doctoral abstract with separate signature page
+%   abstractpage: an internal abstract (optional)
+%   publicabstractpage: a public abstract page
+%   ackpage: an acknowledgements page (optional)
+%   algorithms: a list of algorithms (optional)
+%   appendix: an appendix (optional)
+%   copyrightpage: a copyright your thesis (optional)
+%   dedicationpage: a dedication (optional)
+%   epigraphpage: an epigraph to the beginning of your thesis (optional)
+%   examples: a list of examples (uses ntheorem package)
+%   exampleslemmas: a combined list of examples and lemmas (uses ntheorem) (optional)
+%   examplestheorems: a combined list of examples and theorems (uses ntheorem) (optional)
+%   exampleslemmastheorems: a combined list of examples, lemmas, and theorems (this uses the ntheorem package) (optional)
+%   figures: a list of figures (required)
+%   lemmas: a list of lemmas (uses ntheorem) (optional)
+%   lemmastheorems: a combined list of lemmas and theorems (uses ntheorem) (optional)
+%   nofrontmatter: suppress the title and signature pages
+%   tables: a list of tables (required)
+%   theorems: a list of theorems (uses ntheorem) (optional)
+%   phd: add the doctoral abstract (required)
+
+\documentclass[figures,tables,abstractpage,publicabstractpage,copyrightpage,dedicationpage,appendix,phd]{uithesis}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{array}
+\usepackage{float}
+\usepackage[toc,page,titletoc]{appendix}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage[font=singlespacing]{caption}
+\usepackage{subcaption}
+\usepackage{longtable}
+\usepackage[normalem]{ulem}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{rotating}
+\usepackage{afterpage}
+\usepackage{tikz}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage[colon]{natbib}
+\usetikzlibrary{arrows,positioning}
+
+% compress and sort citations as numbers
+% alter uithesis.cls line 355 from plain2 to unsrt to use this
+%\usepackage[numbers,sort&compress]{natbib}
+
+%include the path for graphs
+\graphicspath{{figures/}}
+
+% does not allow citations to be split between pages; requirement
+\usepackage{etoolbox}
+\apptocmd{\thebibliography}{\interlinepenalty 10000\relax}{}{}
+
+% Vertical spacing (singlespace) in itemset and enumerate
+\usepackage{enumitem}
+\setlist{noitemsep,topsep=1pt, partopsep=4pt, parsep=2pt}
+\setenumerate{noitemsep,topsep=1pt, partopsep=4pt, parsep=2pt}
+
+% single spacing for rows in a table (this does not single space
+% within a row; for that, use \\[-5mm]
+\renewcommand\arraystretch{0.5} % 1/2 of the default spacing (double)
+
+\allowdisplaybreaks[2]
+
+\include{commands}
+\include{prelude}
+
+\begin{document}
+\frontmatter
+\include{chapter1}
+\include{chapter2}
+\include{chapter3}
+\include{chapter4}
+\include{chapter5}
+\nocite{*}
+% \bibliographystyle{uithesis}
+\bibliographystyle{plainnat}
+\biblio{thesis}
+\include{appendix}
+\end{document}

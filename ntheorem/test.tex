@@ -1,0 +1,1000 @@
+\documentclass[twoside,11pt]{article}
+\usepackage{testmacr}
+%\usepackage{amsmath}
+%\usepackage{amssymb,latexsym,testmacr}
+%\usepackage{amssymb}
+%\usepackage{amscd}
+%\usepackage[amsmath,thmmarks,standard,thref]{ntheorem}
+\usepackage[thmmarks,standard,thref]{ntheorem}
+
+\makeatletter
+\newtheoremstyle{lines}%
+  {\item[\hskip\labelsep \theorem@headerfont ##1] ##2\theorem@separator\hrule}%
+  {\item[\hskip\labelsep \theorem@headerfont ##1] ##2\ (##3)\theorem@separator\hrule}
+\newtheoremstyle{nonumberlines}%
+  {\item[\hskip\labelsep \theorem@headerfont ##1] ##2\theorem@separator\hrule}%
+  {\item[\hskip\labelsep \theorem@headerfont ##1] ##2\ (##3)\theorem@separator\hrule}
+
+\newtheoremstyle{longplain}%
+  {\item[\hskip\labelsep \theorem@headerfont ##1\ ##2\theorem@separator]}%
+  {\item[\hskip\labelsep \theorem@headerfont ##1\ ##2] {\bf (##3)}\theorem@separator}
+\renewtheoremstyle{break}%
+  {\item[\rlap{\vbox{\hbox{\hskip\labelsep \theorem@headerfont
+          ##1\ ##2\theorem@separator}\hbox{\strut}}}]}%
+  {\item[\rlap{\vbox{\hbox{\hskip\labelsep \theorem@headerfont 
+          ##1\ ##2\ (##3)\theorem@separator}\hbox{\strut}}}]}
+%
+\makeatother
+ \theoremsymbol{\ensuremath{\heartsuit}}
+ \newtheorem*{Prop}{Prop}
+ \theoremseparator{:}
+ \theoremstyle{lines}
+ \theoremheaderfont{\scshape}\theorembodyfont{\slshape}
+ \theoremsymbol{\ensuremath{\heartsuit}}
+ \theoremindent0.5cm
+ \theoremnumbering{greek}
+ \newtheorem*{XLemma}{XLemma}
+
+ \theoremstyle{longplain}
+ \newtheorem{LongTh}{LongTh}
+\usepackage{latexsym}
+\usepackage{t1enc}
+\pagestyle{headings}
+\addtolength{\topmargin}{-1.2cm}
+\textheight22.5cm
+\textwidth16cm
+\evensidemargin0cm
+\oddsidemargin0cm
+\marginparwidth1.5cm
+\marginparsep0.4cm
+\newdimen\restwidth
+\newtoks\gaga
+\gaga{x}
+
+\renewcommand{\baselinestretch}{1.3}
+%\parskip1.8ex plus 0.5ex minus0.2ex
+\def\itorbf#1{{\textsf{#1}}}
+\def\rins{\itorsf{req\_ins:}}
+\def\rdel{\itorsf{req\_del:}}
+\def\rmod{\itorsf{req\_mod:}}
+
+\def\bins{\itorsf{blk\_ins:}}
+\def\bdel{\itorsf{blk\_del:}}
+\def\bmod{\itorsf{blk\_mod:}}
+
+\def\move{\itorsf{move}}
+\def\akt{\rm}
+\def\attr#1{\ensuremath{\textit{\textbf{attr}}(#1)}}
+
+\hyphenation{data-base}
+\hyphenation{stra-ti-fi-ca-tion data-base know-ledge}
+\hyphenation{situ-ation}
+\begin{document}
+\title{\bf Referential Actions have a Logical Semantics, too}
+
+\author{\normalsize Bertram Lud\"ascher$^\I$ \qquad Wolfgang May$^\I$ 
+        \qquad Joachim Reinert$^\II$
+        %
+        \medskip \\
+                                %
+{\footnotesize\begin{tabular}{c@{}l}
+$^\I$ & Institut f\"ur Informatik, Universit\"at Freiburg,
+   {\tt $\{$ludaesch,may$\}$@informatik.uni-freiburg.de} \\
+                                %
+$^\II$ & Fachbereich Informatik, Universit\"at Kaiserslautern,
+   {\tt jreinert@informatik.uni-kl.de}
+\end{tabular}}} 
+
+%\date{April 1, 1996}
+\date{}
+%\maketitle 
+\thispagestyle{empty}
+
+
+\begin{abstract} 
+  The concept of referential integrity plays an important role in
+  local ``repairs'' after a user-requested update.  
+\end{abstract}
+
+
+\paragraph{List of Theorems and Friends.}\
+\theoremlisttype{allname}
+\listtheorems{KappaTheorem,Lemma,XLemma,Corollary,Proposition}
+\paragraph{List of Definitions.}\
+\theoremlisttype{allname}
+\listtheorems{Definition,Notation}
+\paragraph{List of Examples.}\
+\theoremlisttype{all}
+\listtheorems{Example}
+
+\section{Introduction}{\label{sec:introduction}}
+
+\begin{LongTh}[bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ]
+  gaga.
+\end{LongTh}
+%\makeatletter
+%\gdef\SetMark@endquote#1{#1\hskip-\rightmargin\hbox to 0cm{}}
+%\gdef\endquote{\global\advance\@listdepth\m@ne
+%  \@endtrivlist{\PotEndMark{\hbox{}\nobreak\hfill\nobreak\SetMark@endquote}}}%
+%\makeatother
+
+\begin{Proposition}\label{FirstProp}
+%\makeatletter
+%\def\SetEndMark#1#2{%
+%   \stepcounter{end#1ctr}%
+%   \@ifundefined{mark\roman{curr#1ctr}#1\roman{end#1ctr}}%
+%   {\relax}%
+%   {#2{\csname mark\roman{curr#1ctr}#1\roman{end#1ctr}\endcsname 
+%       \hskip-\rightmargin\hbox to 0cm{}}}}%
+%\makeatother
+gaga
+  \begin{quote}
+    Dat isn quote.
+  \end{quote}
+\end{Proposition}
+
+Eine Referenz auf Prop 1: \thref{FirstProp} on page
+\pageref{FirstProp}.
+The introduction section starts on page~\pageref{sec:introduction}.
+
+\begin{Lemma}
+\begin{equation}
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ \int_{\gamma} f(z)\, dz := \int_a^b f(\gamma (t)) \gamma'(t) \, dt
+\end{equation}
+
+\begin{equation}
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ \int_{\gamma} f(z)\, dz := \int_a^b f(\gamma (t)) \gamma'(t) \, dt
+\end{equation}%
+\end{Lemma}
+\begin{Lemma*}
+\def\LemmaSymbol{\ProofSymbol}
+\begin{equation}
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ \int_{\gamma} f(z)\, dz := \int_a^b f(\gamma (t)) \gamma'(t) \, dt
+\end{equation}
+\begin{equation}
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ \int_{\gamma} f(z)\, dz := \int_a^b f(\gamma (t)) \gamma'(t) \, dt
+\end{equation}
+\end{Lemma*}
+%\begin{Lemma}
+%\begin{equation}
+% \int_{\gamma} f(z)\, dz := \int_a^b f(\gamma (t)) \gamma'(t) \, dt
+%\end{equation}
+%\begin{equation}
+% \int_{\gamma} f(z)\, dz := \int_a^b f(\gamma (t)) \gamma'(t) \, dt
+%\end{equation}
+%\end{Lemma}
+\begin{Definition}
+\begin{eqnarray}
+f(z) &=&
+   \frac{1}{2\pi i}
+   \int \limits_{\partial D} \frac{f(\zeta)}{\zeta-z} d\zeta \\
+&= &
+   \frac{1}{2\pi}
+   \int \limits_0^{2\pi}
+      f(z_0 + re^{it}) dt
+\end{eqnarray}
+\end{Definition}
+
+\begin{Proof}
+\begin{eqnarray*}
+f(z) &=&
+   \frac{1}{2\pi i}
+   \int \limits_{\partial D} \frac{f(\zeta)}{\zeta-z} d\zeta \\
+&= &
+   \frac{1}{2\pi}
+   \int \limits_0^{2\pi}
+      f(z_0 + re^{it}) dt
+\end{eqnarray*}
+\end{Proof}
+
+\begin{equation}
+\eta_E(\chi,\psi) \: a  = \star_E \chi \wedge \psi \label{hodgestar}
+\end{equation}
+
+\begin{Proposition}
+%\makeatletter
+%\def\SetEndMark#1#2{%
+%   \stepcounter{end#1ctr}%
+%   \@ifundefined{mark\roman{curr#1ctr}#1\roman{end#1ctr}}%
+%   {\relax}%
+%   {#2{\csname mark\roman{curr#1ctr}#1\roman{end#1ctr}\endcsname 
+%       \hskip-\rightmargin\hbox to 0cm{~}}}}%
+%\makeatother
+  \begin{quote}
+Dat isn quote.
+   
+The postscript for accepted papers that have not yet appeared in print
+is also available. This ensures very rapid availability. As an example,
+the paper "Transactional Client-Server Cache Consistency: Alternatives
+and Performance" by Michael Franklin, Michael Carey and Miron Livny
+was submitted on October 1995, went through two rounds of review and
+revision, was accepted, and appeared in the ACM Digital Library in
+January 1997, only fifteen months later.
+  \end{quote}
+\end{Proposition}
+
+\begin{Prop}\
+bla
+\end{Prop}
+
+Das Whatsit-Problem, erster Teil:
+In der ersten Umgebung wird kein Endzeichen gesetzt, in der
+zweiten funktioniert es:
+
+\begin{Prop}\
+\begin{enumerate}
+\item ...
+\item ...\label{bla} x
+\end{enumerate}
+\qed\end{Prop}
+
+\begin{Prop}\
+\begin{enumerate}
+\item ... \label{bla}
+\item ...
+\end{enumerate}
+\qed\end{Prop}
+
+H\"artetest fuer Filebehandlung: \\
+Theoremname per Token,
+Endzeichen: Mehrmals Umdefiniertes qed-zeichen, ausserdem ein Eintrag
+ins Theoremfile, der ein sp\"ateres Label referenziert:\\
+\verb|\addtotheoremfile[Proposition]{Das ist die letzte Prop. |\\
+\verb|vor Prop. \ref{PropDieNaechste}}|
+\addtotheoremfile[Proposition]{Das ist die letzte Prop. vor Prop. \ref{PropDieNaechste}}
+\addtotheoremfile[KappaTheorem]{\\Auch mal einen Kommentar zu KappaTheorem in die Liste}
+%
+\begin{Prop}\
+\begin{enumerate}
+\item ...
+\item ...\label{bla}
+\end{enumerate}
+\qed\end{Prop}
+
+\begin{Proposition}[\the\gaga]\
+\begin{enumerate}
+\qedsymbol{x}
+\item ...
+\item ...\the\qedsymbol\label{bla} 
+\end{enumerate}
+\qed\end{Proposition}
+
+\gaga{y}
+\begin{Proposition}[\the\gaga]\label{PropDieNaechste}\
+\begin{enumerate}
+\qedsymbol{y}
+\item ...
+\item ...\the\qedsymbol\label{bla}
+\end{enumerate}
+\qed\end{Proposition}
+ 
+\theoremclass{Theorem}
+\theoremsymbol{\ensuremath{a\atop b}}
+\newtheorem{KappaTheorem}[Theorem]{\(\kappa\)-Theorem}
+
+\begin{KappaTheorem}[1st \(\kappa\)-Theorem]\label{kappatheorem1}
+That's the first Kappa-Theorem. 
+\end{KappaTheorem}
+
+ The first Kappa-Theorem has been given in \thref{kappatheorem1}.
+\makeatletter
+\def\@centercr{\ifhmode \unskip\else \@nolnerr\fi
+       \par\@ifstar{\nobreak\@xcentercr}\@xcentercr}
+\def\@xcentercr{\addvspace{-\parskip}\@ifnextchar
+    [\@icentercr\ignorespaces}
+\def\@icentercr[#1]{\vskip #1\ignorespaces}
+\def\centering{%
+  \let\\\@centercr
+  \rightskip\@flushglue
+  \leftskip\@flushglue
+  \parindent\z@\parfillskip\z@skip}
+\def\center{%
+ \@ifundefined{@itemlabel}\relax
+   {\newbox\bla\setbox\bla\hbox{\unskip\unhbox\@labels}\box\bla\vskip-\ht\strutbox}%
+ % {\unhbox\@labels}% nicht ganz schlecht
+ % {\newbox\bla\setbox\bla\hbox{\unhbox\@labels}\vskip-\ht\@labels}%
+ % {\newbox\bla\setbox\bla\hbox{\unhbox\@labels}\vskip-\ht\@labels\box\bla}%
+ \trivlist \centering\item\relax}
+\makeatother
+
+\newpage
+Systematically test with the center environment:
+
+\begin{center}
+  centered
+\end{center}
+\theoremstyle{plain}
+ \newtheorem{Plain}{Plain}
+ \begin{Plain}[title]
+ \begin{center} 1 Center // Center \end{center}
+ \end{Plain}
+
+\theoremstyle{break}
+ \newtheorem{Break}{Break}
+ \begin{Break}[title]
+ \begin{center} 2 Center // Center \end{center}
+ \end{Break}
+
+\theoremstyle{marginbreak}
+ \newtheorem{mBreak}{MarginBreak}
+ \begin{mBreak}[title]
+ \begin{center} 3 Center // Center \end{center}
+ \end{mBreak}
+
+\theoremstyle{changebreak}
+ \newtheorem{cBreak}{ChangeBreak}
+ \begin{cBreak}[title]
+ \begin{center} 4 Center // Center \end{center}
+ \end{cBreak}
+
+ \begin{Plain}[title]
+ \begin{itemize} \item 5 itemize \item itemize \end{itemize}
+ \end{Plain}
+
+ \begin{Break}[title]
+ \begin{itemize} \item 6 itemize \item itemize \end{itemize}
+ \end{Break}
+
+ \begin{mBreak}[title]
+ \begin{itemize} \item 7 itemize \item itemize \end{itemize}
+ \end{mBreak}
+
+
+ \begin{Break}[title]
+ \begin{quote} quote \end{quote}
+ \end{Break}
+
+ \begin{mBreak}[title]
+ \begin{quote} quote \end{quote}
+ \end{mBreak}
+
+ \begin{Break}[title]
+ \begin{verbatim} verbatim \end{verbatim}
+ \end{Break}
+
+ \begin{mBreak}[title]
+ \begin{verbatim} verbatim \end{verbatim}
+ \end{mBreak}
+
+  \noindent
+ centering in items looks a bit weird, but that has nothing to do 
+  with ntheorem:
+
+ \begin{Break}[title]
+ \begin{itemize} \item 
+  \begin{center} center in item \end{center}
+ \end{itemize}
+ \begin{itemize} \item 
+  \begin{center} center in item \end{center}
+ \end{itemize}
+ \end{Break}
+
+
+
+
+\begin{Example}\label{ex:db1}
+  Consider the database with referential actions as depicted in
+  Figure~\ref{fig:ex2}. For this example, assume that \emph{all dotted
+  parts are empty}.  Let $\extev \del R_A(a)$\footnote{The triangle
+  ``$\extev$'' denotes \emph{external} (ie, user-defined) requests.}
+  be a user request to delete the tuple $(a)$ from relation $R_A$.
+  Depending on the order of execution of referential actions, one of
+  two different final states may be reached: \einruecktiefe{0.8cm}
+\begin{enumerate}
+\item[(1)] If execution follows the path $R_A\leadsto R_C\leadsto
+  R_D$, the tuple $R_C(a,c)$ cannot be deleted: Since $R_D(a,b,c)$
+  references $R_C(a,c)$, the referential action for $R_D$ restricts
+  the deletions of $R_C(a,c)$. This in turn also blocks the deletion
+  of $R_A(a)$.  Consequently, the user request $\extev \del R_A(a)$ is
+  rejected, and the database state remains unchanged, ie $D' = D$.
+\item[(2)] If execution follows the path $R_A\leadsto R_B\leadsto
+  R_D$, the tuple $R_B(a,b)$ and -- as a consequence -- $R_D(a,b,c)$
+  are requested for deletion. Hence, the trigger for $R_D.(X,Z) \to
+  R_C.(X,Z)$ ``assumes'' that $R_D(a,b,c)$ is deleted, thus no
+  referencing tuple exists in $R_D$. Thus, all deletions can
+  be executed, resulting in the new database state $D'=\emptyset$.
+\end{enumerate} gaga
+\[gaga\]\end{Example}
+
+\begin{Example}\label{ex:refined}
+Consider the database as depicted in Figure \ref{fig:ex3} and assume
+  the user requests $\{\extev \del R_A(a), \extev \del R_A(b)\}$ are
+\[gaga\]
+  given.  $\extev \del R_A(a)$ is not admissible since $R_E(a)$ blocks
+  $\extev \del R_A(a)$.  However, the other request, $\extev \del R_A(b)$,
+  could be executed without violating any \ric\ by deleting $R_A(b)$,
+  $R_B(b,b)$, $R_C(b,c)$ and $R_D(b,b,c)$.
+  \begin{eqnarray}
+    a &=& b \\
+    c &=& d    
+  \end{eqnarray}
+\end{Example}
+\begin{Example}
+  \begin{eqnarray*}
+    a &=& b \\
+    c &=& eqnarray*    
+  \end{eqnarray*}
+\end{Example}
+\begin{equation}
+  test
+\end{equation}
+
+
+
+ With theoremstyle break, if the environment is labelled and written as
+ \begin{verbatim}
+  \begin{XLemma}[Whatsit ?]\label{whatsit} \end{verbatim}
+  \begin{XLemma}[Whatsit ?]\label{whatsit}
+  you see, there is a leading space \dots \\
+ If a percent (comment) is put directly after he label, the space 
+disappears.
+
+ From the predefined styles, this is exactly the case for the break-styles.
+ That's no bug, it's \LaTeX-immanent.
+ \end{XLemma}
+
+
+\begin{Example}
+  The ``diamond'' in Figure~\ref{fig:ex2} results in a ``dispute''
+  between blockings and deletions: Given the user request $\extev \del
+  R_A(a)$, the delete requests \textsf{req\_del} for $R_A(a)$,
+  \begin{eqnarray}
+    a &=& b \\
+    c &=& d    
+  \end{eqnarray}
+  $R_B(a,b)$, $R_C(a,c)$, $R_D(a,b,c)$, as well as the blockings
+  \textsf{blk\_del} for $R_A(a)$, $R_C(a,c)$ will be \emph{undefined}
+  in the well-founded model.
+\begin{Lemma}
+Das ist ein Lemma innerhalb eines Beispiels.
+\end{Lemma}
+  Looking at the database in Figure~\ref{fig:ex3} with the user
+  requests $\{\extev \del R_A(a), \extev \del R_A(b)\}$, we find that
+  the blockings for $R_A(a)$ and $R_C(a,c)$ are \emph{true} in the
+  well-founded model (due to the referencing tuple $R_E(a)$) and thus
+  $R_A(a)$, $R_C(a,c)$ cannot be deleted. In contrast, for
+  $R_A(b), R_B(b,b), R_C(b,c)$ and $R_D(b,b,c)$ there are undefined
+  delete requests, and for $R_A(b), R_B(b,b)$ and $R_D(b,b,c)$ there
+  are also undefined blockings.
+\end{Example}
+\begin{Definition}
+\begin{description}
+\item[Player \I\ can move from $R(\bar x)$ to $\extev \del R'(\bar x'):
+  \Leftrightarrow$]\
+  
+  \emph{``there is a finite sequence of \ric's with \texttt{ON DELETE
+      CASCADE} triggers leading from $\extev \del R'(\bar x')$ to
+    $R(\bar x)$ in $D$.''}
+\item[Player \II\ can move from $\extev \del R(\bar x)$ to $R'(\bar
+  x'):\Leftrightarrow$]\ 
+  
+  \emph{``$R'(\bar x')$ is blocked by some \texttt{ON DELETE RESTRICT}
+    trigger, and there a finite (possibly empty) sequence of \ric's
+    with \texttt{ON DELETE CASCADE} triggers leading from $\extev \del
+    R(\bar x)$ to $R(\bar x)$.'' xxxx}
+\begin{equation}
+  testequation    
+\end{equation}
+\end{description}
+\end{Definition}
+
+\begin{Theorem}\label{theo:game}
+For every tuple $R(\bar x)$ there is
+\begin{itemize}
+\item $R(\bar x)$ is won or drawn iff simultaneous execution of
+all user delete requests $\extev \del R'(\bar x')$ s.t.\ $R'(\bar x')$
+is won or drawn does not violate any \ric\ and deletes $R(\bar x)$.
+\item $R(\bar x)$ is lost iff it is not possible with the given set
+of user delete requests to delete $R(\bar x)$ without violating any
+\ric.
+\end{itemize}
+\end{Theorem}
+
+ausserhalb Theorem !! muss normalfont sein.
+\begin{Proof}
+\begin{itemize}
+\item $R(\bar x)$ is won or drawn if there is a user request
+ $\extev \del R'(\bar x')$ s.t.\ $\del R'(\bar x')$ is also won or drawn
+ and there is a sequence of \texttt{on delete cascade}-triggers from
+ $R'(\bar x')$ to $R(\bar x)$ and either there is no tuple which
+ (transitively) restricts this user request or all tuples which
+ (transitively) restrict this user request are either won or drawn.
+ Due to $\extev \del R'(\bar x')$ and the above sequence
+ of cascading triggers, $R(\bar x)$ is deleted when
+ $\extev \del R'(\bar x')$ is executed.
+ With the same argument, all tuples which potentially restrict this
+ execution are also removed, thus no \ric\ of the form
+ \texttt{on delete restrict} is violated.
+ Since all tuples reachable from a user request which is won or lost by
+ \texttt{on delete cascade}-triggers are also won resp.\ lost, all of
+ them will also be deleted, thus no \ric\ of the form
+ \texttt{on delete cascade} is violated.
+\item A tuple $R(\bar x)$ is lost in $n$ moves if there is either
+ ($n=0$) no user request $\extev \del R'(\bar x')$ s.t.\ there is a
+ sequence of \texttt{on delete cascade}-triggers from $R'(\bar x')$
+ to $R(\bar x)$ or every such user request is lost.
+ The latter means that there is some tuple $R''(\bar x'')$ transitively
+ restricting the deletion of $R'(\bar x')$ which is lost in less than
+ $n$ moves. By induction hypothesis, there is no way to delete
+ $R''(\bar x'')$, thus there is also no way to delete $R(\bar x)$.
+\end{itemize}
+\end{Proof}
+
+\section{Next Section}
+
+\begin{Example}
+  Consider again the ``diamond'' in Figure~\ref{fig:ex2}.  The
+  positions are $R_A(a)$, $R_B(a,b)$, $R_C(a,c)$, $R_D(a,b,c)$, and
+  $\extev \del R_A(a)$.  
+
+  \I\ can move from any position in $\{R_A(a), R_B(a,b), R_C(a,c),
+  R_D(a,b,c)\}$ to $\extev \del R_A(a)$, while \II\ can move from
+  $\extev \del R_A(a)$ to $R_D(a,b,c)$. Thus, after \I\ has started
+  the game moving to $\extev \del R_A(a)$, \II\ will answer with the
+  move to $R_D(a,b,c)$ and so on. Hence the game is drawn for
+  all start positions of \I.
+
+  In contrast, if $R_E(a)$ is added to the database in
+  Figure~\ref{fig:ex2}, there is an additional move from $\extev \del
+  R_A(a)$ to $R_E(a)$ for \II, who now has a winning strategy: by
+  moving to $R_E(a)$, there is no possible answer for \I, so \I\ 
+  loses. By Theorems \ref{WinWFS} and \ref{Theo:WFM}, $R_A(a)$ cannot
+  be deleted.
+\end{Example}
+
+\begin{Theorem}\label{WinWFS}
+The well-founded model and the game-theoretic semantics correspond as
+follows:
+  \begin{itemize}
+  \item \I\ wins at $R(\bar x)$ iff
+     $\pl W(P,D,U_\rhd)(\rdel R(\bar x)) = \true $,
+  \item \II\ wins at $R(\bar x)$ iff
+     $\pl W(P,D,U_\rhd)(\rdel R(\bar x)) = \false$, and
+  \item $R(\bar x)$ is drawn iff
+     $\pl W(P,D,U_\rhd) (\rdel R(\bar x)) = \undef$.
+  \end{itemize}
+\end{Theorem}
+The proof is postponed to Section \ref{sec:AlternFixpt}, where a
+computational characterization of $\pl W(P,D,U_\rhd)$ is presented.
+
+\begin{Theorem}\label{theo:founded}
+\begin{itemize}
+\item
+  Each internal delete request such that
+  $v := \pl W(P,D,U_\rhd)(\rdel R(\bar x)) \in \{\true, \undef\}$ is
+  \emph{founded} by some user delete request $\extev \del R'(\bar x')$
+  s.t.\ $\pl W(P,D,U_\rhd)(\rdel R(\bar x)) = v$, ie there is a chain of
+  references from $R(\bar x)$ to $R'(\bar x')$ in $D$ using
+  \texttt{ON DELETE CASCADE} triggers.
+\item For all tuples laying on this chain also
+  $\pl W(P,D,U_\rhd)(\rdel R''(\bar x'')) = v$.
+\item For every $\extev \del R'(\bar x') \in U_\rhd$,
+  \begin{itemize}
+  \item $\pl W(P,D,U_\rhd)(\rdel R'(\bar x')) = \true \Imp$
+    for all $R(\bar x)$ which are reachable from $R'(\bar x')$ by a
+    chain of \texttt{ON DELETE CASCADE} triggers,
+    $\pl W(P,D,U_\rhd)(\rdel R'(\bar x')) = \true$, and
+  \item $\pl W(P,D,U_\rhd)(\rdel R'(\bar x')) = \undef \Imp$
+    for all such $R(\bar x)$,
+    $\pl W(P,D,U_\rhd)(\rdel R'(\bar x')) \in \{\true,undef\}$.
+  \end{itemize}
+\end{itemize}
+\end{Theorem}
+\begin{Definition}
+In each case, there must be a first move of \I\ to some
+$\extev \del R'(\bar x')$ which is also won/drawn, thus
+$\pl W(P,D,U_\rhd)(\rdel R'(\bar x')) = v$. 
+Obviously, all positions in between are also won/drawn, and
+all positions from where \I\ can move to a won/drawn user request,
+are also won/at least drawn.
+\end{Definition}
+
+\begin{Theorem}
+\begin{displaymath}
+  \begin{array}{l@{\ }r}
+    \sterm{S{+}1}\,\rdel R(\bar X) \la\  \extev \del
+    R(\bar X), \sterm{S}\ \neg \bdel R(\bar X).  & (I^A) \medskip \\ 
+                                %
+    \textit{\% $R_{C}.\vec X \to R_{P}.\vec Y$ \texttt{ON DELETE
+        CASCADE}:} \\ 
+                                %
+    \sterm{S{+}1}\ \rdel R_C(\vec X,\bar X) \la\ R_C(\vec X, \bar X),
+    \vec X = \vec Y, \sterm{S{+}1}\ \rdel R_P(\vec Y,\bar Y), &
+    (DC_1^A) \smallskip \\ 
+                                %
+    \sterm{S{+}1}\ \bdel R_P(\vec Y,\bar Y) \la\ R_P(\vec Y,\bar Y),
+    \vec X = \vec Y, \sterm{S{+}1}\ \bdel R_C(\vec X,\bar X).  &
+    (DC_1^A) \medskip \\ 
+                                %
+    \textit{\% $R_{C}.\vec X \to R_{P}.\vec Y$ \texttt{ON DELETE
+        RESTRICT}:} \\ 
+                                %
+    \sterm{S{+}1}\ \bdel R_P(\vec Y,\bar Y) \la\ R_P(\vec Y,\bar Y),
+    R_C(\vec X,\bar X), \vec X {=} \vec Y, \sterm{S}\ \neg \rdel
+    R_C(\vec X,\bar X). \hspace{1.2cm}  & (DR^A)
+\end{array}
+\end{displaymath}
+\end{Theorem}
+
+\begin{Proof} of \textbf{Theorem \ref{WinWFS}}.
+First,  we  prove the following 
+\begin{Lemma}\label{WinWFSAux}
+  \begin{itemize}
+  \item  \I\ wins  at  $R(\bar x)$ within $n$
+    rounds iff $\pl M(P_A,D,U_\rhd) \models \sterm{2n}\ \rdel R(\bar
+    x)$.
+  \item \II\ wins at $R(\bar x)$ within $n$ rounds iff $\pl
+    M(P_A,D,U_\rhd) \models \sterm{2n{-}1}\ \neg \rdel R(\bar x)$.
+ \end{itemize}
+ gagalemma
+\end{Lemma}
+\begin{Proof}
+  (All subproofs below can be extended to ``iff'', but for better
+  readability, this is not always formulated exactly.)  
+
+   \II\ wins in one round starting at $R(\bar x)$ iff Player \I\ 
+  cannot move to a user request, ie if the deletion of
+  $R(\bar x)$ is unfounded. That is the case iff in the first
+  overestimate of $P_A$, $R(\bar x)$ is not requested for deletion:
+  $\pl M(P_A,D,U_\rhd) \models \sterm{1}\ \neg \rdel R(\bar x)$.
+
+  \I\ wins in one round at $R(\bar x)$ iff the deletion of 
+ $R(\bar x)$ is founded by some user delete request 
+ $\extev \del R'(\bar x')$, and  \II\ cannot move from
+ $\extev \del R'(\bar x')$. This is the case, if there is no \texttt{ON
+   DELETE CASCADE} chain from $R'(\bar x')$ to a tuple $R''(\bar x'')$
+ which is restricted by some other tuple.
+ Thus, in this case, in the first overestimate of $P_A$, the
+ deletions of $R''(\bar x'')$ and $R'(\bar x')$ are not blocked:
+ $\pl M(P_A,D,U_\rhd) \models \sterm{1}\ \neg \bdel R'(\bar x')$.
+ Then, since there is a user delete request $\extev \del R'(\bar x')$,
+ $\pl M(P_A,D,U_\rhd) \models \sterm{2}\ \rdel R'(\bar x')$ and
+ $\pl M(P_A,D,U_\rhd) \models \sterm{2}\ \rdel R(\bar x)$.
+
+ The induction step follows the same line of argumentation: 
+ 
+ \II\ wins in $n{+}1$ rounds at $R(\bar x)$ iff for all moves to some
+ $\extev \del R'(\bar x')$ of \I, he can move to some tuple $R''(\bar
+ x'')$ which he wins in $n$ rounds: $\pl M(P_A,D,U_\rhd) \models
+ \sterm{2n{-}1}\ \neg \rdel R''(\bar x'')$ by induction hypothesis.
+ Thus, since there is a move from $\extev \del R'(\bar x')$ to $R''(\bar x'')$,
+ there are triggers \texttt{ON DELETE RESTRICT} and \texttt{ON DELETE
+   CASCADE} s.t.\ $\pl M(P_A,D,U_\rhd) \models \sterm{2n}\ \bdel
+ R'(\bar x')$.  Since this is the case for all $R'(\bar x')$ where \I\ 
+ can move to from $R(\bar x)$, $\pl M(P_A,D,U_\rhd) \models
+ \sterm{2n{+}1}\ \neg \rdel R''(\bar x'')$.
+
+  \I\ wins in $n{+}1$ rounds at $R(\bar x)$ if there is a
+ $R'(\bar x')$ he can move to s.t.\ for all positions $R''(\bar x'')$
+  where  \II\ can move to from $R'(\bar x')$,  \II\ will lose
+ in at most $n$ rounds.
+ By induction hypothesis, for all those $R''(\bar x'')$,
+ $\pl M(P_A,D,U_\rhd) \models \sterm{2n}\ \rdel R''(\bar x'')$.
+ Thus,
+ $\pl M(P_A,D,U_\rhd) \models \sterm{2n{+}1}\ \neg \bdel R'(\bar x')$
+ and
+ $\pl M(P_A,D,U_\rhd) \models \sterm{2n{+}2}\ \rdel R(\bar x)$.
+\end{Proof}
+
+\noindent From the previous lemma, Theorem \ref{WinWFS} follows immediately:
+ Since even-numbered states are underestimates,
+ there is an $n$ such that
+ $\pl M(P_A,D,U_\rhd) \models \sterm{2n}\ \rdel R(\bar x)$ iff
+ $\pl W(P,D,U_\rhd) \models \rdel R(\bar x)$, and
+ on the other hand, since odd-numbered states are overestimates,
+ there is an $n$ such that
+ $\pl M(P_A,D,U_\rhd) \models \sterm{2n{+}1}\ \neg \rdel R''(\bar x'')$ iff
+ $\pl W(P,D,U_\rhd) \models \neg \rdel R''(\bar x'')$.
+\end{Proof}
+
+\begin{itemize}
+\item Underlying Definition
+\begin{Definition}{Stable Model}
+\cite{gelfond-lifschitz-ICLP-88,bidoit-froidevaux-TCS-91}
+Let $M_P$ denote the minimal model of a positive program $P$.
+For an interpretation $I$, let $P/I$ denote the reduction of $P$
+wrt.\ $I$.
+Then, an interpretation $I$ is a \emph{stable model} iff
+$M_{P/I} = I$
+(ie a stable model reproduces itself\footnote{a stable model is a stable
+model is a stable model.}). 
+\end{Definition}
+\noindent
+\textbf{Fact:} The well-founded model agrees on all definite atoms
+with every stable model. \\
+In general, not every program has a stable model. But, here,
+the following theorem develops:
+
+\item Theorem
+\begin{Theorem}
+For every database $D$, and every set $U_\rhd$ of user delete requests,
+there exists at least one stable model.
+\end{Theorem}
+\end{itemize}
+
+\noindent
+From the well-founded model $\pl W(P,D,U_\rhd)$, two distinguished
+stable models which agree with $\pl W(P,D,U_\rhd)$ on all definite
+atoms (thus, if $\pl W$ is total, there is exactly one stable model)
+are induced by the following policies:
+
+\begin{description}
+\item[Restrictive:]
+  Count all delete requests $\rdel R(\bar x)$ s.t.\
+  $\extev \del R(\bar x) \in U_\rhd$ and
+  $\pl W(\rdel R(\bar x)) = \undef$ with the false ones.
+\item[Permissive:]
+  Count all delete requests $\rdel R(\bar x)$ s.t.
+  $\extev \del R(\bar x) \in U_\rhd$ and
+  $\pl W(\rdel R(\bar x)) = \undef$ with the true ones.
+\end{description}
+
+\begin{Theorem}\label{theo:AreStableModels}
+\begin{itemize}
+\item
+  The unique stable model satisfying the restrictive policy is $\pl S_R$: \\
+  $\pl S_R(P,D,U_\rhd) \models \rdel R(\bar x) \Iff
+   \pl W(P,D,U_\rhd)(\rdel R(\bar x)) = \true$, \\
+  $\pl S_R(P,D,U_\rhd) \models \bdel R(\bar x) \Iff
+   \pl W(P,D,U_\rhd)(\bdel R(\bar x)) \in \{\true,\undef\}$,
+\item
+  The unique stable model satisfying the permissive policy is $\pl S_P$: \\
+  $\pl S_P(P,D,U_\rhd) \models \rdel R(\bar x) \Iff
+   \pl W(P,D,U_\rhd)(\rdel R(\bar x)) \in \{\true,\undef\}$, \\
+  $\pl S_P(P,D,U_\rhd) \models \bdel R(\bar x) \Iff
+   \pl W(P,D,U_\rhd)(\bdel R(\bar x)) = \true$.
+\end{itemize}
+\end{Theorem}
+
+\begin{Definition}
+  A set $\Delta$ of internal delete requests is called
+  \begin{enumerate}
+  \item \emph{founded wrt.\ $U_\rhd$, $D$ and $RA$}~
+    if every $\rdel R(\bar x)\in \Delta$ is \emph{founded} by some 
+    $\extev \del R'(\bar x') \in U_\rhd$, ie there is a chain of
+    references from $R(\bar x)$ to $R'(\bar x')$ in $D$ using
+    \texttt{ON DELETE CASCADE} triggers from $RA$,
+  \item \emph{safe wrt.\ $D$ and $RI$}~ if
+    all \ric s in $RI$ are satisfied in the new database 
+    $D':=D \pm \Delta$.
+  \end{enumerate}
+  For a set $U_\rhd$ of user requests, the set of \emph{induced
+  internal updates}, $\Delta(U_\rhd)$, is the minimal set $M$
+  satisfying the following conditions: \\
+\restwidth\textwidth \advance\restwidth-1cm
+\begin{tabular}[t]{lp{\restwidth}}
+  1.& for all $\rdel R(\bar x)$ s.t.\ 
+     $\extev \del R(\bar x) \in U_\rhd$, 
+     $\rdel R(\bar x) \in M$, \\
+  2.& if $\rdel R(\vec x,\bar x) \in M$, $Q(\vec y,\bar y) \in D$, 
+     $Q.\vec x \to R.\vec y$ \texttt{ON DELETE CASCADE} $\in RA$,
+     and $\vec x = \vec y$ then 
+     $\rdel Q(\vec y,\bar y) \in M$. 
+\end{tabular} \\
+\qedsymbol{q.e.d}%
+A set $U$ of user requests is \emph{acceptable} if $\Delta(U)$
+is safe.     \hfill qed \qed
+\end{Definition}
+
+\begin{Lemma}
+  For a set $U$ of external requests, $\Delta(U)$ is founded. If 
+  $\Delta(U)$ is safe, then $D' := D \pm \Delta$ is the database
+  obtained by applying the set $U$ of user requests on the database
+  $D$ and $D'$ satisfies.
+\end{Lemma}
+
+\begin{Lemma} verbatim:
+\begin{verbatim}
+What about tomorrows children \\
+what about the world they live in \\
+what about the way we live today \\
+tell me \\
+What about tomorrows children \\
+we can do a lot to help them \\
+and love tomorrows child today \end{verbatim}
+\end{Lemma}
+\begin{Lemma} center:
+\begin{center}
+What about tomorrows children \\
+what about the world they live in \\
+what about the way we live today \\
+tell me \\
+What about tomorrows children \\
+we can do a lot to help them \\
+and love tomorrows child today
+\end{center}
+\end{Lemma}
+ \addtheoremline{Corollary}{title in list}%
+ \begin{XLemma*}[title in text]\label{xxx}%
+% \addcontentsline{toc}{section}{gaga}\ignorespaces%
+ \begin{center}
+    It also works in the \\
+    center \\
+    environment.  
+ \end{center}
+ \end{XLemma*}
+
+\begin{Satz}
+Eine Menge von Aktionen ist homomorph genau dann wenn f"ur
+ihre Spezifikation durch partielle Interpretationen f"ur alle
+$\akt a,\akt b \in Aktionen$ folgendes gilt:
+\[\begin{array}[b]{l}
+  \displaystyle
+  Spec(\akt a \lor \akt b) =
+        Spec(\akt a) \cup Spec(\akt b) \cup Spec(\akt a || \akt b) \\
+  \displaystyle
+  Spec(\akt a^*) =  \{(\pl P,\pl Q) \st
+    \begin{array}[t]{l}  \displaystyle
+      \exists n:
+      (\pl P,\pl Q) \in 
+       Spec(\underbrace{\akt a \times \ldots \times \akt a}
+             _{n-\mathrm{mal}}) \mbox { und} \\
+      \displaystyle
+      \mbox{es gibt kein } 
+      (\pl I,\pl J) \in Spec(\akt a) \mbox{ so da"s }
+      \pl Q \cup \pl I \mbox{ konsistent ist.} 
+  \end{array}
+\end{array} \]
+\end{Satz}
+\newdimen\dimenx
+      \dimenx\prevdepth
+      \rule{2pt}{\dimenx}%
+
+
+
+\noindent
+In the following, let $\pl S$ be $\pl S_R$, $\pl S_P$, or one of the
+stable models obtained by the above remark.
+
+\begin{Theorem}[Correctness]\label{theo:Correctness}
+Let
+$\Delta_{\pl S} := 
+  \{\rdel R(\bar x) \st \pl S \models \rdel R(\bar x)\}$
+and 
+$U_\pl S:= \{\rdel R(\bar x) \st 
+   \pl S \models \rdel R(\bar x) \land \extev \del R(\bar x)\}
+  \subseteq U_\rhd$.
+%
+Then $\Delta_{\pl S}$ is founded wrt.\ $U_\pl S$, $D$, and $RA$ and
+safe wrt.\ $D$ and $RI$, and $\Delta_{\pl S} = \Delta(U_\pl S)$.
+\end{Theorem}
+\begin{Proof}
+Foundedness follows directly from Theorem \ref{theo:founded}. \\
+$\Delta_{\pl S} \subseteq \Delta(U_\pl S)$ follows from foundedness,
+and $\Delta_{\pl S} \supseteq \Delta(U_\pl S)$ follows from safeness:
+otherwise some \ric\ encoded as \texttt{on delete cascade} would be
+violated.
+\end{Proof}
+
+\begin{Theorem}[Maximality]
+  For a given set $U_\rhd$ of user requests, the permissive variant
+  determines the maximal acceptable subset.
+\end{Theorem}
+\begin{Proof}~
+Und, just for fun, auch dieser Proof wird mit einem qed anstelle der
+black Box abgeschlossen: Sie ist auch r\"uckwirkend in das displaymath:
+\[\begin{array}[t]{l}
+  \pl S_P \models \neg \rdel R(\bar x) 
+  \stackrel{\mbox{\footnotesize policy}}{\Iff}
+  \pl W(P,D,U_\rhd)(\rdel R(\bar x)) = false
+  \stackrel{\mbox{\footnotesize Th. \ref{WinWFS}}}{\Iff} \\
+  \pl R(\bar x) \mbox{ is lost}
+  \stackrel{\mbox{\footnotesize Th. \ref{theo:game}}}{\Iff} 
+  \extev \del R(\bar x) \mbox{ is inadmissible.}
+ \end{array} \]
+\qedsymbol{q.e.d}\qed
+\end{Proof}
+
+\noindent
+By defining the above policies, the \emph{local} ambiguities of
+the operational approach are exploited and turned into controlled, global
+alternatives.
+
+\begin{Definition}\label{def:depgraph}   The labeled dependency
+  graph $\depgraph(P)$ of a Statelog program $P$ is defined as
+  follows.  Its vertices are the relation names occurring in $P$.  For
+  every rule
+\[  \sterm{S_0}\ H(\bar X_0) \la\ 
+   \sterm{S_1}\ B_1(\bar X_1),\ldots,\sterm{S_n}\ B_1(\bar X_n)~.  \]
+%
+   of $P$, $\depgraph(P)$ contains for every $i=1,\dots,n$
+
+   \noindent \begin{tabular}{ll}
+     $\bullet$ & a negative edge $A_i \stackrel{l_i,
+       \neg}{\rightarrow}\ H$, if $B_i$ is a negative literal $\neg
+     A_i(\bar X)$\\ 
+     %
+     $\bullet$ & a positive edge $B_i\ \stackrel{l_i}{\rightarrow}\ H$
+     otherwise.
+   \end{tabular} \smallskip 
+
+   \noindent Here,  the label $l_i:= S_0 - S_i \ge 0$ is the ``gap'' between
+   states; it may be omitted for $l=0$.
+
+   A cycle of $\depgraph(P)$ involving only edges with $l=0$ is
+   called a \emph{local cycle\/}.  A program $P$ is called
+   \emph{state-stratified\/} if no local cycle of $\depgraph(P)$
+   contains a negative edge.
+\end{Definition}
+%
+\theoremnumbering{greek}
+%\theoremstyle{plain}
+\renewtheorem*{Theorem}{DasNeueTheorem}
+\begin{Theorem}[Termination]\label{StatelogTermination}
+For every database $D$ and every set $U_\rhd$ of user delete
+  requests, there is a unique final state $n_{final} \leq |U_\rhd|+1$,
+  ie for all $k<n_{final}$: $\pl M(P_S,D,U_\rhd) \models
+  \sterm{k}\,\running$, and for all $k \ge n_{final}$: $\pl
+  M(P_S,D,U_\rhd) \models \sterm{k}\, \neg \running$.
+\end{Theorem}
+
+
+\begin{Lemma}\label{Lem:AFPStatelog}
+The model $\pl M(P_A,D,U_\rhd)$ corresponds to $\pl M(P_S,D,U_\rhd)$
+as follows:
+\begin{itemize}
+\item [1.]
+  $\pl M(P_A,D,U_\rhd) \models \sterm{2n}\ \bdel R(\bar x) \Iff 
+     \pl M(P_S,D,U_\rhd) \models \sterm{n}\ \bdel R(\bar x)$.
+\item[2.]
+  $\pl M(P_A,D,U_\rhd) \models \sterm{2n{+}1}\ \rdel R(\bar x) \Iff
+     \pl M(P_S,D,U_\rhd) \models \sterm{n}\ \rdel R(\bar x)$.
+\end{itemize}
+\end{Lemma}
+\begin{Proof} 
+  $P_S$ and $P_A$ differ in the rules ($I^S$) and ($I^A$): While
+  ($I^A$) derives internal delete requests in \sterm{S{+}1} from
+  unblocked user requests in \sterm{S}, ($I^S$) already establishes
+  these in the \emph{current} state \sterm{S}.
+
+  In \sterm{0} neither program derives blockings $\bdel R(\bar x)$;
+  hence we have an underestimate of the final set of blockings.  From
+  this, both programs derive an overestimate of delete requests $\rdel
+  R(\bar x)$. Due to rules ($I^S$) and ($I^A$) these overestimates are
+  computed in \sterm{S} and \sterm{S{+}1} by ($I^S$) and ($I^A$),
+  respectively.  Using these overestimates, the next sets of
+  underestimates $\bdel R(\bar x)$ are derived in \sterm{1} for $P_S$,
+  and in \sterm{2} for $P_A$.  Applied inductively, this argument
+  concludes the proof.
+\end{Proof}
+
+\begin{Theorem}\label{gaga}
+  \begin{enumerate}
+  \item $\pl M(P_S,D,U_\rhd) \models \sterm{n_{final}}\, \rdel R(\bar x)  \ 
+    \Leftrightarrow\ \pl W(P,D,U_\rhd)(\rdel R(\bar x)) \in
+    \{\true,\undef\}$ ~.
+  \item $\pl M(P_S,D,U_\rhd) \models \sterm{n_{final}}\, \neg \bdel
+    R(\bar x) \ \Leftrightarrow\ \pl W(P,D,U_\rhd)(\bdel R(\bar x))
+    \in \{\false,\undef\}$~.
+  \end{enumerate}
+\end{Theorem}
+\makeatletter\def\@mklab#1{#1\hfill}\makeatother
+     
+\newtheoremlisttype{list}%
+    {\begin{list}{}{\leftmargin2.8cm\labelwidth2.6cm}}
+    {\item[##1 ##2:] ##3\dotfill~ ##4}%
+    {\end{list}}
+
+\theoremlisttype{allname}
+\listtheorems{KappaTheorem,Theorem,Lemma,Corollary,Proposition}
+\paragraph{List of Definitions.}\
+\theoremlisttype{allname}
+\listtheorems{Definition,Notation}
+\paragraph{List of Examples.}\
+\theoremlisttype{all}
+\listtheorems{Example}
+\end{document}
+
+And now, compare the theorem lists at the beginning of the document
+and here ...
+
+% Local Variables:
+% TeX-command-default: "LaTeX"
+% TeX-master: t
+% End:
+
+
