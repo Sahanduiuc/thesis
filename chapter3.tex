@@ -418,31 +418,32 @@ $log(Size)$ 	& -0.02*** & -0.65 & 0.05 & -0.71*** & 0.44** & -0.13 & -0.06 \\
 \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
 \caption{Sample stock characteristics}
 \label{fig:crsp}
-\begin{subfigure}[b]{0.49\textwidth}
-\small
-\includegraphics[width=\textwidth]{log_prc}
-\captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
-\caption{$\log(Price)$ (\$)}
-\end{subfigure}
-\begin{subfigure}[b]{0.49\textwidth}
-\small
-\includegraphics[width=\textwidth]{log_size}
-\captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
-\caption{$\log(Size)$ (\$)}
-\end{subfigure}
-%
-\begin{subfigure}[b]{0.49\textwidth}
-\small
-\includegraphics[width=\textwidth]{figures/log_vol}
-\captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
-\caption{$\log(Volume)$ (shares)}
-\end{subfigure}
-\begin{subfigure}[b]{0.49\textwidth}
-\small
-\includegraphics[width=\textwidth]{ret}
-\captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
-\caption{$Return$ (bp)}
-\end{subfigure}
+\includegraphics[width=\textwidth]{crsp}
+% \begin{subfigure}[b]{0.49\textwidth}
+% \small
+% \includegraphics[width=\textwidth]{log_prc}
+% \captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
+% \caption{$\log(Price)$ (\$)}
+% \end{subfigure}
+% \begin{subfigure}[b]{0.49\textwidth}
+% \small
+% \includegraphics[width=\textwidth]{log_size}
+% \captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
+% \caption{$\log(Size)$ (\$)}
+% \end{subfigure}
+% %
+% \begin{subfigure}[b]{0.49\textwidth}
+% \small
+% \includegraphics[width=\textwidth]{figures/log_vol}
+% \captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
+% \caption{$\log(Volume)$ (shares)}
+% \end{subfigure}
+% \begin{subfigure}[b]{0.49\textwidth}
+% \small
+% \includegraphics[width=\textwidth]{ret}
+% \captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
+% \caption{$Return$ (bp)}
+% \end{subfigure}
 \captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
 \caption*{Note: These figures demonstrate the distribution of daily average stock characteristics for my sample. $\log(Price)$ is the logarithm of the daily closing price; $\log(Volume)$ is the logarithm of the daily number of shares sold; $Return$ is the daily holding period return in basis points; $\log(Size)$ is the logarithm of the daily market capitalization in thousands. Averages for each stock  are calculated from all days in the period Jan. 1, 2013 - Dec. 31, 2013 for which complete limit order book data is available.}
 \end{figure}
