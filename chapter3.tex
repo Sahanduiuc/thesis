@@ -449,7 +449,19 @@ $log(Size)$ 	& -0.02*** & -0.65 & 0.05 & -0.71*** & 0.44** & -0.13 & -0.06 \\
 \end{figure}
 
 % fig:examples
-\begin{sidewaysfigure}[p]
+% \begin{sidewaysfigure}[p]
+% \linespread{1}
+% \centering
+% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+% \caption{Examples of average limit order book shapes}
+% \label{fig:examples}
+% \includegraphics[width=\textwidth]{example_lob}
+% \captionsetup{font=footnotesize, justification=justified, width=\linewidth}
+% \caption*{Note: The figure shows the average shape of randomly selected large (top row), medium (middle row), and small (bottom row) firms. Average shapes are calculated from all order book updates in the ITCH database during 2013.}
+% \end{sidewaysfigure}
+
+% fig:examples
+\begin{figure}[p]
 \linespread{1}
 \centering
 \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
@@ -458,21 +470,44 @@ $log(Size)$ 	& -0.02*** & -0.65 & 0.05 & -0.71*** & 0.44** & -0.13 & -0.06 \\
 \includegraphics[width=\textwidth]{example_lob}
 \captionsetup{font=footnotesize, justification=justified, width=\linewidth}
 \caption*{Note: The figure shows the average shape of randomly selected large (top row), medium (middle row), and small (bottom row) firms. Average shapes are calculated from all order book updates in the ITCH database during 2013.}
-\end{sidewaysfigure}
+\end{figure}
 
-% fig:pca
+% fig:factors
+% \begin{figure}[p]
+% \linespread{1}
+% \centering
+% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+% \caption{Principal component analysis of order books}
+% \label{fig:pca}
+% \begin{subfigure}[t]{1.00\textwidth}
+% \includegraphics[width=\textwidth]{factors}
+% \end{subfigure}
+% \begin{subfigure}[b]{1.00\textwidth}
+% \includegraphics[width=\textwidth]{eigenvalues}
+% \end{subfigure}
+% \captionsetup{font=footnotesize, justification=justified, width=\linewidth}
+% \caption*{Note: The figures show the results of the principal component analysis of daily limit order book volume data. For each day in the sample I perform PCA on the daily order book history. I then calculate the average of the stock-day eigenvectors ($top$) and the average of the stock-day eigenvalues ($bottom$). Averages are calculated from all order book updates in the ITCH database during 2013 for the stocks in my sample.}
+% \end{figure}
+
+% fig:factors
 \begin{figure}[p]
 \linespread{1}
 \centering
 \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
 \caption{Principal component analysis of order books}
 \label{fig:pca}
-\begin{subfigure}[t]{1.00\textwidth}
 \includegraphics[width=\textwidth]{factors}
-\end{subfigure}
-\begin{subfigure}[b]{1.00\textwidth}
+\captionsetup{font=footnotesize, justification=justified, width=\linewidth}
+\caption*{Note: The figures show the results of the principal component analysis of daily limit order book volume data. For each day in the sample I perform PCA on the daily order book history. I then calculate the average of the stock-day eigenvectors ($top$) and the average of the stock-day eigenvalues ($bottom$). Averages are calculated from all order book updates in the ITCH database during 2013 for the stocks in my sample.}
+\end{figure}
+
+% fig:eigenvalues
+\begin{figure}[p]
+\linespread{1}
+\centering
+\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+\caption{Principal component analysis of order books (cont.)}
 \includegraphics[width=\textwidth]{eigenvalues}
-\end{subfigure}
 \captionsetup{font=footnotesize, justification=justified, width=\linewidth}
 \caption*{Note: The figures show the results of the principal component analysis of daily limit order book volume data. For each day in the sample I perform PCA on the daily order book history. I then calculate the average of the stock-day eigenvectors ($top$) and the average of the stock-day eigenvalues ($bottom$). Averages are calculated from all order book updates in the ITCH database during 2013 for the stocks in my sample.}
 \end{figure}
