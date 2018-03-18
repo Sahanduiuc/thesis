@@ -22,7 +22,7 @@
 %   theorems: a list of theorems (uses ntheorem) (optional)
 %   phd: add the doctoral abstract (required)
 
-\documentclass[draft,figures,tables,abstractpage,publicabstractpage,copyrightpage,dedicationpage,appendix,phd]{uithesis}
+\documentclass[figures,tables,abstractpage,publicabstractpage,copyrightpage,dedicationpage,appendix,phd]{uithesis}
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -72,14 +72,14 @@
 
 \begin{document}
 \frontmatter
-\include{chapter1}
+% \include{chapter1}
 \include{chapter2}
 \include{chapter3}
 \include{chapter4}
-\include{chapter5}
+% \include{chapter5}
 \nocite{*}
 % \bibliographystyle{uithesis}
 \bibliographystyle{plainnat}
 \biblio{thesis}
-\include{appendix}
+% \include{appendix}
 \end{document}

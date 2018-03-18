@@ -259,6 +259,20 @@
 
 			This says that the probability that the parent of the $m^{th}$ event is the $n^{th}$ event equals the relative contribution of the $n^{th}$ event to the aggregate intensity at the time of $m^{th}$ event. As a result, the most likely parent at any time is the event that is \textit{most active} at that time. The conditional distributions are independent, so parents can be sampled in parallel. We can also see from the definition of $\lambda_{n'}(s_m)$ that the most likely parent of an event is not, in general, the most recent event because. Events can also be caused by the background process, which by reflected in the inclusion of $n=0$ in equation \eqref{eq: parents_posterior}.
 
+		\subsubsection*{Likelihood}
+			In the results section I compare the network model with a baseline model. I base my comparison on the likelihood of the data given each of the models. The likelihood of observations $s = \{s_1, \dots, s_M\}, c=\{c_1, \dots, c_M\}$ for the network poisson model with parameters estimates $\theta = (\lambda, W, \mu, \tau)$ is given by
+
+			% eqn:likelihood
+			\begin{align}
+			\label{eqn:likelihood}
+				p(s, c \mid \hat{\theta}) &= \prod_{n=1}^{N} \mathcal{PP} \left( \lambda_n^{(0)}(t) + \sum_{m=1}^{M} \phi_{m , n}(t) \right) \notag \\
+				&= \prod_{n=1}^N \exp -\left( \int_{0}^{T} \! \lambda_n^{(0)}(t) + \sum_{m=1}^{M} \phi_{m , n}(t) \ \mathrm{d}t \right) \notag \\
+				& \ \ \ \ \ \times \prod_{m'=1}^M \left( \lambda_n^{(0)}(s_{m'}) + \sum_{m=1}^{M} \phi_{m , n}(s_{m'}) \right)^{\mathbb{I} (c_{m'} = n)} \notag \\
+				&= \prod_{n=1}^N \exp -\left(T \lambda_n^{(0)} + \sum_{m=1}^M W_{m,n} \right) \prod_{c_{m'}=n} \left( \lambda_n^{(0)} + \sum_{m=1}^{M} \phi_{m , n}(s_{m'}) \right)
+			\end{align}
+
+			\vspace{5mm}
+
 
 \section{Data}
 	This study relies on event data for 401 stocks in the S\&P 500 on July 24, 2013. The data comes from the Nasdaq HistoricalView-ITCH database, which consists of daily message files recording every update to the limit order book for all securities traded on the Nasdaq exchange with nanosecond precision. I used the message data to reconstruct the limit order book of each stock and identified events based on the state of the order book immediately before their arrival. Raw messages were processed using custom Python code available from \url{https://github.com/cswaney/hfttools}.
@@ -274,103 +288,60 @@
 
 	% tab:message_counts
 	\begin{table}[t]
-	\small
-	\linespread{1}
-	\centering
-	\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-	\caption[Message counts]{The table describes the distribution of message counts across the full sample. \textit{Frequency} is the percent of all messages of that type. All other values are computed are numbers of observations per stock-day.}
-	\label{tab:message_counts}
-	\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrrrr}
-		\toprule{}
-		 &  Frequency  &   Mean  & Min &  $q_{0.25}$ &  Median &    $q_{0.75}$   &        Max \\
-		\midrule
-		A &  47.2  &  61,769 &  4,495 &  42,441 &  59,551 &  77,400 &  163,362 \\
-		C &  0.1   &      72 &     1  &      23 &      52 &     101 &      380 \\
-		D &  45.6  &  59,706 &  4,515 &  41,320 &  58,330 &  74,438 &  161,476 \\
-		E &  2.5   &   3,264 &   106  &   1,683 &   2,763 &   4,394 &   31,713 \\
-		U &  3.7   &   4,897 &     21 &   1,867 &   3,950 &   6,189 &   36,076 \\
-		X &  0.3   &     405 &      1 &      16 &     107 &     468 &   11,809 \\
-		\bottomrule
-	\end{tabular*}
+		\small
+		\linespread{1}
+		\centering
+		\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
+		\caption[Message counts]{The table describes the distribution of message counts across the full sample. \textit{Frequency} is the percent of all messages of that type. All other values are computed are numbers of observations per stock-day.}
+		\label{tab:message_counts}
+		\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrrrr}
+			\toprule{}
+			 &  Frequency  &   Mean  & Min &  $q_{0.25}$ &  Median &    $q_{0.75}$   &        Max \\
+			\midrule
+			A &  47.2  &  61,769 &  4,495 &  42,441 &  59,551 &  77,400 &  163,362 \\
+			C &  0.1   &      72 &     1  &      23 &      52 &     101 &      380 \\
+			D &  45.6  &  59,706 &  4,515 &  41,320 &  58,330 &  74,438 &  161,476 \\
+			E &  2.5   &   3,264 &   106  &   1,683 &   2,763 &   4,394 &   31,713 \\
+			U &  3.7   &   4,897 &     21 &   1,867 &   3,950 &   6,189 &   36,076 \\
+			X &  0.3   &     405 &      1 &      16 &     107 &     468 &   11,809 \\
+			\bottomrule
+		\end{tabular*}
 	\end{table}
 
 	% fig:seasonalities
 	\begin{figure}[t]
-	\small
-	\linespread{1}
-	\centering
-	\includegraphics[width=\textwidth]{chapter4/seasonalities}
-	\captionsetup{skip=-20pt, labelsep=colon, font=footnotesize, width=\linewidth, justification=justified}
-	\caption[Message activity seasonalities]{The figure describes patterns in the timing of message activity for the full sample. The top figure shows the distribution of \textit{add}, \textit{delete}, and \textit{execute} messages within each trading day. The bottom figure shows the distribution of messages within each second.}
-	\label{fig:seasonalities}
+		\small
+		\linespread{1}
+		\centering
+		\includegraphics[width=\textwidth]{chapter4/seasonalities}
+		\captionsetup{skip=-20pt, labelsep=colon, font=footnotesize, width=\linewidth, justification=justified}
+		\caption[Message activity seasonalities]{The figure describes patterns in the timing of message activity for the full sample. The top figure shows the distribution of \textit{add}, \textit{delete}, and \textit{execute} messages within each trading day. The bottom figure shows the distribution of messages within each second.}
+		\label{fig:seasonalities}
 	\end{figure}
 
 
 \section{Results}
 	What does the model reveal about limit order book dynamics in general? This section analyzes estimates of the event-driven model for a broad (by microstructure standards) cross-section of stocks. For each stock, I perform MCMC sampling for the network Poisson model with the same hyperparameter selection and settings described in previous sections using a single day of message data. The point-estimator considered is the posterior median, which minimizes posterior absolute loss risk.
 
-	All stocks belong to the S\&P 500, with computational considerations determining the specific selection. I collected message data for all stocks in the S\&P 500 and used this data to identify order book events according to the definitions described above. The MCMC algorithm employed scales on the order of the number of events squared. To reduce the total sampling time, the sample excludes stocks with more than 60,000 observations between 10:30 am and 3:00 pm. An alternative approach would be to select a random subsample of manageable size from the skipped stocks. In fact, it makes more sense to use the same number of events for each stock, rather than the same amount of time, as it is this number that determines the posterior distribution, and message activity varies considerably across stocks.
-
-	The model assumes a constant background rate of events, which is an unrealistic assumption. More likely, the background rate varies over time as market conditions change. It is possible, and not computationally costly, to add a piecewise constant or linear background rate to the model. On the other hand, time-varying background rates are only generally useful if they capture seasonalities, and are complicated to analyze. As a compromise, I summarize each stock day by a single background rate parameter but restrict each day of message data to stable trading hours (10:30 am to 3:00 pm).
+	The MCMC algorithm employed scales on the order of the number of observations squared. To reduce the total sampling time, the sample excludes stocks with more than 60,000 events between 10:30 am and 3:00 pm. An alternative approach is to select a random subsample of manageable size for all stocks.
 
 	\subsection{Connections}
-		\# Connection Matrix
-		What types of interactions characterize aggregate limit order book dynamics? Figure \ref{fig:weights_full_sample} presents the median point-estimate of the connection weight matrix $W$ across stocks. I begin my considering the raw point estimates pictured on the left. The rows of this figure are labeled by parent event and the columns are labeled by child event. Reading across the rows of the chart tells you which events an event precedes, while reading down the columns tells you which events precede that event. There are a few general observations to be made. First, the median point-estimates are symmetric across sides of the orders book, meaning that, for example, if there is a strong connection between an order type on the bid side of the book to an order type on the ask side of the book, then we will also observe a strong connection between the same order types, but from the ask to the bid side. Second, all of the order types (limit, market and cancel) display self-exciting behavior, which can be seen by looking at the diagonal of the matrix. Third, weights are generally much larger than background rates, with the median point-estimate of Wmn being as much as 120 times the lambda0n. This observation alone suggests that the mutually-exciting feature plays a central role in modeling order flow.
+		What types of interactions characterize aggregate limit order book dynamics? Figure \ref{fig:weights_full_sample} presents the median point-estimate of the connection weight matrix $W$ across stocks. I begin my considering the raw point estimates pictured on the left. The rows of this figure are labeled by parent event and the columns are labeled by child event. Reading across the rows of the chart tells you which events an event precedes, while reading down the columns tells you which events precede that event.
 
-		\#\# Limit Orders
-		The top four rows of the matrix tell us how limit orders influence subsequent order flow.
-		1. Self-connections: Limit orders display self-exciting behavior, but the effect is absent for limit orders that improve the offer. Instead, these orders are followed by (same side) limit orders at the new offer. In fact, these follow-on orders  are the primary self-connections between limit orders, demonstrating that price-improving orders are significant order book events that traders respond to by supplying fresh liquidity to preserve execution priority.
-		2. Connections to cancellations: Limit orders at the offer precede (same side) cancellations at the offer, while limit orders that improve the offer are associated with subsequent (same side) cancellations, with little difference seen between cancellations that worsen the offer and those at the offer.
-		3. There are no connections between limit orders and future market orders.
+		There are a few general observations to be made. First, the median point-estimates are symmetric across sides of the orders book, meaning that, for example, if there is a strong connection between an order type on the bid side of the book to an order type on the ask side of the book, then we will also observe a strong connection between the same order types, but from the ask to the bid side. Second, all of the order types (limit, market and cancel) display self-exciting behavior, which can be seen by looking at the diagonal of the matrix. Third, weights are generally much larger than background rates, with the median point-estimate of $W_{m,n}$ being as much as 120 times $\lambda_n^{(0)}$. This observation alone suggests that the mutually-exciting feature plays a central role in modeling order flow.
 
-		\#\# Cancellations
-		The bottom four rows of the matrix tell us how delete orders influence subsequent order flow.
-		1. Self-connections: Connections from order cancellations to subsequent order cancellations display nearly the same pattern as the self-connections between limit orders. There appears to be mild clustering of order cancellations at the offer, but the stronger effect is between cancellations the worsen the offer and following (same side) cancellations at the offer.
-		2. Connections to limit orders: Order cancellations that worsen the offer are followed by (same side) limit orders that improve the offer. This is a counterpart to the opposite effect seen for limit orders above: taken together, these effects form a cycle that appears as fleeting liquidity.
-		3. There are no connections between order cancellations and future market orders.
+		The top four rows of the matrix tell us how limit orders influence subsequent order flow. Limit orders display self-exciting behavior, but the effect is absent for limit orders that improve the offer. Instead, these orders are followed by (same side) limit orders at the new offer. In fact, these follow-on orders  are the primary self-connections between limit orders, demonstrating that price-improving orders are significant order book events that traders respond to by supplying fresh liquidity to preserve execution priority. Limit orders at the offer precede (same side) cancellations at the offer, while limit orders that improve the offer are associated with subsequent (same side) cancellations, with little difference seen between cancellations that worsen the offer and those at the offer. There are no connections between limit orders and future market orders.
 
-		\#\# Market Orders
-		The middle four rows of the matrix tell us how market orders influence subsequent order flow. While  we have seen that market orders are not influenced by limit orders and cancellations, they are themselves strong influencers of both events.
-		1. Self-connections: Market order display self-excitation (clustering) between trades at the offer, but not between trades that worsen the offer. (The absence of the latter self-connection is in some sense mechanical: trades are quite small, so even if a sequence of orders eats through all orders at the top of the book, the trade that finally exhausts liquidity would be followed by a market order at the offer. However, we don’t observe the latter, suggesting that market orders are submitted until liquidity is exhausted, and then traders wait to see if liquidity will be replaced—or simply take a break to conceal their intentions).
-		2. Connections to limit orders: The largest effects in the raw connection weight matrix are between market orders that worsen the offer and subsequent (OPPOSITE side) limit orders, particularly at the offer. The model predicts trades that exhausts liquidity at the offer are most likely to generate (OPPOSITE side) limit orders at the offer, or (OPPOSITE side) limit orders that improve the offer, or (SAME side) limit orders that improve the offer, in that order. The reaction to market orders at the offer is relatively unexciting.
-		3. Connections to cancellations: Market orders also have a strong connection to subsequent cancellations. Market orders that worsen the spread are followed by cancellations at the offer on EITHER side of the book. This effect is interesting because it is at odds with relationship between market order and limit orders. Cancellations on the OPPOSITE side of the book is consistent with traders replacing orders at an improved offer. There appears to be a cautious response (cancellations) and an assertive response (limit orders) to these trades.
+		The bottom four rows of the matrix tell us how delete orders influence subsequent order flow. Connections from order cancellations to subsequent order cancellations display nearly the same pattern as the self-connections between limit orders. There appears to be mild clustering of order cancellations at the offer, but the stronger effect is between cancellations the worsen the offer and following (same side) cancellations at the offer. Order cancellations that worsen the offer are followed by (same side) limit orders that improve the offer. This is a counterpart to the opposite effect seen for limit orders above: taken together, these effects form a cycle that appears as fleeting liquidity. There are no connections between order cancellations and future market orders.
 
-		\#\# Summary
-		1. Add and delete orders are coupled, and neither influences market orders.
-		2. Market orders are rare, but they exert strong influence on limit orders and cancellations.
+		The middle four rows of the matrix tell us how market orders influence subsequent order flow. While  we have seen that market orders are not influenced by limit orders and cancellations, they are themselves strong influencers of both events. Market order display self-excitation (clustering) between trades at the offer, but not between trades that worsen the offer. (The absence of the latter self-connection is in some sense mechanical: trades are quite small, so even if a sequence of orders eats through all orders at the top of the book, the trade that finally exhausts liquidity would be followed by a market order at the offer. However, we don’t observe the latter, suggesting that market orders are submitted until liquidity is exhausted, and then traders wait to see if liquidity will be replaced—or simply take a break to conceal their intentions).
 
+		The largest effects in the raw connection weight matrix are between market orders that worsen the offer and subsequent limit orders on the opposite side of the book, particularly at the offer. The model predicts trades that exhaust liquidity at the offer are most likely to generate opposite-side limit orders at the offer, opposite-side limit orders that improve the offer, or same-side limit orders that improve the offer, in that order. The reaction to market orders at the offer is relatively unexciting.
 
-		Next we turn our attention to the normalized weight matrix on the right of Figure \ref{fig:weights_full_sample}. In this figure, the median point-estimates of $W_{m,n}$ are divided by the median point estimates of $\lambda_{0,n}$. The resulting values are therefore the relative impacts on the child node (the units are expected events divided by expected events per second). This view allows us to explore which events have the biggest effects at the event level and accounts for the fact that some events are more frequent than others. These are not necessarily the most import connections from the view of explaining the data as a whole.
-
-		\#\# Limit Orders
-		The biggest change is that the connection between limit orders that change the improve the offer price and cancellations that worsen the offer is more prominent. In fact, they are the largest relative connections in the model. Thus, the model identifies the main driving force behind such delete orders: they are a response to price-improving orders on the same side of the book. “Response” may not be the right description: these orders are likely to come from the same trading algorithm posted an add order above the best bid, and then immediately deleting that order if it fails to execute. The value of these weights is around 120, which means that the expected number of such delete orders following a price-improving add order is 120 times greater than the expected number of such delete order generated per second as “background” activity.
-
-		\#\# Cancellations
-		The relative view further highlights the connection between cancellations that worsen the offer and limit orders that improve the offer. Thus, in this view the complete fleeting order (or ``flickering'' quotes) cycle is made particularly clear.
-
-		\#\# Market Orders
-		The relative view further highlights the connections between market orders and limit orders, except that market order that worsen the offer have larger relative impact on limit order that improve the offer than on limit orders that do not. Another pair of connections that appears much more clearly under this normalization is that between executions and subsequent executions. After normalization, we see the magnitude of the clustering effect more clearly: trades are expected to generate between 40 and 60 times as many trades as we would expect to occur in one second due to exogenous supply and demand alone, depending on whether they exhaust liquidity at the offer or not.
-
-		\#\# Summary
-		Overall, the biggest change seen by switching to the relative view is on connections to limit orders and cancellations that improve and worsen the offer. The raw weights on these events tend to have a similar magnitude to their counterparts that do not change the offer, but they are occur about a quarter as often. The relative view does not simply extenuate the weights for rare events, however: trades are even less commonly observed, but there is no qualitative difference between the raw and relative views of the impacts of limit order and cancellations on their intensity.
-
-	% \subsection{Connections}
-		% What types of interactions characterize aggregate limit order book dynamics? Figure \ref{fig:weights_full_sample} presents the median of the connection weight matrices. Two connections stand out immediately: add orders at the best bid following trades that increase the best ask, and add orders at the best ask following trades the decrease the best bid. This type of behavior has been noted elsewhere and shows that trading algorithms recognize these trades as dependable signals of underlying supply and demand. In fact, just to the right of these connections are the connections between bids that exhaust the best prices and subsequent add orders that improve the offer price on the opposite side of the book. (Likely what is happening is that this connection activates first, and then new orders queue at the newly established best price—we could confirm this by looking at the impulse responses of the two connections).
-		%
-		% The opposite side of the connection matrix displays a related phenomenon between executions and subsequent deletions. Here, price-changing trades are seen to have two substantial effects: one on the same side of the book, and one on the opposite side. The result is the same on both sides: traders tend to delete orders at the best price. This activity is consistent with the connections between executions and additions. Traders on the opposite side of the book need to remove liquidity that will lose priority if an incoming order establishes a new price on that side. Traders on the same side of the book will cancel their orders if they anticipate that the price will continue to move in that direction (although there is no substantial connection to add orders on this side of the book at the new best price, so traders do not appear to re-establish their prior positions).
-		%
-		% Finally, the median raw estimates demonstrate strong links between price-improving add orders and subsequent add orders at the new best prices (on the same side). Price-improving orders are significant order book events that traders respond to by supplying fresh liquidity to preserve execution priority.
-		%
-		% All of the connections addressed thus far have been identified by looking at the raw estimates of connection weights. These raw estimates represent the expected number of child events following parent events, so they have a direct economic meaning. Alternatively, we might ask which connections are most important relative to background activity. That is, which interactions contribute the most to the child event’s intensity. To do so, we simple normalize all connection weights by their child weight background rates. This normalization gives a somewhat different interpretation of the most important connections.
-		%
-		% The pair of links that stands out the most is those between price-improving add orders and price-deteriorating delete orders. Thus, the model identifies the main driving force behind such delete orders: they are a response to price-improving orders on the same side of the book. In fact, “response” may not be the right description: these orders are likely to come from the same trading algorithm posted an add order above the best bid, and then immediately deleting that order if it fails to execute. (By looking at the impulse response on this connection we can get a better idea of the typical amount of time traders are willing to wait for an execution). The value of these weights is around 120, which means that the expected number of such delete orders following a price-improving add order is 120 times greater than the expected number of such delete order generated as “background” activity. Furthermore, the reverse link becomes clear after normalization: price-deteriorating deletions precede price-improving orders on the same side of the book. These two pairs of connections form a loop that produces cycles of “flickering” quotes: quick, repeated additions and deletions of price-improving liquidity.
-		%
-		% Another pair of connections that appears much more clearly under this normalization is that between executions and subsequent executions. It is well-known that trades are “clustered” in time. As trades are relatively rare events, this clustering is less prominent in the raw weight estimates. After normalization, we recover the observation that executions “generate” additional executions on the same side of the book. According to the model estimates, clustering accounts for around 60 times as many executions at the top of the book as exogenous executions at the best offer, and approximately 40 times as many for price-reducing trades.
-		% 
-		% Finally, it is interesting to note the order of importance between the execute-add connections reverses under this normalization: price-deteriorating trades have a more substantial impact on the probability of observing price-improving orders on the opposite side of the book than they do on the likelihood of add orders at the top of the book.
+		Market orders also have a strong connection to subsequent cancellations. Market orders that worsen the spread are followed by cancellations at the offer on either side of the book. This effect is interesting because it is at odds with relationship between market order and limit orders. Cancellations on the opposite side of the book is consistent with traders replacing orders at an improved offer. There appears to be a cautious response (cancellations) and an assertive response (limit orders) to these trades.
 
 		% fig:weights_full_sample
-		\begin{sidewaysfigure}[ht!]
+		\begin{sidewaysfigure}[p]
 			\small
 			\linespread{1}
 			\centering
@@ -380,21 +351,23 @@
 			\label{fig:weights_full_sample}
 		\end{sidewaysfigure}
 
+		Next, we turn our attention to the normalized weight matrix on the right of Figure \ref{fig:weights_full_sample}. In this figure, the median point-estimates of $W_{m,n}$ are divided by the median point estimates of $\lambda_{0,n}$. The resulting values are therefore the relative impacts on the child node (the units are expected events divided by expected events per second). This view allows us to explore which events have the biggest effects at the event level and accounts for the fact that some events are more frequent than others. These are not necessarily the most import connections from the view of explaining the data as a whole.
+
+		The biggest change is that the connection between limit orders that change the improve the offer price and cancellations that worsen the offer is more prominent. In fact, they are the largest relative connections in the model. Thus, the model identifies the main driving force behind such delete orders: they are a response to price-improving orders on the same side of the book. “Response” may not be the right description: these orders are likely to come from the same trading algorithm posted an add order above the best bid, and then immediately deleting that order if it fails to execute. The value of these weights is around 120, which means that the expected number of such delete orders following a price-improving add order is 120 times greater than the expected number of such delete order generated per second as “background” activity.
+
+		The relative view also further highlights the connection between cancellations that worsen the offer and limit orders that improve the offer. Thus, in this view the complete fleeting order (or ``flickering'' quotes) cycle is made particularly clear.
+
+		The relative view further highlights the connections between market orders and limit orders, except that market order that worsen the offer have larger relative impact on limit order that improve the offer than on limit orders that do not. Another pair of connections that appears much more clearly under this normalization is that between executions and subsequent executions. After normalization, we see the magnitude of the clustering effect more clearly: trades are expected to generate between 40 and 60 times as many trades as we would expect to occur in one second due to exogenous supply and demand alone, depending on whether they exhaust liquidity at the offer or not.
+
+		Overall, the biggest change seen by switching to the relative view is on connections to limit orders and cancellations that improve and worsen the offer. The raw weights on these events tend to have a similar magnitude to their counterparts that do not change the offer, but they are occur about a quarter as often. The relative view does not simply extenuate the weights for rare events, however: trades are even less commonly observed, but there is no qualitative difference between the raw and relative views of the impacts of limit order and cancellations on their intensity.
+
 	\subsection{Impulse Response}
-		Beyond the strength of connections between events, it is necessary to discuss the timescale of these interactions. The median impulse response is the impulse response function evaluated at the posterior median point-estimator of the relevant parameters. Figure \ref{fig:impulse_full_sample} plots the median impulse responses of the four pairs of connections discussed in the previous section.
+		The timescale of interactions is also important. I define the median impulse response as the impulse response function evaluated at the posterior median point-estimate, $\hat{\phi}_{m,n}(t) = \phi_{m,n} \left( t \mid \hat{\mu}_{m,n}, \hat{\tau}_{m,n} \right)$. There is substantial variation in the timing of reactions. The response self-exciting response of market orders is nearly instantaneous, whereas the weak connections from limit orders and cancellations to market orders operate at timescales on the order of seconds.
 
-		One thing to note is that, in addition to the magnitude, the timing of the connections is symmetric in all four cases.
-
-		Figure \ref{fig:impulse_full_sample} shows the delay in response to price-deteriorating trades of both add orders at the opposite-side best price, and that improve the best offer on the opposite side of the book. Both reactions peak between one microsecond (1/100000) and one millisecond (1/1000), where the bulk of their mass concentrates, and of the four connections shown, they are the fastest. It is interesting to note that the response by limit orders that improve the offer is faster than the response of limit order at the offer, which is consistent with offers queueing behind a newly established best price.
-
-		The impulse response of deletions to price-deteriorating executions takes place on a longer timescale, with a maximum intensity attained around one millisecond, while the intensity of delete orders following price-improving add orders peaks between one millisecond and one second. Thus, so-called "flickering orders" are in fact permitted to sit for a relatively extended period before being canceled.
-
-		It is worth briefly contrasting these results with results based on exponential impulse response functions. An exponential impulse response function creates an immediate increase in the intensity of child events. In contrast, with a logarithmic-normal impulse response, there is a lag between the time of a parent event and the time it generates a “spike” in the child event intensity. At timescales on the order of minutes, the distinction is unimportant. As demonstrated by Figure \ref{fig:impulse_full_sample}, however, interactions between order book events take place on timescales measured in milliseconds: on this timescale the difference is meaningful.
-
-		Figure \ref{fig:intensity_SIG} shows an example of a fitted intensity for SIG. The intensity is estimated using the posterior median of the model parameters. The top panel shows the estimated intensity of market sell orders that decrease the best bid. The bottom panel is a scatterplot of all events between 10:30 and 11:00, with the market sell events highlighted in blue. The fitted intensity appears as a sequence of spikes that sometimes--but not always--precede events on the same channel. The spikes result principally from events off of the highlighted node. Note the prominent spike between 10:40 and 10:50 that appears near the end of the most intense cluster of activity during this period. None of the events in that cluster are market sell orders, and the spike is not immediately followed by an event.
+		Figure \ref{fig:impulse_full_sample} plots the median impulse responses of four pairs of connections discussed above. I plot the responses in log time to facilitate interpretation. In log time, the response is normally distributed. The plots on the left show the response to market orders that worsen the offer of limit orders at the offer (above) as well as limit orders that improve the offer (below). Both reactions peak between one microsecond ($10^{-6}$ seconds) and one millisecond ($10^{-3}$ seconds), where their probability-mass concentrates, and of the four connections shown, these are the fastest. It is interesting to note that the response by limit orders that improve the offer is faster than the response of limit order at the offer, consistent with offers queueing behind a newly established best price.
 
 		% fig:impulse_full_sample
-		\begin{figure}[ht!]
+		\begin{figure}[p]
 			\small
 			\linespread{1}
 			\centering
@@ -406,8 +379,14 @@
 			\caption*{Note: The figure shows the median impulse response for selected parent-child event connection pairs across the full sample. The horizontal axis is logarithmic time to improve interoperability. The figure demonstrates that important connections operate at timescales from one microsecond to one second, that estimates of connections pairs are typically symmetric, and that the model identifies the response to parents as a localized "spike" in the probability of child events.}
 		\end{figure}
 
+		The left side of Figure \ref{fig:impulse_full_sample} shows the response of cancellations to market orders that worsen the offer (above) and to limit orders that improve the offer (below). The impulse response of deletions to market orders attains a maximum intensity around one millisecond, while the intensity of cancellation orders limit orders reaches a peak between one millisecond and one second. Thus, so-called ``flickering orders'' are in fact permitted to sit for a relatively extended period before being canceled. The reverse response of limit orders following cancellations (not shown) occurs nearly instantaneously, suggesting that such events are effectively replace orders.
+
+		It is worth briefly contrasting these results with results based on exponential impulse response functions. An exponential impulse response function creates an immediate increase in the intensity of child events. In contrast, with a logarithmic-normal impulse response, there is a lag between the time of a parent event and the time child event intensity spikes. Measured at timescales on the order of minutes (or even seconds), the distinction appears unimportant. As these results demonstrate, however, interactions between order book events take place on timescales measured in milliseconds, and on this timescale the difference is meaningful.
+
+		Figure \ref{fig:intensity_SIG} gives a better sense of the character of the impulse response by showing an example of a fitted intensity for SIG. The intensity is estimated using the posterior median of the model parameters. The top panel shows the estimated intensity of market sell orders that decrease the best bid between 10:30 and 11:00, and the bottom panel display a scatterplot of all events during the same period with market sell events highlighted in blue. At this scale, the fitted intensity appears as a sequence of spikes that are principally induced by events off of the highlighted node. The spikes sometimes--but not always--precede events on the channel. All of the large spikes between 10:30 and 10:40 are followed by market sell orders, but the isolated spike around 10:48, which appears at the end of an intense cluster of activity, is not immediately followed by an event.
+
 		% fig:intensity_SIG
-		\begin{figure}[t!]
+		\begin{figure}[p]
 			\small
 			\linespread{1}
 			\centering
@@ -418,28 +397,12 @@
 		\end{figure}
 
 	\subsection{Likelihood \& Stability}
-		The features identified by the model thus far are encouraging, but do they explain the data well? Next, I briefly examine the issues of model fit and stability. Log-likelihood measures model fit. More precisely, I compare the log-likelihood of model estimates to a standard (homogeneous) Poisson process with a constant intensity vector, which I refer to as the “baseline” model. The maximum of the absolute values of the eigenvalues of the connection matrix determines the stability of the model. Models with stability value higher than one are unstable: with positive probability, they generate an infinite number of events in any finite amount of time. At the other extreme, a model with a stability value of zero is a homogeneous Poisson process.
+		The features identified by the model thus far are encouraging, but do they explain the data well? Next, I briefly examine the issues of model fit and stability. The log-likelihood in \eqref{eqn:likelihood} measures model fit. In particular, I compare the log-likelihood of model estimates to a standard (homogeneous) Poisson process with a constant intensity vector, which serves as a “baseline” model. The maximum of the absolute values of the eigenvalues of the connection matrix determines the stability of the model. Models with a stability value higher than one are unstable: with positive probability, they generate an infinite number of events in a finite amount of time. At the other extreme, a model with a stability value of zero is a homogeneous Poisson process.
 
-		% eqn:likelihood
-		\begin{align}
-			p(s, c \mid \hat{\theta}) &= \prod_{n=1}^{N} \mathcal{PP} \left( \lambda_n^{(0)}(t) + \sum_{m=1}^{M} \phi_{m , n}(t) \right) \notag \\
-			&= \prod_{n=1}^N \exp -\left( \int_{0}^{T} \! \lambda_n^{(0)}(t) + \sum_{m=1}^{M} \phi_{m , n}(t) \ \mathrm{d}t \right) \notag \\
-			& \ \ \ \ \ \times \prod_{m'=1}^M \left( \lambda_n^{(0)}(s_{m'}) + \sum_{m=1}^{M} \phi_{m , n}(s_{m'}) \right)^{\mathbb{I} (c_{m'} = n)} \notag \\
-			&= \prod_{n=1}^N \exp -\left(T \lambda_n^{(0)} + \sum_{m=1}^M W_{m,n} \right) \prod_{c_{m'}=n} \left( \lambda_n^{(0)} + \sum_{m=1}^{M} \phi_{m , n}(s_{m'}) \right)
-		\end{align}
-
-		Figure \ref{fig:distributions} compares the fit of the network model versus the baseline model. For each stock, the point-estimator of the network model is the approximate posterior median based on the MCMC sampling algorithm outlined above. Setting the weight matrix to zero and computing the approximate median of the posterior distribution by direct sampling produces a Bayesian point-estimator of the baseline model. I compute the values in the histogram shown as follows. For each stock, I randomly select 100 subsamples consisting of 180 events each from the same dataset used to construct the point estimates. On each of the subsamples, I compute the ratio of the log-likelihood of the network and baseline models divided by the number of events in the sample and record the average of this value across subsamples. The resulting histogram shows that the network model improves on the baseline model by approximately 4 "bits per event"; the minimum improvement is 1.5 bits per events, and the maximum exceeds 7. These results quantify the extent to which a complex interaction of events determines order book dynamics.
-
-		The range of values in Figure \ref{fig:distributions} demonstrates that the network model fits some stocks better than others. Figure \ref{fig:likelihood_scatter} compares the fit of the model to characteristics of each stock’s order book. Specifically, for each stock, I use the same message data used to identify order book events to calculate four attributes of the message data. The characteristics are defined as follows: $Volume$ is the total number of shares traded as identified by execution messages, including executions against hidden orders; $Price$ is the average midprice across all order book updates; $Volatility$ is the standard deviation of $Price$; $Spread$ is the average bid-ask spread across all order book updates. The scatterplots in Figure \ref{fig:likelihood_scatter} demonstrate that the quality of the network model fit depends on these characteristics. The model appears to work better for stocks with higher trade volumes, lower average prices, lower price volatility, and smaller bid-ask spreads.
-
-		Confirming model stability is essential for two reasons. First, because the network model is only physically meaningful if it is stable. Second, because an unstable model cannot serve as a useful order book simulator. Figure \ref{fig:distributions} presents a histogram of the stability values based on median point estimates. The median value is approximately 0.85, which is well below both the instability threshold (1.0) and estimates reported in studies of related models (e.g., REF). Two of the models have unstable dynamics according to this measure. Figure \ref{fig:stability_scatter} shows scatterplots of stability versus the microstructure characteristics from Figure \ref{fig:likelihood_scatter}. Stability appears to decrease with lower trading volume but is otherwise uncorrelated with the remaining variables. Overall, these results demonstrate that the model learns parameter values leading to highly inhomogeneous, but stable, dynamics.
-
-		The results thus far demonstrate that including interactions between events improves model fit relative to a baseline model. They also show that some interaction terms are stronger than others, in both an absolute and relative sense. We can further analyze the importance of interactions terms by answering the following question: “How much does the model fit change if I turn off the weaker connections?” I answer this question by performing a simple experiment. For a given stock I select a set of threshold values based on the distribution of the estimated matrix weights. Under the minimum threshold, the model includes nearly all of the of the interaction terms, while at the maximum the model reduces to the baseline homogeneous Poisson process. For each threshold, I measure the in-sample and out-of-sample likelihood using subsamples as described above.
-
-		Figures \ref{fig:threshold_LLY} and \ref{fig:threshold_SIG} demonstrate the results for two randomly selected stocks (LLY and SIG). The plots display similar patterns: including weights whose logarithm is less than -4—-which amounts to ignoring around half the interaction terms--has little or no effect on the fit of the model. In fact, retaining weights above 0.1 (about a quarter of the interaction terms) achieves the majority of the benefit of the network structure. These observations provide a new perspective on Figure \ref{fig:weights_full_sample}. Figure \ref{fig:weights_threshold} recreates the plot of the median connection matrix, but this time applies a hard threshold of -2 to the logarithm of the raw weights. The interaction terms that survive are those that were identified earlier, meaning that these are in fact the essential elements of typical order book dynamics.
+		Figure \ref{fig:distributions} compares the fit of the network model versus the baseline model. For each stock, the point-estimator of the network model is the approximate posterior median of the Gibbs sample described above. Setting the weight matrix to zero and computing the approximate median of the posterior distribution by direct sampling produces a Bayesian point-estimator of the baseline model. I compute the values in the histogram as follows. For each stock, I randomly select 100 subsamples consisting of 180 events each from the same dataset used to construct the point estimates. On each of the subsamples, I compute the ratio of the log-likelihood of the network and baseline models divided by the number of events in the sample and record the average of this value across subsamples. The resulting histogram shows that the network model improves on the baseline model by approximately 4 ``bits per event'': the minimum improvement is 1.5 bits per events, and the maximum exceeds 7.0. These results quantify the extent to which a complex interaction of events determines order book dynamics.
 
 		% fig:distributions
-		\begin{figure}[ht!]
+		\begin{figure}[p]
 			\small
 			\linespread{1}
 			\centering
@@ -451,8 +414,12 @@
 			\caption*{Note: The figure shows histograms of the likelihood and stability of model estimates across the full sample. To compute the likelihood, I select random subsamples from the full sample of daily events on which the model was estimated and average the likelihood across subsamples. The values shown are the differences between the inhomogeneous and homogeneous model divided by the total number of events in each subsample. Stability is computed as the absolute value of the largest eigenvalues of the connection weight matrix. Values below one are stable; values at and above one are unstable.  The figure demonstrates that the network model produces a better in-sample fit to the data and that the model estimates are stable in almost all cases.}
 		\end{figure}
 
+		The wide range of values in Figure \ref{fig:distributions} demonstrates that the network model fits some stocks better than others. Figure \ref{fig:likelihood_scatter} compares the fit of the model to characteristics of each stock’s order book. Specifically, for each stock, I use the same message data used to identify order book events to calculate four attributes of the message data. The characteristics are defined as follows: $Volume$ is the total number of shares traded as identified by execution messages, including executions against hidden orders; $Price$ is the average midprice across all order book updates; $Volatility$ is the standard deviation of $Price$; $Spread$ is the average bid-ask spread across all order book updates. The scatterplots in Figure \ref{fig:likelihood_scatter} demonstrate that the quality of the network model fit depends on these characteristics. The model appears to work better for stocks with higher trade volumes, lower average prices, lower price volatility, and smaller bid-ask spreads.
+
+		Confirming model stability is essential for two reasons. First, because the network model is only physically meaningful if it is stable. Second, because an unstable model cannot serve as a useful order book simulator. Figure \ref{fig:distributions} presents a histogram of the stability values based on median point estimates. The median value is approximately 0.85, which is well below both the instability threshold (1.0) and estimates reported in studies of related models (e.g., REF). Two of the models have unstable dynamics according to this measure. Figure \ref{fig:stability_scatter} shows scatterplots of stability versus the microstructure characteristics from Figure \ref{fig:likelihood_scatter}. Stability appears to decrease with lower trading volume but is otherwise uncorrelated with the remaining variables. Overall, these results demonstrate that the model learns parameter values leading to highly inhomogeneous, but stable, dynamics.
+
 		% fig:likelihood_scatter
-		\begin{figure}[ht!]
+		\begin{figure}[p]
 			\small
 			\linespread{1}
 			\centering
@@ -465,7 +432,7 @@
 		\end{figure}
 
 		% fig:stability_scatter
-		\begin{figure}[ht!]
+		\begin{figure}[p]
 			\small
 			\linespread{1}
 			\centering
@@ -477,34 +444,50 @@
 			\caption*{Note: The figure shows scatterplots of the stability of estimated models versus properties of the order books calculated from the message data used to identified order book events (i.e., the same day and hours). Volume is the total number of shares traded, including executions against hidden orders; Price is the average midprice across order book updates; Volatility is the standard deviation of Price; Spread is the average bid-ask spread across order book updates. Stability is the maximum absolute value of the estimated connection weight matrix.}
 		\end{figure}
 
+
+		The results thus far demonstrate that including interactions between events improves model fit relative to a baseline model. They also show that some interaction terms are stronger than others, in both an absolute and relative sense. We can further analyze the importance of interactions terms by answering the following question: “How much does the model fit change if I turn off the weaker connections?” I answer this question by performing a simple experiment. For a given stock I select a set of threshold values based on the distribution of the estimated matrix weights. Under the minimum threshold, the model includes nearly all of the of the interaction terms, while at the maximum the model reduces to the baseline homogeneous Poisson process. For each threshold, I measure the in-sample and out-of-sample likelihood using subsamples as described above.
+
+		Figures \ref{fig:threshold_LLY} and \ref{fig:threshold_SIG} demonstrate the results for two randomly selected stocks (LLY and SIG). The plots display similar patterns: including weights whose logarithm is less than -4—-which amounts to ignoring around half the interaction terms--has little or no effect on the fit of the model. In fact, retaining weights above 0.1 (about a quarter of the interaction terms) achieves the majority of the benefit of the network structure. These observations provide a new perspective on Figure \ref{fig:weights_full_sample}. Figure \ref{fig:weights_threshold} recreates the plot of the median connection matrix, but this time applies a hard threshold of -2 to the logarithm of the raw weights. The interaction terms that survive are those that were identified earlier, meaning that these are in fact the essential elements of typical order book dynamics.
+
 		% fig:threshold_LLY
-		\begin{figure}[ht!]
+		% \begin{figure}[p]
+		% 	\small
+		% 	\linespread{1}
+		% 	\centering
+		% 	\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+		% 	\caption{Threshold Analysis (LLY)}
+		% 	\label{fig:threshold_LLY}
+		% 	\includegraphics[width=\textwidth]{chapter4/threshold_analysis}
+		% 	\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
+		% 	\caption*{Note: The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+		% \end{figure}
+
+		% fig:threshold_LLY
+		\begin{figure}[p]
 			\small
 			\linespread{1}
 			\centering
 			\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			\caption{Threshold Analysis (LLY)}
-			\label{fig:threshold_LLY}
 			\includegraphics[width=\textwidth]{chapter4/threshold_LLY}
-			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption*{Note: The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+			\caption[Threshold analysis for LLY]{Threshold analysis for LLY. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+			\label{fig:threshold_LLY}
 		\end{figure}
 
 		% fig:threshold_SIG
-		\begin{figure}[ht!]
+		\begin{figure}[p]
 			\small
 			\linespread{1}
 			\centering
 			\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			\caption{Threshold Analysis (SIG)}
-			\label{fig:threshold_SIG}
 			\includegraphics[width=\textwidth]{chapter4/threshold_SIG}
-			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption*{Note: The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+			\caption[Threshold analysis for SIG]{Threshold analysis for SIG. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+			\label{fig:threshold_SIG}
 		\end{figure}
 
 		% fig:weights_threshold
-		\begin{figure}[ht!]
+		\begin{figure}[p]
 			\small
 			\linespread{1}
 			\centering
