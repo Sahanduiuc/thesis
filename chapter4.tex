@@ -118,7 +118,7 @@
 			\centering
 			\label{fig:example_chapter4}
 			\includegraphics[width=\textwidth]{chapter4/example}
-			\captionsetup{skip=-30pt, labelsep=colon, font=footnotesize, width=\linewidth}
+			\captionsetup{skip=-20pt, labelsep=colon, font=footnotesize, width=\linewidth}
 			\caption[Example of a mutually-exciting Poisson process.]{Example of a mutually-exciting Poisson process. Event arrivals increase the intensity on both nodes. In the figure, the effect on the event node is twice as strong.}
 		\end{figure}
 
@@ -346,7 +346,7 @@
 			\linespread{1}
 			\centering
 			\includegraphics[width=\textwidth]{chapter4/weights_full_sample}
-			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth, skip=-20pt}
+			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
 			\caption[Median of event connection point-estimates: full sample]{Median of event connection point-estimates: full sample. The figure shows the median connection strength between event types across the full sample of stocks. Larger values indicate stronger connections, which are expected to generate a greater number of child events. (Left) The median of connection weight estimates using the raw weight matrix estimates. This figure identifies the most important connections in an absolute sense. (Right) The median connection weight matrix after normalizing parent-child weights by the estimated background rate of child events. This figure identifies the most important connections in a relative sense.}
 			\label{fig:weights_full_sample}
 		\end{sidewaysfigure}
@@ -371,12 +371,12 @@
 			\small
 			\linespread{1}
 			\centering
-			\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			\caption{Median Impulse Responses}
-			\label{fig:impulse_full_sample}
+			% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+			% \caption{Median Impulse Responses}
 			\includegraphics[width=\textwidth]{chapter4/impulse_full_sample}
-			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption*{Note: The figure shows the median impulse response for selected parent-child event connection pairs across the full sample. The horizontal axis is logarithmic time to improve interoperability. The figure demonstrates that important connections operate at timescales from one microsecond to one second, that estimates of connections pairs are typically symmetric, and that the model identifies the response to parents as a localized "spike" in the probability of child events.}
+			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+			\caption[Median impulse responses]{Median impulse responses. The figure shows the median impulse response for selected parent-child event connection pairs across the full sample. The horizontal axis is logarithmic time to improve interoperability. The figure demonstrates that important connections operate at timescales from one microsecond to one second, that estimates of connections pairs are typically symmetric, and that the model identifies the response to parents as a localized "spike" in the probability of child events.}
+			\label{fig:impulse_full_sample}
 		\end{figure}
 
 		The left side of Figure \ref{fig:impulse_full_sample} shows the response of cancellations to market orders that worsen the offer (above) and to limit orders that improve the offer (below). The impulse response of deletions to market orders attains a maximum intensity around one millisecond, while the intensity of cancellation orders limit orders reaches a peak between one millisecond and one second. Thus, so-called ``flickering orders'' are in fact permitted to sit for a relatively extended period before being canceled. The reverse response of limit orders following cancellations (not shown) occurs nearly instantaneously, suggesting that such events are effectively replace orders.
@@ -406,12 +406,12 @@
 			\small
 			\linespread{1}
 			\centering
-			\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			\caption{Distribution of Likelihood \& Stability}
-			\label{fig:distributions}
+			% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+			% \caption{Distribution of Likelihood \& Stability}
 			\includegraphics[width=\textwidth]{chapter4/distributions}
-			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption*{Note: The figure shows histograms of the likelihood and stability of model estimates across the full sample. To compute the likelihood, I select random subsamples from the full sample of daily events on which the model was estimated and average the likelihood across subsamples. The values shown are the differences between the inhomogeneous and homogeneous model divided by the total number of events in each subsample. Stability is computed as the absolute value of the largest eigenvalues of the connection weight matrix. Values below one are stable; values at and above one are unstable.  The figure demonstrates that the network model produces a better in-sample fit to the data and that the model estimates are stable in almost all cases.}
+			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+			\caption[Distribution of likelihood \& stability]{Distribution of likelihood \& stability. The figure shows histograms of the likelihood and stability of model estimates across the full sample. To compute the likelihood, I select random subsamples from the full sample of daily events on which the model was estimated and average the likelihood across subsamples. The values shown are the differences between the inhomogeneous and homogeneous model divided by the total number of events in each subsample. Stability is computed as the absolute value of the largest eigenvalues of the connection weight matrix. Values below one are stable; values at and above one are unstable.  The figure demonstrates that the network model produces a better in-sample fit to the data and that the model estimates are stable in almost all cases.}
+			\label{fig:distributions}
 		\end{figure}
 
 		The wide range of values in Figure \ref{fig:distributions} demonstrates that the network model fits some stocks better than others. Figure \ref{fig:likelihood_scatter} compares the fit of the model to characteristics of each stock’s order book. Specifically, for each stock, I use the same message data used to identify order book events to calculate four attributes of the message data. The characteristics are defined as follows: $Volume$ is the total number of shares traded as identified by execution messages, including executions against hidden orders; $Price$ is the average midprice across all order book updates; $Volatility$ is the standard deviation of $Price$; $Spread$ is the average bid-ask spread across all order book updates. The scatterplots in Figure \ref{fig:likelihood_scatter} demonstrate that the quality of the network model fit depends on these characteristics. The model appears to work better for stocks with higher trade volumes, lower average prices, lower price volatility, and smaller bid-ask spreads.
@@ -423,12 +423,12 @@
 			\small
 			\linespread{1}
 			\centering
-			\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			\caption{Likelihood vs. Order Book Characteristics}
-			\label{fig:likelihood_scatter}
+			% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+			% \caption{Likelihood vs. Order Book Characteristics}
 			\includegraphics[width=\textwidth]{chapter4/likelihood_scatter}
-			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption*{Note: The figure shows scatterplots of the likelihood of estimated models versus properties of the order books calculated from the message data used to identified order book events (i.e., the same day and hours). Volume is the total number of shares traded, including executions against hidden orders; Price is the average midprice across order book updates; Volatility is the standard deviation of Price; Spread is the average bid-ask spread across order book updates. The likelihood is the difference in likelihood between the network model and a standard Poisson model divided by the number of events.}
+			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+			\caption[Likelihood versus order book characteristics]{Likelihood versus order book characteristics. The figure shows scatterplots of the likelihood of estimated models versus properties of the order books calculated from the message data used to identified order book events (i.e., the same day and hours). Volume is the total number of shares traded, including executions against hidden orders; Price is the average midprice across order book updates; Volatility is the standard deviation of Price; Spread is the average bid-ask spread across order book updates. The likelihood is the difference in likelihood between the network model and a standard Poisson model divided by the number of events.}
+			\label{fig:likelihood_scatter}
 		\end{figure}
 
 		% fig:stability_scatter
@@ -436,12 +436,12 @@
 			\small
 			\linespread{1}
 			\centering
-			\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			\caption{Stability vs. Order Book Characteristics}
-			\label{fig:stability_scatter}
+			% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+			% \caption{Stability vs. Order Book Characteristics}
 			\includegraphics[width=\textwidth]{chapter4/stability_scatter}
-			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption*{Note: The figure shows scatterplots of the stability of estimated models versus properties of the order books calculated from the message data used to identified order book events (i.e., the same day and hours). Volume is the total number of shares traded, including executions against hidden orders; Price is the average midprice across order book updates; Volatility is the standard deviation of Price; Spread is the average bid-ask spread across order book updates. Stability is the maximum absolute value of the estimated connection weight matrix.}
+			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+			\caption[Stability versus order book characteristics]{Stability versus order book characteristics. The figure shows scatterplots of the stability of estimated models versus properties of the order books calculated from the message data used to identified order book events (i.e., the same day and hours). Volume is the total number of shares traded, including executions against hidden orders; Price is the average midprice across order book updates; Volatility is the standard deviation of Price; Spread is the average bid-ask spread across order book updates. Stability is the maximum absolute value of the estimated connection weight matrix.}
+			\label{fig:stability_scatter}
 		\end{figure}
 
 
@@ -449,17 +449,17 @@
 
 		Figures \ref{fig:threshold_LLY} and \ref{fig:threshold_SIG} demonstrate the results for two randomly selected stocks (LLY and SIG). The plots display similar patterns: including weights whose logarithm is less than -4—-which amounts to ignoring around half the interaction terms--has little or no effect on the fit of the model. In fact, retaining weights above 0.1 (about a quarter of the interaction terms) achieves the majority of the benefit of the network structure. These observations provide a new perspective on Figure \ref{fig:weights_full_sample}. Figure \ref{fig:weights_threshold} recreates the plot of the median connection matrix, but this time applies a hard threshold of -2 to the logarithm of the raw weights. The interaction terms that survive are those that were identified earlier, meaning that these are in fact the essential elements of typical order book dynamics.
 
-		% fig:threshold_LLY
+		% fig:threshold_analysis
 		% \begin{figure}[p]
 		% 	\small
 		% 	\linespread{1}
 		% 	\centering
-		% 	\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-		% 	\caption{Threshold Analysis (LLY)}
-		% 	\label{fig:threshold_LLY}
+		% % 	\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+		% % 	\caption{Threshold Analysis (LLY)}
 		% 	\includegraphics[width=\textwidth]{chapter4/threshold_analysis}
 		% 	\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-		% 	\caption*{Note: The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+		% 	\caption[Threshold anaylsis with LLY and SIG]{Threshold anaylsis with LLY and SIG. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+		% \label{fig:threshold_analysis}
 		% \end{figure}
 
 		% fig:threshold_LLY
@@ -491,12 +491,12 @@
 			\small
 			\linespread{1}
 			\centering
-			\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			\caption{Composite Weights with Threshold}
-			\label{fig:weights_threshold}
+			% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+			% \caption{Composite Weights with Threshold}
 			\includegraphics[width=\textwidth]{chapter4/weights_threshold}
-			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption*{Note:}
+			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+			\caption[Composite weights with threshold]{Composite weights with threshold. Shows the median estimate of connections weights after applying 20\% threshold.}
+			\label{fig:weights_threshold}
 		\end{figure}
 
 
