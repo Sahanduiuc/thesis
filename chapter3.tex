@@ -46,7 +46,18 @@
 	My main results rely on the reconstructed order books of a collection of 111 stocks for each trading day (9:30 am to 4:00 pm) between January 1, 2013, and December 31, 2013. The stocks are chosen to match those in a data set used in multiple recent studies of high-frequency trade (e.g. \citet{Brogaard2014}). Nine of the 120 stocks in that data set (BARE, CHTT, KTII, BW, RVI, PPD, KNOL, ABD, and GENZ) delisted before 2013. The remaining sample consists of 56 NYSE-listed stocks and 55 Nasdaq-listed stocks. As shown in Figure \ref{fig:crsp}, the sample contains a diverse set of stocks based on average daily returns, volume, size, and price.
 
 
-	% FIGURE: Descriptive Statistics
+	% fig:crsp
+	\begin{figure}[p]
+		\small
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+		% \caption{Sample stock characteristics}
+		\includegraphics[width=\textwidth]{chapter3/crsp}
+		\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+		\caption[Sample stock characteristics]{Sample stock characteristics. These figures demonstrate the distribution of daily average stock characteristics for my sample. $\log(Price)$ is the logarithm of the daily closing price; $\log(Volume)$ is the logarithm of the daily number of shares sold; $Return$ is the daily holding period return in basis points; $\log(Size)$ is the logarithm of the daily market capitalization in thousands. Averages for each stock  are calculated from all days in the period Jan. 1, 2013 - Dec. 31, 2013 for which complete limit order book data is available.}
+		\label{fig:crsp}
+	\end{figure}
 
 
 	ITCH data has several advantages compared to alternative sources of order book data. First, it covers equity markets that are the most relevant to financial research (Nasdaq and NYSE): other high-quality sources of order book data come from smaller, less active exchanges. Second, it contains message data describing every update to the limit order book, as opposed to order book snapshots. The distinction matters because messages provide information beyond the information in order book snapshots. For example, the calculation of the high-frequency trade activity metric in this paper requires more than order book snapshots. Lastly, Nasdaq makes ITCH data freely available to academic researchers under a nondisclosure agreement.
@@ -65,7 +76,17 @@
 	% Examples
 	Figure \ref{fig:examples} shows the average shape of a random selection of stocks in my sample. The average volume displayed at each level in the figure is the simple average of the nanosecond time stamped order book updates (i.e. the averages don't take account of the duration between updates). We see that order books display a wide range of possible shapes. The overall average of the sample is similar to that of BRE; its liquidity is concentrated away from the best quotes, around the level-5 quote, and the average liquidity at all levels is small, between two and three round lots.  The order book of PFE is typical of stocks with low price-to-tick ratios: liquidity concentrates towards the best quotes, and overall liquidity is orders of magnitude larger than the typical stock. GOOG, on the other hand, has a large price-to-tick ratio. Its order book is flat, and features a pronounced increase at the best quotes. None of its levels exceed two round lots in average displayed liquidity. Overall, average order book shapes are symmetric across bid and ask sides of the book.
 
-	% FIGURE: Order Book Examples
+	% fig:examples
+	\begin{figure}[p]
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+		% \caption{Examples of average limit order book shapes}
+		\includegraphics[width=\textwidth]{chapter3/example_lob}
+		\captionsetup{skip=-20pt, font=footnotesize, justification=justified, width=\linewidth}
+		\caption[Examples of average limit order book shapes]{Examples of average limit order book shapes. The figure shows the average shape of randomly selected large (top row), medium (middle row), and small (bottom row) firms. Average shapes are calculated from all order book updates in the ITCH database during 2013.}
+		\label{fig:examples}
+	\end{figure}
 
 	% PCA Description
 	I explore the determinants of the shape of limit order books by applying principal component analysis to order book snapshots. Principal component analysis is a method of dimensionality reduction; instead of describing order books in terms of ten levels, we wish to describe it using two or three characteristic shapes. Principal component analysis is a linear method, so the resulting description will still take a simple mathematical form.
@@ -78,6 +99,29 @@
 
 	% Results
 	Figure \ref{fig:pca} shows the results. The top panel contains the average of the first three rows of $W^T$ across stock-days in the sample. Not surprisingly, the bid and ask sides are symmetric. The loadings on the first factor are spread evenly across the levels of the book, with the weight decreasing slightly towards the tenth level. The second factor places positive weight on the five highest levels of the order book (levels 1 through 5), and negative weight on the five lowest (levels 6 through 10). The third factor places negative weight on the highest (levels 1 through 3) and lowest (levels 8 through 10) levels, and positive weight on the levels in-between. The bottom panel shows the average eigenvalues associated with the principal components. The eigenvalues reveal that the first factor plays a dominant role in determining the shape of the order book, explaining around 37\% of the variation on either side of the book, while the first three factors combined explain approximately 65\%.
+
+	% fig:factors
+	\begin{figure}[p]
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+		% \caption{Principal component analysis of order books}
+		\includegraphics[width=\textwidth]{chapter3/factors}
+		\captionsetup{skip=-20pt, font=footnotesize, justification=justified, width=\linewidth}
+		\caption[Principal component analysis of order books]{Principal component analysis of order books. The figures show the results of the principal component analysis of daily limit order book volume data. For each day in the sample I perform PCA on the daily order book history. I then calculate the average of the stock-day eigenvectors ($top$) and the average of the stock-day eigenvalues ($bottom$). Averages are calculated from all order book updates in the ITCH database during 2013 for the stocks in my sample.}
+		\label{fig:pca}
+	\end{figure}
+
+	% fig:eigenvalues
+	\begin{figure}[t]
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+		% \caption{Principal component analysis of order books (cont.)}
+		\includegraphics[width=\textwidth]{chapter3/eigenvalues}
+		\captionsetup{skip=-20pt, font=footnotesize, justification=justified, width=\linewidth}
+		\caption*{Figure \ref{fig:pca} (continued). The figures show the results of the principal component analysis of daily limit order book volume data. For each day in the sample I perform PCA on the daily order book history. I then calculate the average of the stock-day eigenvectors ($top$) and the average of the stock-day eigenvalues ($bottom$). Averages are calculated from all order book updates in the ITCH database during 2013 for the stocks in my sample.}
+	\end{figure}
 
 	Based on these results I propose three factors that I expect, due to their importance in determining the shape of the order book, also contain information about price movements. Borrowing from similar analyses in the asset pricing literature, I refer to these factors as the ``level'', ``slope'', and ``curvature'' of the order book. The level factor is defined as the simple average across levels of the book; slope is defined as the average of the first five levels of the book minus the average of the last five levels of the book; curvature is defined as the average of the middle four levels of the book minus the average of the top and bottom three levels of the book. The weights of these factors mimic the weights of the first three eigenvectors shown in Figure \ref{fig:pca}. In the next section, I analyze the information content these proposed factors.
 
@@ -117,13 +161,149 @@
 	% Results
 	Panel A of Table \ref{tab:var} shows the results for the equation with returns as the dependent variable. In agreement with prior studies, I find that the signs of the lagged return coefficients are negative and statistically significant for all lags up to four minutes. The loadings on lagged level and slope factors for bids (asks) are all positive (negative), as expected, and the coefficients are statistically significant at all lags. The signs of the lagged curvature factors are the opposite of the level and slope factors for all but two of the coefficients (which are not statistically significant). For each of the factors, the estimated coefficients decrease in magnitude monotonically as the number of lags increases, and the coefficients are approximately symmetric across the bid and ask sides of the book.
 
-
-	% TABLE: VAR (Returns)
-
+	% tab:var
+	\begin{table}[p]
+		\small
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+		% \caption{Vector autoregression estimates}
+		\begin{tabular}{lrrrrr}
+		\toprule
+		& \multicolumn{5}{c}{\textbf{Panel A (dependent variable: $Ret_t$)}} \\
+		\cmidrule(l{2pt}r{2pt}){2-6}
+		& $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ \\
+		\midrule
+		$Ret_{t-k}$ 			& -0.05*** & -0.03*** & -0.01*** & -0.02*** & -0.00 \\
+								& (-5.80) & (-5.92) & (-4.82) & (-6.93) & (-0.91) \\
+		$\Delta Level^B_{t-k}$ 	& 3.87*** & 2.71*** & 1.96*** & 1.12*** & 1.01** \\ % x 10 ** 7
+								& (6.01) & (5.89) & (4.72) & (4.11) & (1.98) \\
+		$\Delta Level^A_{t-k}$ 	& -4.09*** & -2.62*** & -1.90*** & -1.36*** & -0.76*** \\ % x 10 ** 7
+								& (-6.62) & (-5.27) & (-5.22) & (-2.87) & (-2.67) \\
+		$\Delta Slope^B_{t-k}$	& 1.00*** & 0.76*** & 0.63*** & 0.51*** & 0.48*** \\ % x 10 ** 7
+								& (5.18) & (4.57) & (4.05) & (4.12) & (3.47) \\
+		$\Delta Slope^A_{t-k}$ 	& -1.20*** & -0.81*** & -0.76*** & -0.61*** & -0.36*** \\ % x 10 ** 7
+								& (-5.27) & (-4.22) & (-4.70) & (-4.52) & (-3.54) \\
+		$\Delta Curve^B_{t-k}$ 	& -0.61*** & -0.24** & -0.20** & -0.11 & 0.03 \\ % x 10 ** 7
+								& (-5.66) & (-2.02) & (-2.16) & (-1.51) & (0.26) \\
+		$\Delta Curve^A_{t-k}$ 	& 0.41*** & 0.41*** & 0.29*** & 0.24** & 0.12** \\ % x 10 ** 7
+								& (5.26) & (4.14) & (4.52) & (2.86) & (2.06) \\
+		\bottomrule
+		\end{tabular}
+		\captionsetup{position=below, font=footnotesize, justification=justified, width=0.75\linewidth}
+		\caption[Vector autoregression estimates]{Vector autoregression estimates. The tables shows the average coefficient estimates of the vector autoregressive model of the limit order book: $X_t = \sum_{k=1}^{5} A_{k} X_{t-k}.$ The components of $X_t$ are one-minute mid-price returns and the changes to the level, slope, and curvature factors for each side of the order book. The table presents the stock-day average of coefficient estimate and $t$-values based on double-clustered standard errors. Coefficient estimates for the shape factors are scaled by $10^7$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
+		\label{tab:var}
+	\end{table}
 
 	To give these estimates economic meaning, I calculate the effect of a one standard deviation change in each of the independent variables on the return in the following period. For the coefficient on one minute lagged returns, this equals to -4.5\% of one standard deviation in future returns. For the slope and curvature factors, a one standard deviation change on the bid (ask) side is associated with a future return of approximately 7\% (9.5\%) and 6.5\% (5\%) of one standard deviation in returns, respectively. For level factors, the effects are approximately twice as large: slightly over 12\% for the bids and nearly 14\% for asks. Thus, not only are the order book shape coefficients statistically significant, but they are also associated with economically significant effects on future returns. Interestingly, the ordering of the magnitudes of these effects agrees with the ordering of the factors importance in explaining the shape of the limit order book.
 
-	What about the dynamics of the order book factors themselves? Panels B-C of Table \ref{tab:var} show estimates of the equations with level, slope, and curvature factors as the dependent variable, respectively. The estimates for the level equation indicate that, similar to returns, changes in the level factor are negatively autocorrelated, with the estimated coefficients decreasing monotonically as the number of lags increases. Not only are the level factors autocorrelated, but future changes on one side of the book are positively correlated with lagged changes in the level factor on the opposite side of the book. In fact, the magnitude of the autocorrelation is approximately equal to the magnitude of the cross correlation. Similar results hold for the slope and curvature equations, except that the cross correlation is considerably smaller than the autocorrelation in both cases. For all three of the factors, I find statistically significant relations between lagged returns and changes to factors. For level and curvature, lagged returns are negatively (positively) correlated with future changes on the bid (ask) side. For the slope equations, the relationship reverses.
+	What about the dynamics of the order book factors themselves? Panels B-D of Table \ref{tab:var} show estimates of the equations with level, slope, and curvature factors as the dependent variable, respectively. The estimates for the level equation indicate that, similar to returns, changes in the level factor are negatively autocorrelated, with the estimated coefficients decreasing monotonically as the number of lags increases. Not only are the level factors autocorrelated, but future changes on one side of the book are positively correlated with lagged changes in the level factor on the opposite side of the book. In fact, the magnitude of the autocorrelation is approximately equal to the magnitude of the cross correlation. Similar results hold for the slope and curvature equations, except that the cross correlation is considerably smaller than the autocorrelation in both cases. For all three of the factors, I find statistically significant relations between lagged returns and changes to factors. For level and curvature, lagged returns are negatively (positively) correlated with future changes on the bid (ask) side. For the slope equations, the relationship reverses.
+
+	% tab:var (cont.)
+	\begin{sidewaystable}[p]
+		\small
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=0.91\linewidth}
+		% \caption*{Table \ref{tab:var} (continued)}
+		\begin{tabular}{lrrrrrrrrrr}
+		\toprule
+		& \multicolumn{10}{c}{\textbf{Panel B (dependent variable: $\Delta Level_t$)}} \\
+		\midrule
+		& \multicolumn{5}{c}{$Bid$} & \multicolumn{5}{c}{$Ask$} \\
+		\cmidrule(l{2pt}r{2pt}){2-6} \cmidrule(l{2pt}r{2pt}){7-11}
+		& $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ & $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ \\
+		\midrule
+		$Ret_{t-k}$ 			& -0.85* & -1.71*** & -1.43*** & -1.13*** & -1.08*** & 1.17*** & 0.97*** & 1.10*** & 1.08*** & 0.85*** \\  % x 10 ** 4
+								& (-1.80) & (-3.22) & (-3.75) & (-3.94) & (-4.03) & (3.46) & (3.55) & (3.98) & (3.99) & (3.62) \\
+		$\Delta Level^B_{t-k}$ 	& -0.186*** & -0.11*** & -0.09*** & -0.06*** & -0.02** & 0.15*** & 0.12*** & 0.07*** & 0.06*** & 0.05*** \\
+								& (-5.43) & (-4.67) & (-6.01) & (-5.38) & (-2.19) & (5.84) & (5.61) & (6.18) & (6.11) & (5.75) \\
+		$\Delta Level^A_{t-k}$ 	& 0.15*** & 0.12*** & 0.07*** & 0.05*** & 0.05*** & -0.18*** & -0.11*** & -0.09*** & -0.06*** & -0.02** \\
+								& (5.92) & (5.83) & (6.51) & (6.41) & (5.85) & (-5.49) 	& (-4.69) & (-6.04) & (-5.42) & (-2.50) \\
+		$\Delta Slope^B_{t-k}$ 	& -0.03*** & -0.02*** & -0.01*** & -0.01*** & -0.01*** & -0.01*** & -0.00  & -0.00 & -0.00** & -0.01*** \\
+								& (-6.56) & (-4.76) & (-5.07) & (-4.95) & (-5.10) & (-3.90) & (-1.66) & (-0.50) & (-2.15) & (-3.29) \\
+		$\Delta Slope^A_{t-k}$ 	& -0.01*** & -0.00 & -0.00 & -0.00 & -0.00*** & -0.03*** & -0.01*** & -0.01*** & -0.01*** & -0.01*** \\
+								& (-4.37) & (-1.26) & (-0.56) & (-0.88) & (-2.87) & (-6.38) & (-4.01) & (-5.01) & (-5.70) & (-5.48) \\
+		$\Delta Curve^B_{t-k}$ 	& 0.01*** & 0.00** & 0.00 & 0.00 & 0.00 & 0.00 & -0.00*** & -0.01*** & -0.00*** & -0.00 \\
+								& (5.07) & (2.25) & (0.27) & (0.036) & (0.62) & (0.82) & (-2.97) & (-4.10) & (-3.67) & (-1.73) \\
+		$\Delta Curve^A_{t-k}$ 	& 0.00 & -0.00** & -0.00*** & -0.00*** & -0.000 & 0.012*** & 0.01*** & 0.00* & 0.00 & 0.00** \\
+								& (1.52) & (-2.45) & (-3.97) & (-3.59) & (-0.78) & (5.76) & (3.66) & (1.69) & (1.36) & (2.07) \\
+		\bottomrule
+		\end{tabular}
+		\captionsetup{position=below, font=footnotesize, justification=justified, width=0.92\linewidth}
+		\caption*{Table \ref{tab:var} (continued). This tables shows the average coefficient estimates of the vector autoregressive model of the limit order book: $ X_t = \sum_{k=1}^{5} A_{k} X_{t-k}. $ The components of $X_t$ are one-minute mid-price returns and the changes to the level, slope, and curvature factors for each side of the order book. The table presents the stock-day average of coefficient estimate and $t$-values based on double-clustered standard errors. Coefficient estimates for the shape factors are scaled by $10^7$. Coefficient estimates of returns are scaled by $10^4$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
+	\end{sidewaystable}
+
+	% tab:var (cont.)
+	\begin{sidewaystable}[p]
+		\small
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=0.91\linewidth}
+		% \caption*{Table \ref{tab:var} (continued)}
+		\begin{tabular}{lrrrrrrrrrr}
+		\toprule
+		& \multicolumn{10}{c}{\textbf{Panel C (dependent variable: $\Delta Slope_t$)}} \\
+		\midrule
+		& \multicolumn{5}{c}{$Bid$} & \multicolumn{5}{c}{$Ask$} \\
+		\cmidrule(l{2pt}r{2pt}){2-6} \cmidrule(l{2pt}r{2pt}){7-11}
+		& $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ & $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ \\
+		\midrule
+		$Ret_{t-k}$  			& 2.37*** & 2.03*** & 2.34*** & 2.11*** & 1.95*** & -2.06*** & -3.06*** & -2.99*** & -2.76*** & -2.13*** \\  % x 10 ** 4
+								& (3.99) & (4.27) & (5.15) & (4.18) & (4.49) & (-4.19) & (-4.06) & (-5.04) & (-4.99) & (-4.33) \\
+		$\Delta Level^B_{t-k}$ 	& 0.11*** & 0.08*** & 0.02*** & 0.01 & 0.05*** & 0.14*** & 0.08*** & 0.04*** & 0.01** & 0.04*** \\
+								& (3.75) & (4.06) & (2.97) & (1.48) & (4.17) & (4.83) & (4.27) & (4.24) & (1.98) & (3.56) \\
+		$\Delta Level^A_{t-k}$ 	& 0.15*** & 0.10*** & 0.04*** & 0.02*** & 0.04*** & 0.11*** & 0.08*** & 0.03*** & 0.01** & 0.04*** \\
+								& (5.01) & (4.90) & (4.96) & (3.86) & (3.85) & (3.92) & (4.34) & (4.17) & (2.35) & (4.16) \\
+		$\Delta Slope^B_{t-k}$ 	& -0.47*** & -0.33*** & -0.23*** & -0.16*** & -0.10*** & -0.03*** & -0.01*** & -0.00** & -0.00 & -0.01*** \\
+								& (-8.36) & (-8.23) &(-8.18) & (-8.24) & (-8.35) & (-5.05 & (-3.22) & (-2.29) & (-0.92) & (-4.39) \\
+		$\Delta Slope^A_{t-k}$ 	& -0.03*** & -0.01*** & -0.00** & -0.00** & -0.01*** & -0.46*** & -0.32*** & -0.23*** & -0.16*** & -0.09*** \\
+								& (-5.48) & (-3.48) & (-2.41) & (-2.52) & (-4.60) & (-8.35) & (-8.22) & (-8.19) & (-8.27) & (-8.37) \\
+		$\Delta Curve^B_{t-k}$ 	& 0.02*** & 0.01*** & 0.00** & 0.00 & 0.00 & 0.00 & -0.00 & -0.00** & -0.00*** & -0.00 \\
+								& (5.05) & (3.07) & (2.20) & (0.74) & (1.83) & (0.61) & (-0.94) & (-2.34) & (-3.16) & (-1.51) \\
+		$\Delta Curve^A_{t-k}$ 	& 0.00 & -0.00 & -0.00** & -0.00** & -0.00 & 0.02*** & 0.01*** & 0.01*** & 0.00* & 0.00*** \\
+								&  (1.9) & (-0.38) & (-2.63) & (-2.63) & (-0.37) & (5.39) & (4.13) & (3.53) & (1.74) & (2.68) \\
+		\bottomrule
+		\end{tabular}
+		\captionsetup{position=below, font=footnotesize, justification=justified, width=0.92\linewidth}
+		\caption*{Table \ref{tab:var} (continued). The tables shows the average coefficient estimates of the vector autoregressive model of the limit order book: $ X_t = \sum_{k=1}^{5} A_{k} X_{t-k}. $ The components of $X_t$ are one-minute mid-price returns and the changes to the level, slope, and curvature factors for each side of the order book. The table presents the stock-day average of coefficient estimate and $t$-values based on double-clustered standard errors. Coefficient estimates for the shape factors are scaled by $10^7$. Coefficient estimates of returns are scaled by $10^4$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
+	\end{sidewaystable}
+
+	% tab:var (cont.)
+	\begin{sidewaystable}[p]
+		\small
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=0.91\linewidth}
+		% \caption*{Table \ref{tab:var} (continued)}
+		\begin{tabular}{lrrrrrrrrrr}
+		\toprule
+		& \multicolumn{10}{c}{\textbf{Panel D (dependent variable: $\Delta Curve_t$)}} \\
+		\midrule
+		& \multicolumn{5}{c}{$Bid$} & \multicolumn{5}{c}{$Ask$} \\
+		\cmidrule(l{2pt}r{2pt}){2-6} \cmidrule(l{2pt}r{2pt}){7-11}
+		& $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ & $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ \\
+		\midrule
+		$Ret_{t-k}$ 			& -0.55 & 1.88*** & 2.79*** & 1.61*** & 1.93*** & -1.56* & -0.03 & -0.97** & -1.21** & -1.11** \\  % 10 ** 4
+								& (-0.33) &  (2.90) & (3.29) & (3.27) & (3.01) & (-1.91) & (-0.03) & (-2.06) & (-2.47) & (-2.61) \\
+		$\Delta Level^B_{t-k}$ 	& -0.26*** & -0.19*** & -0.11*** & -0.07*** & -0.10*** & -0.21*** & -0.15*** & -0.08*** & -0.04*** & -0.08*** \\
+								& (-5.20) & (-5.81) & (-6.00) & (-5.77) & (-5.47) & (-4.86) & (-5.61) & (-5.38) & (-4.54) & (-4.57) \\
+		$\Delta Level^A_{t-k}$ 	& -0.23*** & -0.16*** & -0.07*** & -0.05*** & -0.08*** & -0.23*** & -0.17*** & -0.09*** & -0.06*** & -0.09*** \\
+								& (-5.03) & (-5.44) & (-5.44) & (-5.46) & (-4.58) & (-5.27) & (-5.82) & (-5.83) & (-5.57) & (-5.30) \\
+		$\Delta Slope^B_{t-k}$ 	& 0.05*** & 0.02*** & 0.02*** & 0.01*** & 0.02*** & 0.02*** & 0.00 & -0.00 & -0.00 & 0.00 \\
+								& (6.09) & (4.92) & (4.72) & (4.02) & (4.96) & (3.52) & (0.93) & (-1.35) & (-1.62) & (0.74) \\
+		$\Delta Slope^A_{t-k}$ 	& 0.02*** & -0.00 & -0.01*** & -0.01*** & 0.00 & 0.04*** & 0.02*** & 0.02*** & 0.01*** & 0.01*** \\
+								&  (3.7) & (-0.76) & (-2.86) & (-2.98) & (0.27) & (6.12) & (4.29) &  (4.90) & (4.25) & (4.79) \\
+		$\Delta Curve^B_{t-k}$ 	& -0.52*** & -0.38*** & -0.27*** & -0.19*** & -0.11*** & 0.00 & 0.01*** & 0.01*** & 0.00** & -0.00 \\
+								& (-8.37) & (-8.27) & (-8.23) & (-8.30) & (-8.44) & (0.20) & (3.47) & (3.98) & (2.62) & (-1.18) \\
+		$\Delta Curve^A_{t-k}$ 	& -0.00 & 0.00 & 0.01*** & 0.01*** & -0.00 & -0.52*** & -0.38*** & -0.27*** & -0.19*** & -0.11*** \\
+								& (-0.80) & (1.76) & (2.85) &  (3.40) & (-1.59) & (-8.39) & (-8.29) & (-8.26) & (-8.3) & (-8.46) \\
+		\bottomrule
+		\end{tabular}
+		\captionsetup{position=below, font=footnotesize, justification=justified, width=0.92\linewidth}
+		\caption*{Table \ref{tab:var} (continued). The tables shows the average coefficient estimates of the vector autoregressive model of the limit order book: $ X_t = \sum_{k=1}^{5} A_{k} X_{t-k}. $ The components of $X_t$ are one-minute mid-price returns and the changes to the level, slope, and curvature factors for each side of the order book. The table presents the stock-day average of coefficient estimate and $t$-values based on double-clustered standard errors. Coefficient estimates for the shape factors are scaled by $10^7$. Coefficient estimates of returns are scaled by $10^4$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
+	\end{sidewaystable}
+
 
 	% At first glance, these relationships seem mysterious. We can get some insight into these estimates by considering the implications of the factor construction process. The time series for each of the proposed factors can be written as an inner-product of an order book history with a particular weight vector:
 
@@ -147,6 +327,65 @@
 
 	Table \ref{tab:hft} shows the results of regressing the VAR coefficients on high-frequency trading intensity and additional control variables. I only analyze the equation with return as the dependent variable, as our interest lies in high-frequency trading's impact on price formation. There are two versions of the regression: the first version uses a dummy variable $HFT_{top}$ equal to one for stock-days with high-frequency trading intensity above the median; the second version uses the logarithm of high-frequency trading intensity. In addition to the high-frequency trading intensity, I control for the daily closing price, the daily number of shares sold, daily holding period return, and market capitalization. Due to space limitations, I only show the results for the first lagged coefficients. In the dummy variable version, high-frequency trading is associated smaller (in magnitude) level coefficients; in the second version, high-frequency trading is also associated with dampened slope coefficients. As the level coefficients are the most important in terms of explaining future returns, the overall effect is a reduction in the immediate price impact of increases to these factors.
 
+	% tab:hft
+	\begin{sidewaystable}[p]
+		\small
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+		% \caption{The effect of high-frequency trade on predictive regressions}
+		\begin{tabular}{lrrrrrrr}
+		\toprule
+		& $Ret_{t-1}$ & $\Delta Level^B_{t-1}$ & $\Delta Level^A_{t-1}$ & $\Delta Slope^B_{t-1}$ & $\Delta Slope^A_{t-1}$ & $\Delta Curve^B_{t-1}$ & $\Delta Curve^A_{t-1}$ \\
+		\midrule
+		$Intercept$ 	& -0.22*** & 14.07** & -20.75*** & 6.86*** & -9.82*** & -4.40*** & 2.41*** \\
+						& (-5.91) & (2.05) & (-5.54) & (3.57) & (-5.23) & (-3.38) & (2.86) \\
+		$HFT_{top}$ 	& 0.03*** & -3.08*** & 2.07*** & 0.12 & -0.30 & 0.00 & 0.03 \\
+						& (3.606) & (-3.64) & (3.20) & (0.38) & (-1.21) & (0.02) & (0.20) \\
+		$log(Price)$ 	& 0.02** & 0.22 & -0.20 & 0.18 & -0.11 & 0.28 & -0.16 \\
+						& (2.42) & (0.18) & (-0.35) & (0.71) & (-0.38) & (1.02) & (-1.22) \\
+		$log(Volume)$	& 0.03*** & 0.19 & 0.28 & 0.01 & 0.38 & 0.41 & -0.14 \\
+						&  (5.02) & (0.13) & (0.52) & (0.06) & (1.36) & (1.26) & (-1.38) \\
+		$Ret$ 			& -0.03 & 4.86 & -6.06 & 4.96 & 2.80 & 2.65 & -1.71 \\
+						& (-0.35) & (0.34) & (-0.51) & (0.53) & (0.58) & (0.52) & (-0.57) \\
+		$log(Size)$		& -0.02*** & -0.78 & 0.82* & -0.44** & 0.26 & -0.18 & 0.03 \\
+						& (-3.49) & (-0.69) & (1.80) & (-2.29) & (1.12) & (-0.67) & (0.26) \\
+		\bottomrule
+		\end{tabular}
+		\captionsetup{position=below, font=footnotesize, justification=justified, width=0.80\linewidth}
+		\caption[The effect of high-frequency trade on predictive regressions]{The effect of high-frequency trade on predictive regressions. The table shows the results of regressing the estimated vector autoregression coefficients on high-frequency trading: $ Y_{i,t} = \alpha + \beta_1 HFT + \beta_2 \log(Price) + \beta_3 \log(Volume) + \beta_4 Ret_{i,t} + \beta_5 \log(Size) + \epsilon_{i,t}. $ $HFT$ is the the logarithm of the daily number of message runs (\cite{Hasbrouck2013}) divided by daily volume. I include additional controls for daily price, volume, return, and market capitalization. $HFT_{top}$ is a dummy variable equal to one if $HFT$ is above the stock-day median. Standard errors are double-clustered. Coefficients for equations with level, slope and curvature as the dependent variable are multiplied by $10^7$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. Data on common stocks are obtained from the CRSP database. $HFT$ is computed from the ITCH message data. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
+		\label{tab:hft}
+	\end{sidewaystable}
+
+	% tab:hft (cont.)
+	\begin{sidewaystable}[p]
+		\small
+		\linespread{1}
+		\centering
+		% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+		% \caption*{Table \ref{tab:hft} (continued)}
+		\begin{tabular}{lrrrrrrr}
+		\toprule
+		& $Ret_{t-1}$ & $\Delta Level^B_{t-1}$ & $\Delta Level^A_{t-1}$ & $\Delta Slope^B_{t-1}$ & $\Delta Slope^A_{t-1}$ & $\Delta Curve^B_{t-1}$ & $\Delta Curve^A_{t-1}$ \\
+		\midrule
+		$Intercept$  	& -0.36*** & 26.98*** & -32.91*** & 3.59* & -7.14*** & -3.70*** & 1.49** \\
+						& (-12.69) & (5.57) & (-10.20) & (1.80) & (-5.08) & (-4.26) & (2.18) \\
+		$log(HFT)$		& 0.01*** & -1.21** & 0.83*** & 0.37*** & -0.28** & -0.14 & 0.09* \\
+						& (4.47) & (-2.57) & (3.84) & (2.93) & (-2.51) & (-1.42) & (1.66) \\
+		$log(Price)$ 	& 0.02** & 0.20 & 0.49 & 0.37 & -0.25 & 0.29 & -0.10 \\
+						& (2.59) & (0.16) & (0.95) & (1.34) & (-0.97) & (0.93) & (-0.78) \\
+		$log(Volume)$ 	& 0.04*** & -0.57 & 1.62*** & 0.38 & 0.11 & 0.36 & -0.02 \\
+						& (7.24) & (-0.44) & (3.33) & (1.14) & (0.57) & (1.13) & (-0.24) \\
+		$Ret$	 		& -0.02 & 5.84 & -5.58 & 3.66 & 3.35 & 2.59 & -2.05 \\
+						& (-0.29) & (0.45) & (-0.47) & (0.38) & (0.66) & (0.54) & (-0.73) \\
+		$log(Size)$ 	& -0.02*** & -0.65 & 0.05 & -0.71*** & 0.44** & -0.13 & -0.06 \\
+						& (-3.90) & (-0.58) & (0.11) & (-2.75) & (2.24) & (-0.47) & (-0.51) \\
+		\bottomrule
+		\end{tabular}
+		\captionsetup{position=below, font=footnotesize, justification=justified, width=0.80\linewidth}
+		\caption*{Table \ref{tab:hft} (continued). The table shows the results of regressing the estimated vector autoregression coefficients on high-frequency trading: $ Y_{i,t} = \alpha + \beta_1 HFT + \beta_2 \log(Price) + \beta_3 \log(Volume) + \beta_4 Ret_{i,t} + \beta_5 \log(Size) + \epsilon_{i,t}. $ $HFT$ is the the logarithm of the daily number of message runs (\cite{Hasbrouck2013}) divided by daily volume. I include additional controls for daily price, volume, return, and market capitalization. $HFT_{top}$ is a dummy variable equal to one if $HFT$ is above the stock-day median. Standard errors are double-clustered. Coefficients for equations with level, slope and curvature as the dependent variable are multiplied by $10^7$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. Data on common stocks are obtained from the CRSP database. $HFT$ is computed from the ITCH message data. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
+	\end{sidewaystable}
+
 
 \section{Conclusion}
 	In this paper I have attempted to provide a simple representation of electronic limit order book dynamics. My main insight is that if order book dynamics are primarily driven by a few factors, then we might be able to extract those factors from the limit order book shape. Using principal component analysis I show that three factors---level, slope, and curvature--- explain the majority of intraday variation in limit order book shape. Furthermore, these factors can be used to form a simple linear model of order book dynamics that predicts future price movements. High-frequency trading appears to dampen the relationship between prices and order book variables in this model, although the cause of this effect is unclear.
@@ -155,7 +394,7 @@
 % tab:variables
 \begin{sidewaystable}[p]
 	\small
-	\linespread{1}
+	% \linespread{1}
 	\centering
 	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=0.95\linewidth}
 	% \caption{Variable descriptions}
@@ -165,16 +404,21 @@
 	\midrule
 	Variable & Description \\
 	\midrule
-	$Ret$ & Mid-price returns computed from the average of the level-1 bid and ask prices at the end of each time period. \\
+	$Ret$ & Mid-price returns computed from the average of the level-1 bid and ask prices at the end of each time period.\\
 	$Level$ & The average of the volume of shares available for immediate execution at levels 1-10 of the order book.\\
-	$Slope$ & The average of the volume of shares available for immediate execution at levels 1-5 of the order book minus the average of levels 6-10.\\
-	$Curve$ & The average of the volume of shares available for immediate execution at levels 4-7 of the order book minus the averages of levels 1-3 and 8-10.\\
+	$Slope$ & The average of the volume of shares available for immediate execution at levels 1-5 of the order book minus the \\
+	& average of levels 6-10.\\
+	$Curve$ & The average of the volume of shares available for immediate execution at levels 4-7 of the order book minus the \\
+	& averages of levels 1-3 and 8-10.\\
 	\midrule
 	\multicolumn{2}{c}{\textbf{Panel B: Stock characteristics}} \\
 	\midrule
 	Variable & Description \\
 	\midrule
-	$HFT$ & The daily number of message runs as described in \cite{Hasbrouck2013} at the individual stock level. For a sequence of messages to be considered a run, the messages in a sequence must each be less than 100 milliseconds apart, there much be least 10 messages in the sequence, and the messages must be congruent (i.e. add messages must be followed by delete or execute messages, and delete messages must be followed by add messages) \\
+	$HFT$ & The daily number of message runs as described in \cite{Hasbrouck2013} at the individual stock level. For a \\
+	& sequence of messages to be considered a run, the messages in a sequence must each be less than 100 milliseconds \\
+	& apart, there much be least 10 messages in the sequence, and the messages must be congruent (i.e. add messages \\
+	& must be followed by delete or execute messages, and delete messages must be followed by add messages) \\
 	$Price$ & The stock-day closing price. \\
 	$Volume$ & The daily number of shares sold at the individual stock level.\\
 	$Return$ & The daily holding-period return at the individual stock level.\\
@@ -185,305 +429,3 @@
 	\caption[Variable descriptions]{Variable descriptions. The table describes the key variables used in this paper. Panel A contains descriptions of the variables used to model the limit order book. Panel B describes the variables used in the analysis of the effects of high-frequency trading on the limit order book dynamics.}
 	\label{tab:variables}
 \end{sidewaystable}
-
-% tab:var
-\begin{table}[p]
-	\small
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-	% \caption{Vector autoregression estimates}
-	\begin{tabular}{lrrrrr}
-	\toprule
-	& \multicolumn{5}{c}{\textbf{Panel A (dependent variable: $Ret_t$)}} \\
-	\cmidrule(l{2pt}r{2pt}){2-6}
-	& $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ \\
-	\midrule
-	$Ret_{t-k}$ 			& -0.05*** & -0.03*** & -0.01*** & -0.02*** & -0.00 \\
-							& (-5.80) & (-5.92) & (-4.82) & (-6.93) & (-0.91) \\
-	$\Delta Level^B_{t-k}$ 	& 3.87*** & 2.71*** & 1.96*** & 1.12*** & 1.01** \\ % x 10 ** 7
-							& (6.01) & (5.89) & (4.72) & (4.11) & (1.98) \\
-	$\Delta Level^A_{t-k}$ 	& -4.09*** & -2.62*** & -1.90*** & -1.36*** & -0.76*** \\ % x 10 ** 7
-							& (-6.62) & (-5.27) & (-5.22) & (-2.87) & (-2.67) \\
-	$\Delta Slope^B_{t-k}$	& 1.00*** & 0.76*** & 0.63*** & 0.51*** & 0.48*** \\ % x 10 ** 7
-							& (5.18) & (4.57) & (4.05) & (4.12) & (3.47) \\
-	$\Delta Slope^A_{t-k}$ 	& -1.20*** & -0.81*** & -0.76*** & -0.61*** & -0.36*** \\ % x 10 ** 7
-							& (-5.27) & (-4.22) & (-4.70) & (-4.52) & (-3.54) \\
-	$\Delta Curve^B_{t-k}$ 	& -0.61*** & -0.24** & -0.20** & -0.11 & 0.03 \\ % x 10 ** 7
-							& (-5.66) & (-2.02) & (-2.16) & (-1.51) & (0.26) \\
-	$\Delta Curve^A_{t-k}$ 	& 0.41*** & 0.41*** & 0.29*** & 0.24** & 0.12** \\ % x 10 ** 7
-							& (5.26) & (4.14) & (4.52) & (2.86) & (2.06) \\
-	\bottomrule
-	\end{tabular}
-	\captionsetup{position=below, font=footnotesize, justification=justified, width=0.75\linewidth}
-	\caption[Vector autoregression estimates]{Vector autoregression estimates. The tables shows the average coefficient estimates of the vector autoregressive model of the limit order book: $X_t = \sum_{k=1}^{5} A_{k} X_{t-k}.$ The components of $X_t$ are one-minute mid-price returns and the changes to the level, slope, and curvature factors for each side of the order book. The table presents the stock-day average of coefficient estimate and $t$-values based on double-clustered standard errors. Coefficient estimates for the shape factors are scaled by $10^7$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
-	\label{tab:var}
-\end{table}
-
-% tab:var (cont.)
-\begin{sidewaystable}[p]
-	\small
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=0.91\linewidth}
-	% \caption*{Table \ref{tab:var} (continued)}
-	\begin{tabular}{lrrrrrrrrrr}
-	\toprule
-	& \multicolumn{10}{c}{\textbf{Panel B (dependent variable: $\Delta Level_t$)}} \\
-	\midrule
-	& \multicolumn{5}{c}{$Bid$} & \multicolumn{5}{c}{$Ask$} \\
-	\cmidrule(l{2pt}r{2pt}){2-6} \cmidrule(l{2pt}r{2pt}){7-11}
-	& $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ & $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ \\
-	\midrule
-	$Ret_{t-k}$ 			& -0.85* & -1.71*** & -1.43*** & -1.13*** & -1.08*** & 1.17*** & 0.97*** & 1.10*** & 1.08*** & 0.85*** \\  % x 10 ** 4
-							& (-1.80) & (-3.22) & (-3.75) & (-3.94) & (-4.03) & (3.46) & (3.55) & (3.98) & (3.99) & (3.62) \\
-	$\Delta Level^B_{t-k}$ 	& -0.186*** & -0.11*** & -0.09*** & -0.06*** & -0.02** & 0.15*** & 0.12*** & 0.07*** & 0.06*** & 0.05*** \\
-							& (-5.43) & (-4.67) & (-6.01) & (-5.38) & (-2.19) & (5.84) & (5.61) & (6.18) & (6.11) & (5.75) \\
-	$\Delta Level^A_{t-k}$ 	& 0.15*** & 0.12*** & 0.07*** & 0.05*** & 0.05*** & -0.18*** & -0.11*** & -0.09*** & -0.06*** & -0.02** \\
-							& (5.92) & (5.83) & (6.51) & (6.41) & (5.85) & (-5.49) 	& (-4.69) & (-6.04) & (-5.42) & (-2.50) \\
-	$\Delta Slope^B_{t-k}$ 	& -0.03*** & -0.02*** & -0.01*** & -0.01*** & -0.01*** & -0.01*** & -0.00  & -0.00 & -0.00** & -0.01*** \\
-							& (-6.56) & (-4.76) & (-5.07) & (-4.95) & (-5.10) & (-3.90) & (-1.66) & (-0.50) & (-2.15) & (-3.29) \\
-	$\Delta Slope^A_{t-k}$ 	& -0.01*** & -0.00 & -0.00 & -0.00 & -0.00*** & -0.03*** & -0.01*** & -0.01*** & -0.01*** & -0.01*** \\
-							& (-4.37) & (-1.26) & (-0.56) & (-0.88) & (-2.87) & (-6.38) & (-4.01) & (-5.01) & (-5.70) & (-5.48) \\
-	$\Delta Curve^B_{t-k}$ 	& 0.01*** & 0.00** & 0.00 & 0.00 & 0.00 & 0.00 & -0.00*** & -0.01*** & -0.00*** & -0.00 \\
-							& (5.07) & (2.25) & (0.27) & (0.036) & (0.62) & (0.82) & (-2.97) & (-4.10) & (-3.67) & (-1.73) \\
-	$\Delta Curve^A_{t-k}$ 	& 0.00 & -0.00** & -0.00*** & -0.00*** & -0.000 & 0.012*** & 0.01*** & 0.00* & 0.00 & 0.00** \\
-							& (1.52) & (-2.45) & (-3.97) & (-3.59) & (-0.78) & (5.76) & (3.66) & (1.69) & (1.36) & (2.07) \\
-	\bottomrule
-	\end{tabular}
-	\captionsetup{position=below, font=footnotesize, justification=justified, width=0.92\linewidth}
-	\caption*{Table \ref{tab:var} (continued). This tables shows the average coefficient estimates of the vector autoregressive model of the limit order book: $ X_t = \sum_{k=1}^{5} A_{k} X_{t-k}. $ The components of $X_t$ are one-minute mid-price returns and the changes to the level, slope, and curvature factors for each side of the order book. The table presents the stock-day average of coefficient estimate and $t$-values based on double-clustered standard errors. Coefficient estimates for the shape factors are scaled by $10^7$. Coefficient estimates of returns are scaled by $10^4$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
-\end{sidewaystable}
-
-% tab:var (cont.)
-\begin{sidewaystable}[p]
-	\small
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=0.91\linewidth}
-	% \caption*{Table \ref{tab:var} (continued)}
-	\begin{tabular}{lrrrrrrrrrr}
-	\toprule
-	& \multicolumn{10}{c}{\textbf{Panel C (dependent variable: $\Delta Slope_t$)}} \\
-	\midrule
-	& \multicolumn{5}{c}{$Bid$} & \multicolumn{5}{c}{$Ask$} \\
-	\cmidrule(l{2pt}r{2pt}){2-6} \cmidrule(l{2pt}r{2pt}){7-11}
-	& $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ & $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ \\
-	\midrule
-	$Ret_{t-k}$  			& 2.37*** & 2.03*** & 2.34*** & 2.11*** & 1.95*** & -2.06*** & -3.06*** & -2.99*** & -2.76*** & -2.13*** \\  % x 10 ** 4
-							& (3.99) & (4.27) & (5.15) & (4.18) & (4.49) & (-4.19) & (-4.06) & (-5.04) & (-4.99) & (-4.33) \\
-	$\Delta Level^B_{t-k}$ 	& 0.11*** & 0.08*** & 0.02*** & 0.01 & 0.05*** & 0.14*** & 0.08*** & 0.04*** & 0.01** & 0.04*** \\
-							& (3.75) & (4.06) & (2.97) & (1.48) & (4.17) & (4.83) & (4.27) & (4.24) & (1.98) & (3.56) \\
-	$\Delta Level^A_{t-k}$ 	& 0.15*** & 0.10*** & 0.04*** & 0.02*** & 0.04*** & 0.11*** & 0.08*** & 0.03*** & 0.01** & 0.04*** \\
-							& (5.01) & (4.90) & (4.96) & (3.86) & (3.85) & (3.92) & (4.34) & (4.17) & (2.35) & (4.16) \\
-	$\Delta Slope^B_{t-k}$ 	& -0.47*** & -0.33*** & -0.23*** & -0.16*** & -0.10*** & -0.03*** & -0.01*** & -0.00** & -0.00 & -0.01*** \\
-							& (-8.36) & (-8.23) &(-8.18) & (-8.24) & (-8.35) & (-5.05 & (-3.22) & (-2.29) & (-0.92) & (-4.39) \\
-	$\Delta Slope^A_{t-k}$ 	& -0.03*** & -0.01*** & -0.00** & -0.00** & -0.01*** & -0.46*** & -0.32*** & -0.23*** & -0.16*** & -0.09*** \\
-							& (-5.48) & (-3.48) & (-2.41) & (-2.52) & (-4.60) & (-8.35) & (-8.22) & (-8.19) & (-8.27) & (-8.37) \\
-	$\Delta Curve^B_{t-k}$ 	& 0.02*** & 0.01*** & 0.00** & 0.00 & 0.00 & 0.00 & -0.00 & -0.00** & -0.00*** & -0.00 \\
-							& (5.05) & (3.07) & (2.20) & (0.74) & (1.83) & (0.61) & (-0.94) & (-2.34) & (-3.16) & (-1.51) \\
-	$\Delta Curve^A_{t-k}$ 	& 0.00 & -0.00 & -0.00** & -0.00** & -0.00 & 0.02*** & 0.01*** & 0.01*** & 0.00* & 0.00*** \\
-							&  (1.9) & (-0.38) & (-2.63) & (-2.63) & (-0.37) & (5.39) & (4.13) & (3.53) & (1.74) & (2.68) \\
-	\bottomrule
-	\end{tabular}
-	\captionsetup{position=below, font=footnotesize, justification=justified, width=0.92\linewidth}
-	\caption*{Table \ref{tab:var} (continued). The tables shows the average coefficient estimates of the vector autoregressive model of the limit order book: $ X_t = \sum_{k=1}^{5} A_{k} X_{t-k}. $ The components of $X_t$ are one-minute mid-price returns and the changes to the level, slope, and curvature factors for each side of the order book. The table presents the stock-day average of coefficient estimate and $t$-values based on double-clustered standard errors. Coefficient estimates for the shape factors are scaled by $10^7$. Coefficient estimates of returns are scaled by $10^4$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
-\end{sidewaystable}
-
-% tab:var (cont.)
-\begin{sidewaystable}[p]
-	\small
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=0.91\linewidth}
-	% \caption*{Table \ref{tab:var} (continued)}
-	\begin{tabular}{lrrrrrrrrrr}
-	\toprule
-	& \multicolumn{10}{c}{\textbf{Panel D (dependent variable: $\Delta Curve_t$)}} \\
-	\midrule
-	& \multicolumn{5}{c}{$Bid$} & \multicolumn{5}{c}{$Ask$} \\
-	\cmidrule(l{2pt}r{2pt}){2-6} \cmidrule(l{2pt}r{2pt}){7-11}
-	& $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ & $k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ \\
-	\midrule
-	$Ret_{t-k}$ 			& -0.55 & 1.88*** & 2.79*** & 1.61*** & 1.93*** & -1.56* & -0.03 & -0.97** & -1.21** & -1.11** \\  % 10 ** 4
-							& (-0.33) &  (2.90) & (3.29) & (3.27) & (3.01) & (-1.91) & (-0.03) & (-2.06) & (-2.47) & (-2.61) \\
-	$\Delta Level^B_{t-k}$ 	& -0.26*** & -0.19*** & -0.11*** & -0.07*** & -0.10*** & -0.21*** & -0.15*** & -0.08*** & -0.04*** & -0.08*** \\
-							& (-5.20) & (-5.81) & (-6.00) & (-5.77) & (-5.47) & (-4.86) & (-5.61) & (-5.38) & (-4.54) & (-4.57) \\
-	$\Delta Level^A_{t-k}$ 	& -0.23*** & -0.16*** & -0.07*** & -0.05*** & -0.08*** & -0.23*** & -0.17*** & -0.09*** & -0.06*** & -0.09*** \\
-							& (-5.03) & (-5.44) & (-5.44) & (-5.46) & (-4.58) & (-5.27) & (-5.82) & (-5.83) & (-5.57) & (-5.30) \\
-	$\Delta Slope^B_{t-k}$ 	& 0.05*** & 0.02*** & 0.02*** & 0.01*** & 0.02*** & 0.02*** & 0.00 & -0.00 & -0.00 & 0.00 \\
-							& (6.09) & (4.92) & (4.72) & (4.02) & (4.96) & (3.52) & (0.93) & (-1.35) & (-1.62) & (0.74) \\
-	$\Delta Slope^A_{t-k}$ 	& 0.02*** & -0.00 & -0.01*** & -0.01*** & 0.00 & 0.04*** & 0.02*** & 0.02*** & 0.01*** & 0.01*** \\
-							&  (3.7) & (-0.76) & (-2.86) & (-2.98) & (0.27) & (6.12) & (4.29) &  (4.90) & (4.25) & (4.79) \\
-	$\Delta Curve^B_{t-k}$ 	& -0.52*** & -0.38*** & -0.27*** & -0.19*** & -0.11*** & 0.00 & 0.01*** & 0.01*** & 0.00** & -0.00 \\
-							& (-8.37) & (-8.27) & (-8.23) & (-8.30) & (-8.44) & (0.20) & (3.47) & (3.98) & (2.62) & (-1.18) \\
-	$\Delta Curve^A_{t-k}$ 	& -0.00 & 0.00 & 0.01*** & 0.01*** & -0.00 & -0.52*** & -0.38*** & -0.27*** & -0.19*** & -0.11*** \\
-							& (-0.80) & (1.76) & (2.85) &  (3.40) & (-1.59) & (-8.39) & (-8.29) & (-8.26) & (-8.3) & (-8.46) \\
-	\bottomrule
-	\end{tabular}
-	\captionsetup{position=below, font=footnotesize, justification=justified, width=0.92\linewidth}
-	\caption*{Table \ref{tab:var} (continued). The tables shows the average coefficient estimates of the vector autoregressive model of the limit order book: $ X_t = \sum_{k=1}^{5} A_{k} X_{t-k}. $ The components of $X_t$ are one-minute mid-price returns and the changes to the level, slope, and curvature factors for each side of the order book. The table presents the stock-day average of coefficient estimate and $t$-values based on double-clustered standard errors. Coefficient estimates for the shape factors are scaled by $10^7$. Coefficient estimates of returns are scaled by $10^4$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
-\end{sidewaystable}
-
-% tab:hft
-\begin{sidewaystable}[p]
-	\small
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-	% \caption{The effect of high-frequency trade on predictive regressions}
-	\begin{tabular}{lrrrrrrr}
-	\toprule
-	& $Ret_{t-1}$ & $\Delta Level^B_{t-1}$ & $\Delta Level^A_{t-1}$ & $\Delta Slope^B_{t-1}$ & $\Delta Slope^A_{t-1}$ & $\Delta Curve^B_{t-1}$ & $\Delta Curve^A_{t-1}$ \\
-	\midrule
-	$Intercept$ 	& -0.22*** & 14.07** & -20.75*** & 6.86*** & -9.82*** & -4.40*** & 2.41*** \\
-					& (-5.91) & (2.05) & (-5.54) & (3.57) & (-5.23) & (-3.38) & (2.86) \\
-	$HFT_{top}$ 	& 0.03*** & -3.08*** & 2.07*** & 0.12 & -0.30 & 0.00 & 0.03 \\
-					& (3.606) & (-3.64) & (3.20) & (0.38) & (-1.21) & (0.02) & (0.20) \\
-	$log(Price)$ 	& 0.02** & 0.22 & -0.20 & 0.18 & -0.11 & 0.28 & -0.16 \\
-					& (2.42) & (0.18) & (-0.35) & (0.71) & (-0.38) & (1.02) & (-1.22) \\
-	$log(Volume)$	& 0.03*** & 0.19 & 0.28 & 0.01 & 0.38 & 0.41 & -0.14 \\
-					&  (5.02) & (0.13) & (0.52) & (0.06) & (1.36) & (1.26) & (-1.38) \\
-	$Ret$ 			& -0.03 & 4.86 & -6.06 & 4.96 & 2.80 & 2.65 & -1.71 \\
-					& (-0.35) & (0.34) & (-0.51) & (0.53) & (0.58) & (0.52) & (-0.57) \\
-	$log(Size)$		& -0.02*** & -0.78 & 0.82* & -0.44** & 0.26 & -0.18 & 0.03 \\
-					& (-3.49) & (-0.69) & (1.80) & (-2.29) & (1.12) & (-0.67) & (0.26) \\
-	\bottomrule
-	\end{tabular}
-	\captionsetup{position=below, font=footnotesize, justification=justified, width=0.80\linewidth}
-	\caption[The effect of high-frequency trade on predictive regressions]{The effect of high-frequency trade on predictive regressions. The table shows the results of regressing the estimated vector autoregression coefficients on high-frequency trading: $ Y_{i,t} = \alpha + \beta_1 HFT + \beta_2 \log(Price) + \beta_3 \log(Volume) + \beta_4 Ret_{i,t} + \beta_5 \log(Size) + \epsilon_{i,t}. $ $HFT$ is the the logarithm of the daily number of message runs (\cite{Hasbrouck2013}) divided by daily volume. I include additional controls for daily price, volume, return, and market capitalization. $HFT_{top}$ is a dummy variable equal to one if $HFT$ is above the stock-day median. Standard errors are double-clustered. Coefficients for equations with level, slope and curvature as the dependent variable are multiplied by $10^7$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. Data on common stocks are obtained from the CRSP database. $HFT$ is computed from the ITCH message data. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
-	\label{tab:hft}
-\end{sidewaystable}
-
-% tab:hft (cont.)
-\begin{sidewaystable}[p]
-	\small
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-	% \caption*{Table \ref{tab:hft} (continued)}
-	\begin{tabular}{lrrrrrrr}
-	\toprule
-	& $Ret_{t-1}$ & $\Delta Level^B_{t-1}$ & $\Delta Level^A_{t-1}$ & $\Delta Slope^B_{t-1}$ & $\Delta Slope^A_{t-1}$ & $\Delta Curve^B_{t-1}$ & $\Delta Curve^A_{t-1}$ \\
-	\midrule
-	$Intercept$  	& -0.36*** & 26.98*** & -32.91*** & 3.59* & -7.14*** & -3.70*** & 1.49** \\
-					& (-12.69) & (5.57) & (-10.20) & (1.80) & (-5.08) & (-4.26) & (2.18) \\
-	$log(HFT)$		& 0.01*** & -1.21** & 0.83*** & 0.37*** & -0.28** & -0.14 & 0.09* \\
-					& (4.47) & (-2.57) & (3.84) & (2.93) & (-2.51) & (-1.42) & (1.66) \\
-	$log(Price)$ 	& 0.02** & 0.20 & 0.49 & 0.37 & -0.25 & 0.29 & -0.10 \\
-					& (2.59) & (0.16) & (0.95) & (1.34) & (-0.97) & (0.93) & (-0.78) \\
-	$log(Volume)$ 	& 0.04*** & -0.57 & 1.62*** & 0.38 & 0.11 & 0.36 & -0.02 \\
-					& (7.24) & (-0.44) & (3.33) & (1.14) & (0.57) & (1.13) & (-0.24) \\
-	$Ret$	 		& -0.02 & 5.84 & -5.58 & 3.66 & 3.35 & 2.59 & -2.05 \\
-					& (-0.29) & (0.45) & (-0.47) & (0.38) & (0.66) & (0.54) & (-0.73) \\
-	$log(Size)$ 	& -0.02*** & -0.65 & 0.05 & -0.71*** & 0.44** & -0.13 & -0.06 \\
-					& (-3.90) & (-0.58) & (0.11) & (-2.75) & (2.24) & (-0.47) & (-0.51) \\
-	\bottomrule
-	\end{tabular}
-	\captionsetup{position=below, font=footnotesize, justification=justified, width=0.80\linewidth}
-	\caption*{Table \ref{tab:hft} (continued). The table shows the results of regressing the estimated vector autoregression coefficients on high-frequency trading: $ Y_{i,t} = \alpha + \beta_1 HFT + \beta_2 \log(Price) + \beta_3 \log(Volume) + \beta_4 Ret_{i,t} + \beta_5 \log(Size) + \epsilon_{i,t}. $ $HFT$ is the the logarithm of the daily number of message runs (\cite{Hasbrouck2013}) divided by daily volume. I include additional controls for daily price, volume, return, and market capitalization. $HFT_{top}$ is a dummy variable equal to one if $HFT$ is above the stock-day median. Standard errors are double-clustered. Coefficients for equations with level, slope and curvature as the dependent variable are multiplied by $10^7$. The estimation period is Jan-2013 to Dec-2013, and the sample excludes stock-days with missing observations. Data on common stocks are obtained from the CRSP database. $HFT$ is computed from the ITCH message data. ***, **, * indicate significance at the 1\%, 5\%, and 10\% levels, respectively.}
-\end{sidewaystable}
-
-\clearpage
-
-% fig:crsp
-\begin{figure}[p]
-	\small
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-	% \caption{Sample stock characteristics}
-	\includegraphics[width=\textwidth]{chapter3/crsp}
-	% \begin{subfigure}[b]{0.49\textwidth}
-	% \small
-	% \includegraphics[width=\textwidth]{log_prc}
-	% \captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
-	% \caption{$\log(Price)$ (\$)}
-	% \end{subfigure}
-	% \begin{subfigure}[b]{0.49\textwidth}
-	% \small
-	% \includegraphics[width=\textwidth]{log_size}
-	% \captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
-	% \caption{$\log(Size)$ (\$)}
-	% \end{subfigure}
-	% %
-	% \begin{subfigure}[b]{0.49\textwidth}
-	% \small
-	% \includegraphics[width=\textwidth]{figures/log_vol}
-	% \captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
-	% \caption{$\log(Volume)$ (shares)}
-	% \end{subfigure}
-	% \begin{subfigure}[b]{0.49\textwidth}
-	% \small
-	% \includegraphics[width=\textwidth]{ret}
-	% \captionsetup{labelformat=simple, labelsep=period, font=footnotesize, justification=centerfirst, width=\linewidth, belowskip=-15pt}
-	% \caption{$Return$ (bp)}
-	% \end{subfigure}
-	\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-	\caption[Sample stock characteristics]{Sample stock characteristics. These figures demonstrate the distribution of daily average stock characteristics for my sample. $\log(Price)$ is the logarithm of the daily closing price; $\log(Volume)$ is the logarithm of the daily number of shares sold; $Return$ is the daily holding period return in basis points; $\log(Size)$ is the logarithm of the daily market capitalization in thousands. Averages for each stock  are calculated from all days in the period Jan. 1, 2013 - Dec. 31, 2013 for which complete limit order book data is available.}
-	\label{fig:crsp}
-\end{figure}
-
-% fig:examples
-% \begin{sidewaysfigure}[p]
-% \linespread{1}
-% \centering
-% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-% \caption{Examples of average limit order book shapes}
-% \label{fig:examples}
-% \includegraphics[width=\textwidth]{example_lob}
-% \captionsetup{font=footnotesize, justification=justified, width=\linewidth}
-% \caption*{Note: The figure shows the average shape of randomly selected large (top row), medium (middle row), and small (bottom row) firms. Average shapes are calculated from all order book updates in the ITCH database during 2013.}
-% \end{sidewaysfigure}
-
-% fig:examples
-\begin{figure}[p]
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-	% \caption{Examples of average limit order book shapes}
-	\includegraphics[width=\textwidth]{chapter3/example_lob}
-	\captionsetup{skip=-20pt, font=footnotesize, justification=justified, width=\linewidth}
-	\caption[Examples of average limit order book shapes]{Examples of average limit order book shapes. The figure shows the average shape of randomly selected large (top row), medium (middle row), and small (bottom row) firms. Average shapes are calculated from all order book updates in the ITCH database during 2013.}
-	\label{fig:examples}
-\end{figure}
-
-% fig:factors
-% \begin{figure}[p]
-% \linespread{1}
-% \centering
-% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-% \caption{Principal component analysis of order books}
-% \label{fig:pca}
-% \begin{subfigure}[t]{1.00\textwidth}
-% \includegraphics[width=\textwidth]{factors}
-% \end{subfigure}
-% \begin{subfigure}[b]{1.00\textwidth}
-% \includegraphics[width=\textwidth]{eigenvalues}
-% \end{subfigure}
-% \captionsetup{font=footnotesize, justification=justified, width=\linewidth}
-% \caption*{Note: The figures show the results of the principal component analysis of daily limit order book volume data. For each day in the sample I perform PCA on the daily order book history. I then calculate the average of the stock-day eigenvectors ($top$) and the average of the stock-day eigenvalues ($bottom$). Averages are calculated from all order book updates in the ITCH database during 2013 for the stocks in my sample.}
-% \end{figure}
-
-% fig:factors
-\begin{figure}[p]
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-	% \caption{Principal component analysis of order books}
-	\includegraphics[width=\textwidth]{chapter3/factors}
-	\captionsetup{skip=-20pt, font=footnotesize, justification=justified, width=\linewidth}
-	\caption[Principal component analysis of order books]{Principal component analysis of order books. The figures show the results of the principal component analysis of daily limit order book volume data. For each day in the sample I perform PCA on the daily order book history. I then calculate the average of the stock-day eigenvectors ($top$) and the average of the stock-day eigenvalues ($bottom$). Averages are calculated from all order book updates in the ITCH database during 2013 for the stocks in my sample.}
-	\label{fig:pca}
-\end{figure}
-
-% fig:eigenvalues
-\begin{figure}[p]
-	\linespread{1}
-	\centering
-	% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-	% \caption{Principal component analysis of order books (cont.)}
-	\includegraphics[width=\textwidth]{chapter3/eigenvalues}
-	\captionsetup{skip=-20pt, font=footnotesize, justification=justified, width=\linewidth}
-	\caption*{Table \ref{fig:pca} (continued). The figures show the results of the principal component analysis of daily limit order book volume data. For each day in the sample I perform PCA on the daily order book history. I then calculate the average of the stock-day eigenvectors ($top$) and the average of the stock-day eigenvalues ($bottom$). Averages are calculated from all order book updates in the ITCH database during 2013 for the stocks in my sample.}
-\end{figure}

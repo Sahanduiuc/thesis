@@ -4,41 +4,43 @@
 
 
 \section{Introduction}
-	Algorithms abound in the modern world, and no less so in the world of modern finance. One of the first victims (or beneificiaries, depending on your perspective) of automation in has been the trading floor. From asset managers to market makers, the day-to-day trading of securities is performed by machine, with limited human supervision. Automated trading in the finance literature goes back to the order execution algorithms of \cite{Almgren2000} and \cite{Bertsimas1998}. Traditional order execution algorithms rely on diffusion processes to model low-frequency price movements, and are simplistic in the sense that they only consider the size and timing of market orders.
+	Algorithms abound in the modern world, and no less so in the world of modern finance. One of the first victims (or beneificiaries, depending on your perspective) of automation in has been the trading floor. From asset managers to market makers, the day-to-day trading of securities on lit exchanges is performed by machines, with limited human supervision. Automated trading in the finance literature goes back to the order execution algorithms of \cite{Almgren2000} and \cite{Bertsimas1998}. Traditional order execution algorithms rely on diffusion processes to model low-frequency price movements, and are simplistic in the sense that they only consider the size and timing of market orders as decision variables.
 
-	Trading in modern exchanges is more complicated. Limit orders are widely used by those supplying liquidity as well as those demanding liquidity, order cancellations and replacements are pervasive, and order routing decisions are also important (\cite{Cont2017}). More recent research incorporates some of these aspects while considering the optimal trading strategies of market makers (\cite{Guilbaud2013, Xu2015}), but the \textit{solution} methods remain fundamentally unchanged from earlier studies. In particular, the field has preferred to use dynamic optimization methods (i.e., solving Hamilton-Jacobi-Bellman equations, typically numerically). Machine learning and artificial intelligence have been largely ignored.
+	Trading in modern exchanges is more complicated. Limit orders are widely used by those \textit{supplying} liquidity as well as those demanding liquidity, order cancellations and replacements are pervasive, and \textit{order routing} decisions---deciding which exchange to send orders to---are important (\cite{Cont2017}). Recent research incorporates some of these aspects while considering the optimal trading strategies of market makers (\cite{Guilbaud2013, Xu2015}), but the \textit{solution} methods remain fundamentally unchanged from earlier studies. In particular, the field has preferred to use dynamic optimization methods (i.e., solving Hamilton-Jacobi-Bellman equations, typically numerically). Machine learning and artificial intelligence have been largely ignored.
 
 	Recent advances in the application of machine learning to optimal control offer alternative strategies. Reinforcement learning provides a case in point. Developments in the training of neural networks have demonstrated its potential as a method of solving complex, dynamic optimization problems. For example, reinforcement learning algorithms have achieved world-class performance in a variety of video games (\cite{Mnih2015}) and board games, famously beating the human world champion in Go (\cite{Silver2017}). In the trading context, which takes place at sub-human timescales, similar types of algorithms might provide significant value.
 
-	The main challenge to applying these methods is that they require a data source. Optimization in market microstructure is complicated by the fact that backtesting is infeasible. Unlike investment decisions, we first have to guaruntee that any actions an agent performs are consistent with the data: orders have mechanical effects on the state of the order book that are not reflected in the historical data. There is the additional problem that we can no longer assume that actions will not affect the market. Sequences of actions will reveal information to the market, leading to orders that are absent from the historical data.
+	The main challenge to applying these methods is that they require a data source. Optimization in market microstructure is complicated by the fact that backtesting is infeasible. Unlike investment decisions, we first have to guaruntee that any actions an agent performs are consistent with the data: orders have mechanical effects on the state of the order book that are not reflected in the historical data. There is also the critical problem that we can no longer assume that actions will not affect the market. Sequences of actions will reveal information to the market, leading to orders that are absent from the historical data.
 
-	The traditional dynamic optimization approach overcomes this issue by assuming stochastic processes designed to capture features of microstructure they consider important, and which are compatible with numerical methods: one only needs to calibrate a model from historical data and apply the solver. Reinforcement learning are ``model-free'', but they do not work with historical data--they require a source. The goal of this study is to take the first step towards improved automated trading, and towards our understanding how automated trading works in practice, by developing a model of limit order book dynamics that can serve as a training environment--a sort of testing lab--for new classes of algorithms attempting to learn optimal trading strategies\footnote{\cite{Nevmyvaka2006} is a rare example in this vein. They use a simplified version of reinforcement learning, trained on historical data, to learn how to execute a small order. The machine learning literature on high-frequency trading has tended to focus on \textit{prediction} rather than control}.
+	The traditional dynamic optimization approach overcomes this issue by assuming stochastic processes designed to capture features of microstructure they consider important, and which are compatible with numerical methods: one only needs to calibrate a model from historical data and apply the solver. Reinforcement learning are ``model-free'', but they do not work with historical data---they require a source. The goal of this study is to take the first step towards improved automated trading, and towards our understanding how automated trading works in practice, by developing a model of limit order book dynamics that can serve as a training environment---a sort of testing lab---for new classes of algorithms attempting to learn optimal trading strategies\footnote{\cite{Nevmyvaka2006} is a rare example in this vein. They use a simplified version of reinforcement learning, trained on historical data, to learn how to execute a small order. The machine learning literature on high-frequency trading has tended to focus on \textit{prediction} rather than control}.
 
-	There are two essential features that a simulator intended to train computational agents should possess. First, the simulator should be \textit{responsive}. It is not enough to generate data that matches statistical moments of observed order book data. To learn, an agent needs to be able to interact with the simulator, which requires that it can generate new data based on the agent's actions. Second, I expect reaction times to be extremely fast in modern markets. A discrete-time model would need to take extremely small time-steps to capture interactions with any degree of accuracy, which would then require datasets that are incredibly sparse. For example, if the timescale necessary is milliseconds ($1/1000$ of a second), and we observe one event per second, then the data is 99.9\% sparse--99.9999\% sparse if the necessary timescale is microseconds. Nasdaq message data is recorded with nanosecond precision, meaning that microseconds are well within the measurable accuracy anticipated by the exchange. The approach I pursue satisfies both criteria by modeling order book events as a system of mutually-exciting point processes in continuous time.
+	There are two essential features that a simulator intended to train computational agents should possess. First, the simulator should be \textit{responsive}. It is not enough to generate data that matches statistical moments of observed order book data. To learn, an agent needs to be able to interact with the simulator, which requires that it can generate new data based on the agent's actions. Second, the model needs to be able to capture dynamics at small timescales, as we expect reaction times to be fast in modern markets. A discrete-time model would need to take extremely small time-steps to capture interactions with any degree of accuracy, which would then require datasets that are incredibly sparse. For example, if the timescale necessary is milliseconds ($1/1000$ of a second), and we observe one event per second, then the data is 99.9\% sparse---99.9999\% sparse if the necessary timescale is microseconds. Nasdaq message data is recorded with nanosecond precision, meaning that microseconds are well within the measurable accuracy anticipated by the exchange. The approach I pursue satisfies both criteria by modeling order book events as a system of mutually-exciting point processes in continuous time.
 
-	In this view, order book events (e.g., a limit order at the best offer) form a network in which different types of events influence the probability of events on other ``nodes'' of the network. These interactions provide a natural way for a simulator to respond to actions of a trading agent, namely by simulating some new data every time the agent acts. The model is purely ``excitatory'', meaning that events can increase the intensity of future events, but does not decrease the intensity. Moreover, the model permits a high degree of flexibility regarding the timing of the relationship between events.
+	I view order book events (e.g., limit orders at the best offer) as a network in which different types of events influence the probability of events on other ``nodes'' of the network. These interactions provide a natural way for a simulator to respond to actions of a trading agent, namely by simulating some new data every time the agent acts. The model is purely ``excitatory'', meaning that events can increase the intensity of future events, but does not decrease the intensity. Moreover, the model permits a high degree of flexibility regarding the timing of the relationship between events.
 
-	I begin by identifying order book events from message data obtained from NASDAQ. Order book events are defined contingent upon on the state of the order book at the time a message arrives. I distinguish twelve order book events based on the side (bid or ask), order type (limit, cancel, or market), and whether or not an order changes either of the best offers. I apply Markov Chain Monte Carlo methods to sample the joint posterior distribution of the parameters in a continuous-time, event-driven model of order book dynamics. The results of the sampling algorithm are used to perform Bayesian inference on a broad selection of stocks. For each stock in the sample, I also compute point-estimates of the model parameters which I use to analyze the median and cross-section of model features and performance.
+	\subsection{Summary}
+		I begin by identifying order book events from message data obtained from NASDAQ. Order book events are defined contingent upon on the state of the order book at the time a message arrives. I distinguish twelve order book events based on the side (bid or ask), order type (limit, cancel, or market), and whether or not an order changes either of the best offers. I apply Markov Chain Monte Carlo methods to sample the joint posterior distribution of the parameters in a continuous-time, event-driven model of order book dynamics. The results of the sampling algorithm are used to analyze the dynamic microstructure---and potential simulator features---of a broad selection of stocks. For each stock in the sample, I compute point estimates of the model parameters which I use to analyze the median and cross-section of model features and performance.
 
-	The model captures a variety of general order book characteristics. Several of the order book events display self-exciting behavior, resulting in clustering of these events. Limit orders and cancellations display strong coupling behavior, especially between limit orders that improve the offer and cancellations that worsen the offer. Market orders arrivals are rare and largely independent or limit orders and cancellations, but they have profound influence on the arrival of future events. The model also indicates that the timescale of these interactions is small, typically in the range of microseconds to milliseconds. This is true despite the fact that I explicit permit the model to learn response times ranging up to one minute.
+		The model captures a variety of general order book characteristics. Several of the order book events display self-exciting behavior, resulting in clustering of these events. Limit orders and cancellations display strong coupling behavior, especially between limit orders that improve the offer and cancellations that worsen the offer. Market orders arrivals are rare and largely independent or limit orders and cancellations, but they have profound influence on the arrival of all types of future events. The model indicates that the timescale of these interactions is small, typically in the range of microseconds to milliseconds. This is true despite the fact that I explicit permit the model to learn response times ranging up to one minute.
 
-	The network model fits the message data better than a baseline model that ignores interactions. On average, the likelihood of the proposed model is more than 4 bits per event higher than the baseline. through further analysis, I explore which of these features are the most important in explaining order book activity, finding that the majority of this improvement is due to the first 20-25\% of the interaction terms. Overall, the inference procedure tends to identify a relatively small network of events in which interactions between nodes take place on extremely small timescales, or not at all. All of these features are found within a single, consolidated framework that provides a more precise and sophisticated understanding of the interactions between order book events.
+		The network model fits the message data better than a baseline model that ignores interactions. On average, the likelihood of the proposed model is more than 4 bits per event higher than the baseline. Through further analysis, I explore which of these features are the most important in explaining order book activity, finding that the majority of this improvement is due to the first 20-25\% of the interaction terms. Overall, the inference procedure tends to identify a modest-sized network of events in which interactions between nodes take place on extremely small timescales, or not at all. All of these features are found within a single, consolidated framework that provides a more precise and sophisticated understanding of the interactions between order book events.
 
-	This paper is the first of its kind to analyze a broad cross-section of order books. High-dimensional, continuous-time models of the type employed in this study demand computationally intensive methods and event-driven models of order books involve large datasets. For these reasons, studies tend to be limited in scope, often restricted to the analysis of a single security. In contrast, this study presents results for a sample of 400 stocks in the S\&P 500, permitting new lines of inquiry.
+	\subsection{Contribution}
+		This paper is the first of its kind to analyze a broad cross-section of order books. High-dimensional, continuous-time models of the type employed in this study demand computationally intensive methods when applied to large datasets like those found in market microstructure studies. For these reasons, studies tend to be limited in scope, often restricted to the analysis of a single security. In contrast, this study presents results for a sample of over 400 stocks in the S\&P 500, permitting a more general analysis of order book dynamics.
 
-	This paper is the first to apply Bayesian inference methods to a continuous-time, event-driven order book model. Traditionally, research in this area has relied on parameterizations that facilitate maximum-likelihood estimation. In contrast, using recent advances lying at the intersection of computational neuroscience and machine learning, I introduce a model that possess greater flexibility in addition to the standard benefits of Bayesian methods.
+		This paper is the first to apply Bayesian inference methods to a continuous-time, event-driven order book model. Traditionally, research in this area has relied on parameterizations that facilitate maximum likelihood estimation. In contrast, following recent modeling approaches lying at the intersection of computational neuroscience and machine learning, I introduce a model and inference procedure that possess greater flexibility in addition to the standard benefits of Bayesian methods.
 
-	A number of academic articles develop statistical models of market microstructure using modern, high-frequency exchange data. One approach to modeling order flow relies on state variables to reduce the dimension of the order book to a small number of variables that predict changes in prices and volumes (e.g., \cite{Avellaneda2011} and \cite{Cont2013B}). This chapter pursues an orthogonal approach, which is to directly model the underlying process of events leading to order book states. \cite{Huang2015} is compromise between the state-based and event-based approaches: they model order arrivals as an inhomogeneous point process in which intensities depend on the state of the order book.
+		A number of academic articles develop statistical models of market microstructure using modern, high-frequency exchange data. One approach to modeling order flow relies on state variables to reduce the dimension of the order book to a small number of variables that predict changes in prices and volumes (e.g., \cite{Avellaneda2011} and \cite{Cont2013B}). This chapter pursues an orthogonal approach, which is to directly model the underlying process of events leading to order book states. \cite{Huang2015} is an example of a compromise between the state-based and event-based approaches in which order arrivals are modeled as inhomogeneous point processes with intensities that depend on the state of the order book.
 
-	This chapter is closely related to \cite{Large2007}, who analyzes dynamic microstructure using the same general class of continuous-time model. However, he focuses on what he calls the "resiliency" of markets, which is the capacity of a market to replace liquidity consumed in a \textit{single} ``large'' trade. Such a notion made sense for the security analyzed at the time of the study, but its meaning is less clear now: in lit exchanges, traders split large orders into smaller portions that rarely deplete liquidity beyond what is available at the best offer. I focus on a broader analysis of order book events, including an examination of the cross-section of microstructure dynamics, and introduce a subtle but consequential change to assumptions regarding the timing of interactions between events.
+		This chapter is closely related to \cite{Large2007} who analyzes dynamic microstructure using the same general class of continuous-time model. He focuses on what he calls the ``resiliency'' of markets, which is the capacity of a market to replace liquidity consumed in a \textit{single} ``large'' trade. Such a notion made sense for the security analyzed at the time of the study, but its consequence is less obvious now: in lit exchanges, traders split large orders into smaller portions that rarely deplete liquidity beyond what is available at the best offer. I focus on a broader analysis of order book events, including an examination of the cross-section of microstructure dynamics, and introduce a subtle but consequential change to assumptions regarding the timing of interactions between events.
 
-	Both papers are generalizations of the analysis of \cite{Biais1995}. That study identified patterns in order flow on the Paris Bourse (now Euronext Paris) by examining the conditional probabilities of various order types following a single order, and the expected waiting times between events. The approach taken in the current chapter goes considerably further by estimating a model of order flow that is \textit{fully} conditioned on prior information, and which operates in continuous time. I can, therefore, make detailed statements about the marginal effect of any given order on the probability of future orders, including the precise timing of its impact. In addition, the dataset that I analyze improves significantly over the size and relevancy of the datasets that these two studies used. Although the datasets used in both papers come from fully-automated exchanges, they predate the rise in popularity of electronic trading, meaning that they reflect trading by humans more than algorithmic trading, and contain orders of magnitude fewer observations.
+		Both papers are generalizations of the analysis of \cite{Biais1995}. That study identified patterns in order flow on the Paris Bourse (now Euronext Paris) by examining the conditional probabilities of various order types following a single order, and the expected waiting times between events. The approach taken in the current chapter goes considerably further by estimating a model of order flow that is \textit{fully} conditioned on prior information, and which operates in continuous time. I can, therefore, make detailed statements about the marginal effect of any given order on the probability of future orders, including the precise timing of its impact. In addition, the dataset that I analyze improves significantly over the size and relevancy of the datasets that these two studies used. Although the datasets used in both papers come from fully-automated exchanges, they predate the swell in popularity of electronic trading and contain orders of magnitude fewer observations.
 
-	Finally, the approach taken in this chapter contributes to a broader line of research studying market microstructure through the lens of mutually-exciting point processes. \cite{Bowsher2007} was the first paper to apply such methods to the study of market microstructure. \cite{Bacry2013} models upwards and downwards price movements as mutually-exciting processes to explain patterns in price variance and covariance across timescales. \cite{Alfonsi2016} addresses optimal order execution in models where such dynamics drive market orders. Common features to nearly all of this literature are the reliance on exponential decay impulse response functions, low-dimensional models, and maximum-likelihood estimators. An exponential impulse response leads to a simplified likelihood expression, and keeping the dimension low--all of the above are bivariate models--reduces computation times, thereby facilitating maximum-likelihood estimation. This chapter is the first to my knowledge to propose a Bayesian model and inference procedure. The inference procedure is made possible in the relatively high-dimensional model considered by writing customized Python code that utilizes Cython to overcome computational bottlenecks. The package is available at \url{https://github.com/cswaney/fawkes}.
+		Finally, the approach taken in this chapter contributes to a broader line of research studying market microstructure through the lens of mutually-exciting point processes. \cite{Bowsher2007} was the first paper to apply such methods to the study of market microstructure. \cite{Bacry2013} models upwards and downwards price movements as mutually-exciting processes to explain patterns in price variance and covariance across timescales. \cite{Alfonsi2016} addresses optimal order execution in models where such dynamics drive market orders. Common features to nearly all of this literature are the reliance on exponential decay impulse response functions, low-dimensional models, and maximum likelihood estimators. An exponential impulse response leads to a simplified likelihood expression, and keeping the dimension low (all of the above are bivariate models) reduces computation times, thereby facilitating maximum likelihood estimation. This chapter is the first to my knowledge to propose a Bayesian model and inference procedure. The inference procedure is made possible in the relatively high-dimensional model considered by writing customized Python code that utilizes Cython to overcome computational bottlenecks. The package download and documentation is available at \url{https://github.com/cswaney/fawkes}.
 
 
 \section{Model}
-	I model Limit order books as event-driven processes. In order to come up with a model that can serve as a simulator, we require a continuous-time statistical framework that identifies the exact ordering of events. In addition, the model should be \textit{responsive} so that a user can learn how actions change expected outcomes, rather than simply learning expectations. Point processes--and Poisson processes in particular--provide a statistical framework satifsying both criteria.
+	I model Limit order books as event-driven processes. In order to come up with a model that can serve as a simulator, we require a continuous-time statistical framework that identifies the exact ordering of events. In addition, the model should be \textit{responsive} so that a user can learn how actions change expected outcomes, rather than simply learning expectations. Point processes---and Poisson processes in particular---provide a statistical framework satifsying both criteria.
 
 	\subsection{Mutually-Exciting Poisson Processes}
 		A \textit{Poisson process} is a continuous-time model that simulates a sequence of events $\{s_m\}_{m=1}^M$ occurring within a time interval $\left[0, T\right]$. The expected number of events that occur in any sub-interval $[\tau_1, \tau_2]$ is determined by the \textit{intensity} of the process, $\lambda(t)$. If the intensity is a constant, then the expected number of events is $\lambda (\tau_2 - \tau_1)$, so that $\lambda$ is the expected frequency of events. In general, the intensity is time-varying (e.g., in order to capture seasonalities in the frequency of events), in which case the expected number of events is equal to the \textit{integrated intensity},
@@ -46,7 +48,7 @@
 			\mathcal{I}\left[t_1, t_2\right] = \int_{\tau_1}^{\tau_2} \lambda(t) \ dt = \mathbb{E} \left[ N \right].
 		\end{equation}
 
-		A \textit{self-exciting Poisson process}--or \textit{Hawkes process} (\cite{Hawkes1971})--is a type of inhomogeneous Poisson process. At any point in time, the intensity of a self-exciting Poisson process depends on the history of events up to that point. Specifically,
+		A \textit{self-exciting Poisson process}---or \textit{Hawkes process} (\cite{Hawkes1971})---is a type of inhomogeneous Poisson process. At any point in time, the intensity of a self-exciting Poisson process depends on the history of events up to that point. Specifically,
 		\begin{equation}
 			\lambda(t) = \lambda_0(t) + \sum_{s_m < t} \phi(t - s_m),
 		\end{equation}
@@ -54,30 +56,27 @@
 
 		Self-exciting Poisson processes can be simulated using the \textit{Poisson superposition principle} (\cite{Kingman1993}), which states that a collection of independent Poisson processes is equivalent to an individual Poisson process. More precisely, suppose that we are given observations of a collection of $K$ Poisson processes, $\{ \{ s_m^{(k)} \}_{m=1}^{M_k} \}_{k=1}^K$, but that the data have been merged into a single sequence of events without indicating their origins. Thus, we observe $\{ s_m \}_{m=1}^{\sum_k M_k}$, and there is no difference, from our perspective, between assuming that the data is generated by a collection of processes with intensities $\{\lambda_k(t)\}_{k=1}^K$ and assuming that it is generated by a individual Poisson process with intensity $\lambda_{tot}(t) = \sum_{k=1}^K \lambda_k(t)$.
 
-		For a self-exciting Poisson process, the superposition principle implies a generative model in which each event is the offspring of either the ``background'' Poisson process--represented by $\lambda_0$--or of a Poisson process initiated by an earlier event whose intensity is given by $\phi(t-s_m)$ on its support $[s_m, T]$. Thus, the process can be simulated according to Algorithm \ref{algo:hawkes}:
+		For a self-exciting Poisson process, the superposition principle implies a generative model in which each event is the ``offspring'' of either the background Poisson process---represented by $\lambda_0$---or of a Poisson process initiated by an earlier event whose intensity is given by $\phi(t-s_m)$ on its support $[s_m, T]$. Thus, the process can be simulated according to Algorithm \ref{algo:hawkes} below.
 
 		% algo:hawkes
 		\begin{algorithm}
 				\begin{algorithmic}
 					\vspace{1mm}
-					\STATE $S \gets$ Generate sample $\{s_m\}_{m=1}^M$ according to $\lambda(t) = \lambda_0$
+					\STATE $S \gets$ Generate sample $\{s_m\}_{m=1}^M$ according to $\lambda(t) = \lambda_0$ on $[0, T]$
+					\STATE $S_{\text{out}} \gets S$
 					\REPEAT
 						\FOR{$s_m$ in $S$}
-							\STATE{$S \gets$ Generate sample $\{s_m\}_{m=1}^M$ according to $\lambda(t) = \phi(t - s_m)$}
+							\STATE{$S_m \gets$ Generate sample $\{s_k\}_{k=1}^{M_m}$ according to $\lambda(t) = \phi(t - s_m)$ on $[s_m, T]$}
 						\ENDFOR
+					\STATE $S = S_1 \cup \dots \cup S_M$
+					\STATE $S_{\text{out}} \gets S_{\text{out}} \cup S$
 					\UNTIL{$S = \emptyset$}
 			\end{algorithmic}
 			\caption{Generative model for a mutually-exciting Poisson process}
 			\label{algo:hawkes}
 		\end{algorithm}
 
-		% \begin{enumerate}
-		% 	\item Generate a sequence of events according to a standard Poisson process with intensity $\lambda_0(t)$ on the interval $[0,T]$.
-		% 	\item For each event $s_m \in [0, T]$, generate a sequence of events according to a Poisson process with intensity $\phi(t - s_m)$ on the interval $[s_m, T]$.
-		% 	\item Repeat Step 2 until no further events are occur.
-		% \end{enumerate}
-
-		A \textit{marked} Poisson process is a Poisson process having multiple every types. Observations of a marked Poisson process consist of event times, $s_t \in [0, T]$, and labels, $c_t \in \{1, \dots, K\}$. It is natural to think of such a process as a network of processes, in which case each process represents a different \textit{nodes}. A \textit{mutually-exciting Poisson process} is a marked Poisson process that permits these nodes to communicate with each other in the same manner as in a self-exciting Poisson process. The intensity of the $n^{th}$ event type is given by
+		A \textit{marked} Poisson process is a Poisson process having multiple event types. Observations of a marked Poisson process consist of event times, $s_t \in [0, T]$, and labels, $c_t \in \{1, \dots, K\}$. It is natural to think of such a process as a network of processes, in which case each process represents a different \textit{node}. A \textit{mutually-exciting Poisson process} is a marked Poisson process that permits these nodes to communicate with each other in the same manner as in a self-exciting Poisson process. The intensity of the $n^{th}$ event type is given by
 		%
 		\begin{equation} \label{eq:hawkes-intensity}
 			\lambda_{n}(t) = \lambda_{n, 0}(t) + \sum_{s_m < t} W_{c_m, n} \ \phi_{c_m, n}(t-s_m),
@@ -88,23 +87,27 @@
 		For the purposes of simulating a mutually-exciting Poisson process, it is useful to associate each event with a Poisson process having intensity
 		%
 		\begin{equation}
-			\lambda_n^m(t) = \begin{cases}
+			\lambda_{m,n}(t) = \begin{cases}
 						             0 & t \le s_m \\
 						             W_{c_m, n} \ \phi_{c_m, n}(t - s_m) & t > s_m
 						      		 \end{cases}
 		\end{equation}
 		%
-		Comparing to \eqref{eq:hawkes-intensity}, we see that the intensity of each node is a linear combination of a background process, $\lambda_{n,0}$, and a sequence of independent Poisson processes. According to the Poisson superposition principle, data generated by this process is indistiguishable from data generated by its component processes. Therefore, the process can be simulated according to Algorithm \ref{algo:network-hawkes}:
+		Comparing to \eqref{eq:hawkes-intensity}, we see that the intensity of each node is a linear combination of a background process, $\lambda_{n,0}$, and a sequence of independent Poisson processes. According to the Poisson superposition principle, data generated by this process is indistiguishable from data generated by its component processes. Therefore, the process can be simulated according to Algorithm \ref{algo:network-hawkes} below.
 
 		% algo:network-hawkes
 		\begin{algorithm}
 				\begin{algorithmic}
 					\vspace{1mm}
-					\STATE $S \gets$ Generate sample $\{s_m, c_m\}_{m=1}^M$ according to $\lambda(t) = \lambda_0$
+					\STATE $\lambda_{m,n} = W_{c_m,n} \ \phi_{c_m,n}(t - s_m)$
+					\STATE $S, C \gets$ Generate sample $\{s_m, c_m\}_{m=1}^M$ according to $\lambda(t) = \lambda_0$ on $[0, T]$
+					\STATE $S_{\text{out}}, C_{\text{out}} \gets S, C$
 					\REPEAT
 						\FOR{$s_m, c_m$ in $S$}
-							\STATE{$S \gets$ Generate sample $\{s_m, c_m\}_{m=1}^M$ according to $\lambda(t) = W_{c_m,n} \ \phi_{c_m,n}(t - s_m)$}
+							\STATE{$(S_m, C_m) \gets$ Generate sample $\{s_k, c_k\}_{k=1}^{M_m}$ according to $\lambda_{m,n}(t)$ on $[s_m, T]$}
 						\ENDFOR
+						\STATE $S, C \gets S_1 \cup \dots \cup S_M$, $C_1 \cup \dots \cup C_M$
+						\STATE $S_{\text{out}} \gets S_{\text{out}} \cup S$
 					\UNTIL{$S = \emptyset$}
 			\end{algorithmic}
 			\caption{Generative model for a mutually-exciting Poisson process}
@@ -123,38 +126,38 @@
 		\end{figure}
 
 	\subsection{Order Book Events}
-		Applying the mutually-exciting Poisson model to market microstructure data requires us to define a set of order book events that form the nodes of a graph. In this study I focus on ``Level I`` of the order book and choose events that affect either the volume or price at the best bid or ask. There are three basic types of orders (limit orders, market orders, and cancellations), which can be submitted on either side of the book (bid or ask), and each of these order types either changes the best offer price or leaves it unmodified. Thus, I define 12 order book events that capture how order flow responds to changes at the best offers. The definitions match \cite{Large2007}, except that they account for the fact that cancellations also change the best offer when they are the last order remaining at the best price.
+		Applying the mutually-exciting Poisson model to market microstructure data requires us to define a set of order book events that form the nodes of a graph. In this study, I focus on ``Level I'' of the order book and choose events that affect either the volume or price at the best bid or ask. There are three basic types of orders (limit orders, market orders, and cancellations), which can be submitted on either side of the book (bid or ask), and each of these order types either moves or maintains the best offer price. Thus, I define 12 order book events that capture how order flow responds to changes in either the volume or price (or both) at the best offer. These definitions match \cite{Large2007}, except that they account for the fact that cancellations also change the best offer when they are the last order remaining at that price.
 
-		Table \ref{tab:event_definitions} describes the order book events. The average market buy and sell orders that fail to move the best offer are for 187 and 181 shares, respectively\footnote{Note that the side of the market order events in Table \ref{tab:event_definitions} indicates the side of the book impacted by the trade, not the interest side. Thus, a market order to sell is a market order on the bid side (events 5 and 6)}. Market orders that move the best price are larger on average: 292 shares for buys, and 283 shares for sells. These values overstate the size of a typical trade, as the median size of market orders is 100 shares for trades that do not adjust prices, and slightly higher than 100 shares for trades that do (111 and 106 for buys and sells, respectively). The frequencies of the various event types are similar to the frequencies of the underlying message data shwon in Table \ref{tab:message_counts}. The median number of order book events is slightly greater than one-fifth the median number of messages per day.
+		Table \ref{tab:event_definitions} describes the order book events. The average market buy and sell orders that fail to move the best offer are for 187 and 181 shares, respectively\footnote{Note that the side of the market order events in Table \ref{tab:event_definitions} indicates the side of the book impacted by the trade, not the interest side. Thus, a market order to sell is a market order on the bid side (events 5 and 6)}. Market orders that move the best price are larger on average: 292 shares for buys, and 283 shares for sells. These values overstate the size of a typical trade, as the median size of market orders is 100 shares for trades that maintain prices, and slightly higher than 100 shares for trades that move prices (111 for buys and 106 for sells). The frequencies of the various event types are similar to the frequencies of the underlying message data shwon in Table \ref{tab:message_counts}. The median number of order book events is slightly greater than one-fifth the median number of messages per day.
 
-		Besides ignorning activity below Level I of the book, I also disregard replacement orders and executions against hidden orders. As discussed above, a satisfactory treatment of these events would require additional nodes, and I exclude them in favor of a smaller model. Unlike \cite{Biais1995}, I do not distinguish between orders based on their number of shares. Distinctions between orders size are less relevant in modern markets because order sizes have decreased: the majority of trades involve 100 shares or less, with an exponentially decreasing percent distributed across larger numbers of round lots. The event definitions also ignore potentially useful information reflecting the state of the order book. One way to include such information is to make parameters functionally dependent on it. For example, the background intensity parameter could be a linear function of the bid-ask spread or imbalance.
+		Besides ignorning activity below Level I of the book, I also disregard replacement orders and executions against hidden orders. As discussed above, a satisfactory treatment of these events would require additional nodes, and I exclude them in favor of a smaller model. Unlike \cite{Biais1995}, I do not distinguish between orders based on their number of shares. Distinctions between orders size are less relevant in modern markets because order sizes have decreased, with the majority of trades involve 100 shares or less and an exponentially decreasing percent distributed across larger numbers of round lots. The event definitions also ignore potentially useful information reflecting the state of the order book. One way to include such information is to make parameters functionally dependent on it. For example, the background intensity parameter could be a linear function of the bid-ask spread or imbalance.
 
 		% tab:event_definitions
 		\begin{table}[t]
-		\small
-		\linespread{1}
-		\centering
-		\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-		\caption[Order book event definitions]{The table describes the order book events. \textit{Count} is the median number of events per stocky-day. \textit{Frequency} is the percent of orders of that type per stock-day. \textit{Shares} is the average number of shares per event.}
-		\label{tab:event_definitions}
-		\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}ccccrrr}
-		\toprule
-		Event \# & Order type & Bid or ask? & Changes price? & Count & Frequency & Shares \\
-		\midrule
-		1 & Limit & Bid & No & 5,013 & 19.0 & 125 \\
-		2 & Limit & Bid & Yes & 1,391 & 5.3 & 76 \\
-		3 & Limit & Ask & No & 4,936 & 18.7 & 128 \\
-		4 & Limit & Ask & Yes & 1,352 & 5.1 & 73 \\  % 34052	200.0  100.0   98.0  1.0
-		5 & Market & Bid & No & 517 & 2.0 & 181 \\   % 21100 	243.5  106.0  100.0  2.0
-		6 & Market & Bid & Yes & 467 & 1.8 & 283 \\  % 56829 	200.0  100.0  100.0  1.0
-		7 & Market & Ask & No & 508 & 1.9 & 187 \\   % 24340 	250.0  111.0  100.0  2.0
-		8 & Market & Ask & Yes & 453 & 1.7 & 292 \\
-		9 & Cancellation & Bid & No & 4,707 & 17.9 & 121 \\
-		10 & Cancellation & Bid & Yes & 1,199 & 4.6 & 62 \\
-		11 & Cancellation & Ask & No & 4,688 & 17.8 & 124 \\
-		12 & Cancellation & Ask & Yes & 1,108 & 4.2 & 10 \\
-		\bottomrule
-		\end{tabular*}
+			\small
+			\linespread{1}
+			\centering
+			\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}ccccrrr}
+			\toprule
+			Event \# & Order type & Bid or ask? & Changes price? & Count & Frequency & Shares \\
+			\midrule
+			1 & Limit & Bid & No & 5,013 & 19.0 & 125 \\
+			2 & Limit & Bid & Yes & 1,391 & 5.3 & 76 \\
+			3 & Limit & Ask & No & 4,936 & 18.7 & 128 \\
+			4 & Limit & Ask & Yes & 1,352 & 5.1 & 73 \\  % 34052	200.0  100.0   98.0  1.0
+			5 & Market & Bid & No & 517 & 2.0 & 181 \\   % 21100 	243.5  106.0  100.0  2.0
+			6 & Market & Bid & Yes & 467 & 1.8 & 283 \\  % 56829 	200.0  100.0  100.0  1.0
+			7 & Market & Ask & No & 508 & 1.9 & 187 \\   % 24340 	250.0  111.0  100.0  2.0
+			8 & Market & Ask & Yes & 453 & 1.7 & 292 \\
+			9 & Cancellation & Bid & No & 4,707 & 17.9 & 121 \\
+			10 & Cancellation & Bid & Yes & 1,199 & 4.6 & 62 \\
+			11 & Cancellation & Ask & No & 4,688 & 17.8 & 124 \\
+			12 & Cancellation & Ask & Yes & 1,108 & 4.2 & 10 \\
+			\bottomrule
+			\end{tabular*}
+			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
+			\caption[Order book event definitions]{The table describes the order book events. \textit{Count} is the median number of events per stocky-day. \textit{Frequency} is the percent of orders of that type per stock-day. \textit{Shares} is the average number of shares per event.}
+			\label{tab:event_definitions}
 		\end{table}
 
 	\subsection{Parameterization}
@@ -168,9 +171,9 @@
 		Z &= \frac{\Delta t (\Delta t_{\text{max}} - \Delta t)}{\Delta t_{\text{max}}} \left( \frac{\tau_{m , n}}{2 \pi} \right)^{-\frac{1}{2}}
 		\end{align}
 		%
-		Making $\phi$ a probability density facilitates interpretion because the connection weight $W_{m,n}$ becomes the expected number of events generated on node $n$ by an event on node $m$. Note as well that the impulse response has non-zero on the interval $\Delta t \in [0, \Delta t_{\text{max}}]$. Thus, events on node $m$ have no influence over events on node $n$ after $\Delta t_{\text{max}}$ seconds. Finally, as a two-parameter density, $\phi$ can model a variety of impulse response functions, as demonstrated by Figure \ref{fig:impulse_examples}. Importantly, observe that the first parameter ($\mu$) controls the apex of the response, while the second ($\tau$) determines its dispersion.
+		Making $\phi$ a probability density facilitates interpretion because the connection weights $W_{m,n}$ become the expected number of events generated on node $n$ by an event on node $m$. Note that the impulse response is non-zero on the interval $\Delta t \in [0, \Delta t_{\text{max}}]$. Thus, events on node $m$ have no influence over events on node $n$ after a maximum lag of $\Delta t_{\text{max}}$ seconds. Finally, as a two-parameter density, $\phi$ can model a variety of impulse response functions, as demonstrated by Figure \ref{fig:impulse_examples}. Importantly, observe that the first parameter ($\mu$) controls the apex of the response, while the second ($\tau$) determines its dispersion.
 
-		The maximum lag $\Delta t_{\text{max}}$ is set to 60 seconds. Based on the results, this is probably longer than required (and causes the estimation to be much slower in practice), but allows for the possibility that events have important low-frequency consequences. It is also possible that events have effects that are felt over multiple timescales. The same inference procedure is easily modified so that some or all of the events have a fast response (small $\Delta t_{\text{max}}$) and a slow response (large $\Delta t_{\text{max}}$).
+		The maximum lag $\Delta t_{\text{max}}$ is set to 60 seconds. Based on the results in the next section, this is longer than required (and causes the estimation to be much slower in practice), but allows for the possibility that events have important low-frequency consequences. It is also possible that events have effects that are felt over multiple timescales. The same inference procedure is easily modified so that some or all of the events have a fast response (small $\Delta t_{\text{max}}$) and a slow response (large $\Delta t_{\text{max}}$).
 
 		% fig:impulse_examples
 		\begin{figure}[t]
@@ -183,10 +186,10 @@
 			\label{fig:impulse_examples}
 		\end{figure}
 
-		Finally, I assume that the background intensity of events is constant: $\lambda_0(t) = \lambda$. As previously remarked, overall market activity displays a distinct `U'-shape during the trading hours from 9:30 to 16:00, and I accordingly restrict the sample to the uniform trading hours between 10:30 and 15:00. Alternatively, a piecewise constant or linear spline could account for seasonalities and further un-modeled exogenous variation, and it is also possible to let $\lambda_0$ depend on additional covariates (e.g., news events).
+		Finally, I assume that the background intensity of events is constant: $\lambda_0(t) = \lambda$. As previously remarked, overall market activity displays a distinct `U'-shape during the trading hours from 9:30 to 16:00, and I accordingly restrict the sample to the relatively uniform trading hours between 10:30 and 15:00. Alternatively, a piecewise constant or linear spline could account for seasonalities and other un-modeled exogenous variation, or $\lambda_0$ could be allowed to be a function of additional covariates (e.g., news events).
 
 	\subsection{Inference}
-		Estimation of Hawkes processes in the finance literature relies on maximum-likelihood methods (e.g., \cite{Bowsher2007}, \cite{Large2007}, and \cite{Bacry2013}). I introduce a Bayesian inference procedure based on work in the field of computational neuroscience (\cite{Linderman2015}). The algorithm uses standard Gibbs sampling to generates approximate samples from the conditional posterior distributions of the model parameters using conjugate priors, as described below.
+		Estimation of Hawkes processes in the finance literature relies on maximum likelihood methods (e.g., \cite{Bowsher2007}, \cite{Large2007}, and \cite{Bacry2013}). I introduce a Bayesian inference procedure based on work in the field of computational neuroscience (\cite{Linderman2015}). The algorithm uses standard Gibbs sampling to generate approximate samples from the conditional posterior distributions of the model parameters using conjugate priors, as described below.
 
 		\subsubsection*{Weights}
 			If the weights have gamma priors,
@@ -250,17 +253,17 @@
 		\subsubsection*{Parents}
 			In order to sample the above model parameters, we first need to sampmle the latent ``parent'' variables. Their conditional distribution is a multinomial with probability mass function
 			\begin{equation} \label{eq: parents_posterior}
-				p(\omega_m = n \ | \ s_m, \{ \lambda_n(t)\}_{n=1}^M) = \frac{\lambda_n(s_m)}{\lambda_{c_m}^0 + \sum_{n'=1}^{m - 1} \lambda_{n'}(s_m)},
+				p(\omega_m = n \ | \ s_m, \{ \lambda_n(t)\}_{n=1}^M) = \frac{\lambda_n(s_m)}{\lambda_{c_m, 0} + \sum_{n'=1}^{m - 1} \lambda_{n'}(s_m)},
 			\end{equation}
 			for $n = 0, \dots, m - 1$, where
 			\begin{equation}
 				\lambda_{n'}(s_m) = w_{c_{n'},c_m} \cdot \phi(s_m - s_{n'}; \theta_{c_m,c_n'})
 			\end{equation}
 
-			This says that the probability that the parent of the $m^{th}$ event is the $n^{th}$ event equals the relative contribution of the $n^{th}$ event to the aggregate intensity at the time of $m^{th}$ event. As a result, the most likely parent at any time is the event that is \textit{most active} at that time. The conditional distributions are independent, so parents can be sampled in parallel. We can also see from the definition of $\lambda_{n'}(s_m)$ that the most likely parent of an event is not, in general, the most recent event because. Events can also be caused by the background process, which by reflected in the inclusion of $n=0$ in equation \eqref{eq: parents_posterior}.
+			This says that the probability that the parent of the $m^{th}$ event is the $n^{th}$ event equals the relative contribution of the $n^{th}$ event to the aggregate intensity on the $c_m^{th}$ node at the time of $m^{th}$ event. As a result, the most likely parent at any time is not, in general, the most recent event, but the event that is most active at that time. Events can also be caused by the background process, which by reflected in the inclusion of $n=0$ in equation \eqref{eq: parents_posterior}. Note that the conditional distributions are independent. This feature allows parents to be sampled in parallel, which substantially reduces the computation time.
 
 		\subsubsection*{Likelihood}
-			In the results section I compare the network model with a baseline model. I base my comparison on the likelihood of the data given each of the models. The likelihood of observations $s = \{s_1, \dots, s_M\}, c=\{c_1, \dots, c_M\}$ for the network poisson model with parameters estimates $\theta = (\lambda, W, \mu, \tau)$ is given by
+			In the results section I compare the network model with a baseline model. I base my comparison on the likelihood of the data given each of the models. The likelihood of observations $(s, c) = \{s_m, c_m\}_{m=1}^M$ for the network poisson model with parameters estimates $\theta = (\lambda_0, W, \mu, \tau)$ is given by
 
 			% eqn:likelihood
 			\begin{align}
@@ -279,21 +282,13 @@
 
 	ITCH message data consists primarily of \textit{add}, \textit{delete}, and \textit{execute} messages. Add messages record new limit orders; delete messages indicate cancellations of resting limit orders; execute messages correspond to market orders (or ``marketable'' limit orders). If an order matches against multiple resting limit orders, then it generates a sequence of execute messages with identical timestamps. I identify such trades with the last execute message reported. If the complete trade moves the best offer, then it is identified with an execute message with a different price from the first message in the sequence. Given the nanosecond precision of ITCH timestamps, I register all other execute messages as separate trades.
 
-	Table \ref{tab:message_counts} provides descriptive statistics for the ITCH message data. Including replace messages, add and delete messages constitute 97.1\% of all messages: 47.2\% of messages are new limit orders, while 45.6\% are limit order cancellations. Thus, 97\% of limit orders are canceled before they are matched, which reflects the activity of high-frequency market makers competing for order flow while attempting to avoid being adversely selected. Execute messages, which overstate the number of \textit{trades}, amount to just 2.8\% of all messages. While the average stock received over 200,000 messages per day, the majority of this activity is not directly utilized by this study because it does not affect the top of the order book.
-
-	ITCH includes additional message types that are ignored in this study. Executions against hidden orders constitute 0.3\% of all messages, and 10\% off all execute messages. Non-displayed orders typically execute between the bid and ask, in which case they fall outside the event definitions above. It is possible that a hidden order executes at the best offer, but this only happens when a market order specifying more shares than what is available at the current best offer hits the book at the same time that a non-displayed order resides at the back of the queue. I also disregard \textit{replace} (3.7\%) and \textit{cancel} (0.1\%) messages.
-	Traders use replace orders to change the price of open orders. A replace order is equivalent to simultaneous add and delete messages. Recording both events is inconsistent with the point process specification, and adding an additional set of event types is undesirable. Cancellation messages occur when a trader cancels a fraction of an order.
-
-	Figure \ref{fig:seasonalities} demonstrates patterns in the timing of order book activity in my sample. The unconditional arrival rates of add, delete, and execute messages display the typical `U'-shape, with higher rates at the opening and close of trading hours. This study only looks at events that occur during the relatively stable trading hours between 10:30 and 15:00. The figure also demonstrates that orders are not uniformly distributed throughout each second. A disproportionate number of orders arrive within the first few milliseconds of each second. As noted by \cite{Hasbrouck2013}, this feature is probably due to algorithms that submit orders at even intervals of time.
+	Table \ref{tab:message_counts} provides descriptive statistics for the ITCH message data. Including replace messages, add and delete messages constitute 97.1\% of all messages: 47.2\% of messages are new limit orders, while 45.6\% are limit order cancellations. Thus, 97\% of limit orders are canceled before they are matched, which reflects the activity of high-frequency market makers competing for order flow while attempting to avoid being adversely selected. Execute messages---which overstate the number of \textit{trades}---amount to just 2.8\% of all messages. While the average stock received over 200,000 messages per day, the majority of this activity is not directly utilized by this study because it does not affect the top of the order book.
 
 	% tab:message_counts
 	\begin{table}[t]
 		\small
 		\linespread{1}
 		\centering
-		\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-		\caption[Message counts]{The table describes the distribution of message counts across the full sample. \textit{Frequency} is the percent of all messages of that type. All other values are computed are numbers of observations per stock-day.}
-		\label{tab:message_counts}
 		\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrrrr}
 			\toprule{}
 			 &  Frequency  &   Mean  & Min &  $q_{0.25}$ &  Median &    $q_{0.75}$   &        Max \\
@@ -306,7 +301,15 @@
 			X &  0.3   &     405 &      1 &      16 &     107 &     468 &   11,809 \\
 			\bottomrule
 		\end{tabular*}
+		\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
+		\caption[Summary statistics for the ITCH message data]{Summary statistics for the ITCH message data. The table describes the distribution of message counts across the full sample. \textit{Frequency} is the percent of all messages of that type. All other values are computed are numbers of observations per stock-day.}
+		\label{tab:message_counts}
 	\end{table}
+
+	ITCH includes additional message types that are ignored in this study. Executions against hidden orders constitute 0.3\% of all messages, and 10\% off all execute messages. Non-displayed orders typically execute between the bid and ask, in which case they fall outside the event definitions above. It is possible that a hidden order executes at the best offer, but this only happens when a market order specifying more shares than what is displayed at the current best offer hits the book at the same time that a non-displayed order resides at the back of the queue. This is equivalent to a market order that moves the \textit{displayed} price, which has already been defined as an order book event. I also disregard \textit{replace} (3.7\%) and \textit{cancel} (0.1\%) messages.
+	Traders use replace orders to change the price of open orders. A replace order is equivalent to simultaneous add and delete messages, but recording both events is inconsistent with the point process specification, and adding an additional set of event types is undesirable. Cancellation messages occur when a trader cancels a fraction of an order.
+
+	Figure \ref{fig:seasonalities} demonstrates patterns in the timing of order book activity in my sample. The unconditional arrival rates of add, delete, and execute messages display the typical `U'-shape of order book activity, with higher rates at the opening and close of trading hours. This study only looks at events that occur during the relatively stable trading hours between 10:30 and 15:00. The figure also demonstrates that orders are not uniformly distributed throughout each second. A disproportionate number of orders arrive within the first few milliseconds of each second. As noted by \cite{Hasbrouck2013}, this feature is probably due to algorithms that submit orders at even intervals of time.
 
 	% fig:seasonalities
 	\begin{figure}[t]
@@ -321,24 +324,22 @@
 
 
 \section{Results}
-	What does the model reveal about limit order book dynamics in general? This section analyzes estimates of the event-driven model for a broad (by microstructure standards) cross-section of stocks. For each stock, I perform MCMC sampling for the network Poisson model with the same hyperparameter selection and settings described in previous sections using a single day of message data. The point-estimator considered is the posterior median, which minimizes posterior absolute loss risk.
-
-	The MCMC algorithm employed scales on the order of the number of observations squared. To reduce the total sampling time, the sample excludes stocks with more than 60,000 events between 10:30 am and 3:00 pm. An alternative approach is to select a random subsample of manageable size for all stocks.
+	What does the model reveal about limit order book dynamics in general? This section analyzes estimates of the event-driven model for a broad (by microstructure standards) cross-section of stocks. For each stock, I perform MCMC sampling for the network Poisson model with the same hyperparameter selection and settings described in previous sections using a single day of message data. The point estimator considered is the posterior median of the Gibbs sample, which minimizes posterior absolute loss risk. As the MCMC algorithm employed scales on the order of the number of observations squared, I reduce the total sampling time by excluding stocks in the S\&P 500 with more than 60,000 events between 10:30 am and 3:00 pm, which leaves a total of 401 stocks.
 
 	\subsection{Connections}
-		What types of interactions characterize aggregate limit order book dynamics? Figure \ref{fig:weights_full_sample} presents the median point-estimate of the connection weight matrix $W$ across stocks. I begin my considering the raw point estimates pictured on the left. The rows of this figure are labeled by parent event and the columns are labeled by child event. Reading across the rows of the chart tells you which events an event precedes, while reading down the columns tells you which events precede that event.
+		What types of interactions characterize aggregate limit order book dynamics? Figure \ref{fig:weights_full_sample} presents the median point estimate of the connection weight matrix $W$ across stocks. I begin my considering the raw point estimates shwon on the left. The rows of this figure are labeled by parent event and the columns are labeled by child event. Reading across the rows of the matrix allows us to see the impact of that row event on all other event intensities; reading down the columns allows us to see how much each event impacts the intensity of the column event.
 
-		There are a few general observations to be made. First, the median point-estimates are symmetric across sides of the orders book, meaning that, for example, if there is a strong connection between an order type on the bid side of the book to an order type on the ask side of the book, then we will also observe a strong connection between the same order types, but from the ask to the bid side. Second, all of the order types (limit, market and cancel) display self-exciting behavior, which can be seen by looking at the diagonal of the matrix. Third, weights are generally much larger than background rates, with the median point-estimate of $W_{m,n}$ being as much as 120 times $\lambda_n^{(0)}$. This observation alone suggests that the mutually-exciting feature plays a central role in modeling order flow.
+		There are a few general observations to be made. First, the median point estimates are symmetric across sides of the orders book, meaning that, for example, if there is a strong connection between an order type on the bid side of the book to an order type on the ask side of the book, then we will also observe a strong connection between the same order types, but from the ask to the bid side. Second, all of the order types (limit, market and cancel) display self-exciting behavior, which can be seen by looking at the diagonal of the matrix. Third, weights are generally much larger than background rates, with the median point estimate of $W_{m,n}$ being as much as 120 times $\lambda_{n,0}$. This observation alone suggests that the mutually-exciting feature plays a central role in modeling order flow.
 
-		The top four rows of the matrix tell us how limit orders influence subsequent order flow. Limit orders display self-exciting behavior, but the effect is absent for limit orders that improve the offer. Instead, these orders are followed by (same side) limit orders at the new offer. In fact, these follow-on orders  are the primary self-connections between limit orders, demonstrating that price-improving orders are significant order book events that traders respond to by supplying fresh liquidity to preserve execution priority. Limit orders at the offer precede (same side) cancellations at the offer, while limit orders that improve the offer are associated with subsequent (same side) cancellations, with little difference seen between cancellations that worsen the offer and those at the offer. There are no connections between limit orders and future market orders.
+		The top four rows of the matrix tell us how limit orders influence subsequent order flow. Limit orders display self-exciting behavior, but the effect is absent for limit orders that improve the offer. Instead, these orders are followed by (same-side) limit orders at the new offer. In fact, these follow-on orders  are the primary self-connections between limit orders, demonstrating that price-improving orders are significant order book events that traders respond to by supplying fresh liquidity to preserve execution priority. Limit orders at the offer precede (same side) cancellations at the offer, while limit orders that improve the offer are associated with subsequent (same side) cancellations, with little difference seen between cancellations that worsen the offer and those at the offer. There are no connections between limit orders and future market orders.
 
-		The bottom four rows of the matrix tell us how delete orders influence subsequent order flow. Connections from order cancellations to subsequent order cancellations display nearly the same pattern as the self-connections between limit orders. There appears to be mild clustering of order cancellations at the offer, but the stronger effect is between cancellations the worsen the offer and following (same side) cancellations at the offer. Order cancellations that worsen the offer are followed by (same side) limit orders that improve the offer. This is a counterpart to the opposite effect seen for limit orders above: taken together, these effects form a cycle that appears as fleeting liquidity. There are no connections between order cancellations and future market orders.
+		The bottom four rows of the matrix tell us how order cancellations influence subsequent order flow. Connections from order cancellations to subsequent order cancellations display nearly the same pattern as the self-connections between limit orders. There appears to be mild clustering of order cancellations at the offer, but the stronger effect is between cancellations the worsen the offer and following (same side) cancellations at the offer. Order cancellations that worsen the offer are followed by (same side) limit orders that improve the offer. This is a counterpart to the opposite effect seen for limit orders above. Taken together, these effects form a cycle of ``fleeting liquidity''. As with limit orders, there are no connections between order cancellations and future market orders.
 
-		The middle four rows of the matrix tell us how market orders influence subsequent order flow. While  we have seen that market orders are not influenced by limit orders and cancellations, they are themselves strong influencers of both events. Market order display self-excitation (clustering) between trades at the offer, but not between trades that worsen the offer. (The absence of the latter self-connection is in some sense mechanical: trades are quite small, so even if a sequence of orders eats through all orders at the top of the book, the trade that finally exhausts liquidity would be followed by a market order at the offer. However, we don’t observe the latter, suggesting that market orders are submitted until liquidity is exhausted, and then traders wait to see if liquidity will be replaced—or simply take a break to conceal their intentions).
+		The middle four rows of the matrix tell us how market orders influence subsequent order flow. While  we have seen that market orders are not influenced by limit orders and cancellations, they are themselves strong influencers of both events. Market orders display self-excitation (clustering) between trades at the offer, but not between trades that worsen the offer. The absence of the latter self-connection is in some sense mechanical: the median trades is small, so even if a sequence of orders matches all orders at the top of the book, the trade that finally exhausts liquidity will be followed by a market order at the offer. However, observe the latter is absent from the results, suggesting that market orders are submitted until liquidity is exhausted, and then traders wait to see if liquidity will be replaced, or pause to conceal their intentions.
 
 		The largest effects in the raw connection weight matrix are between market orders that worsen the offer and subsequent limit orders on the opposite side of the book, particularly at the offer. The model predicts trades that exhaust liquidity at the offer are most likely to generate opposite-side limit orders at the offer, opposite-side limit orders that improve the offer, or same-side limit orders that improve the offer, in that order. The reaction to market orders at the offer is relatively unexciting.
 
-		Market orders also have a strong connection to subsequent cancellations. Market orders that worsen the spread are followed by cancellations at the offer on either side of the book. This effect is interesting because it is at odds with relationship between market order and limit orders. Cancellations on the opposite side of the book is consistent with traders replacing orders at an improved offer. There appears to be a cautious response (cancellations) and an assertive response (limit orders) to these trades.
+		Market orders display a strong connection to subsequent cancellations. Market orders that worsen the spread are followed by cancellations at the offer on either side of the book. This effect is interesting because it is at odds with the relationship between market orders and limit orders. Cancellations on the opposite side of the book is consistent with traders replacing orders at an improved offer. There appears to be a cautious response (cancellations) and an assertive response (limit orders) to these trades.
 
 		% fig:weights_full_sample
 		\begin{sidewaysfigure}[p]
@@ -347,24 +348,22 @@
 			\centering
 			\includegraphics[width=\textwidth]{chapter4/weights_full_sample}
 			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Median of event connection point-estimates: full sample]{Median of event connection point-estimates: full sample. The figure shows the median connection strength between event types across the full sample of stocks. Larger values indicate stronger connections, which are expected to generate a greater number of child events. (Left) The median of connection weight estimates using the raw weight matrix estimates. This figure identifies the most important connections in an absolute sense. (Right) The median connection weight matrix after normalizing parent-child weights by the estimated background rate of child events. This figure identifies the most important connections in a relative sense.}
+			\caption[Median of event connection point estimates: full sample]{Median of event connection point estimates: full sample. The figure shows the median connection strength between event types across the full sample of stocks. Larger values indicate stronger connections, which are expected to generate a greater number of child events. (Left) The median of connection weight estimates using the raw weight matrix estimates. This figure identifies the most important connections in an absolute sense. (Right) The median connection weight matrix after normalizing parent-child weights by the estimated background rate of child events. This figure identifies the most important connections in a relative sense.}
 			\label{fig:weights_full_sample}
 		\end{sidewaysfigure}
 
-		Next, we turn our attention to the normalized weight matrix on the right of Figure \ref{fig:weights_full_sample}. In this figure, the median point-estimates of $W_{m,n}$ are divided by the median point estimates of $\lambda_{0,n}$. The resulting values are therefore the relative impacts on the child node (the units are expected events divided by expected events per second). This view allows us to explore which events have the biggest effects at the event level and accounts for the fact that some events are more frequent than others. These are not necessarily the most import connections from the view of explaining the data as a whole.
+		Next, we turn our attention to the \textit{normalized} weight matrix on the right of Figure \ref{fig:weights_full_sample}. In this figure, the median point estimates of $W_{m,n}$ are divided by the median point estimates of $\lambda_{0,n}$. The resulting values are therefore the relative impacts on the child node (the units are expected events divided by expected events per second). This view allows us to explore which events have the biggest effects at the event level and accounts for the fact that some events are more frequent than others. These are not necessarily the most import connections from the view of explaining the data as a whole.
 
 		The biggest change is that the connection between limit orders that change the improve the offer price and cancellations that worsen the offer is more prominent. In fact, they are the largest relative connections in the model. Thus, the model identifies the main driving force behind such delete orders: they are a response to price-improving orders on the same side of the book. “Response” may not be the right description: these orders are likely to come from the same trading algorithm posted an add order above the best bid, and then immediately deleting that order if it fails to execute. The value of these weights is around 120, which means that the expected number of such delete orders following a price-improving add order is 120 times greater than the expected number of such delete order generated per second as “background” activity.
 
-		The relative view also further highlights the connection between cancellations that worsen the offer and limit orders that improve the offer. Thus, in this view the complete fleeting order (or ``flickering'' quotes) cycle is made particularly clear.
+		The relative view also highlights the connection between cancellations that worsen the offer and limit orders that improve the offer. Thus, from this perspective the complete fleeting order (or ``flickering'' quotes) cycle is particularly clear. The relative viewpoint also further highlights the connections between market orders and limit orders, except that market orders that worsen the offer now have a larger relative impact on limit orders that improve the offer than on limit orders that do not. Another pair of connections that appears much more clearly under this normalization is that between executions and subsequent executions. After normalization, observe the magnitude of the clustering effect more clearly. Trades are expected to generate between 40 and 60 times as many trades as we would expect to occur in one second due to exogenous supply and demand alone, depending on whether the trades exhausts liquidity at the offer or not.
 
-		The relative view further highlights the connections between market orders and limit orders, except that market order that worsen the offer have larger relative impact on limit order that improve the offer than on limit orders that do not. Another pair of connections that appears much more clearly under this normalization is that between executions and subsequent executions. After normalization, we see the magnitude of the clustering effect more clearly: trades are expected to generate between 40 and 60 times as many trades as we would expect to occur in one second due to exogenous supply and demand alone, depending on whether they exhaust liquidity at the offer or not.
-
-		Overall, the biggest change seen by switching to the relative view is on connections to limit orders and cancellations that improve and worsen the offer. The raw weights on these events tend to have a similar magnitude to their counterparts that do not change the offer, but they are occur about a quarter as often. The relative view does not simply extenuate the weights for rare events, however: trades are even less commonly observed, but there is no qualitative difference between the raw and relative views of the impacts of limit order and cancellations on their intensity.
+		Overall, the biggest change seen by switching to the relative view is on connections to limit orders and cancellations that improve and worsen the offer. The raw weights on these events have similar magnitudes as their counterparts that do not change the offer, but they occur about a quarter as often. The relative view does not simply exaggerate the weights for rare events, however: trades are even less commonly observed, but there is no qualitative difference between the raw and relative views of the impacts of limit order and cancellations on their intensity.
 
 	\subsection{Impulse Response}
-		The timescale of interactions is also important. I define the median impulse response as the impulse response function evaluated at the posterior median point-estimate, $\hat{\phi}_{m,n}(t) = \phi_{m,n} \left( t \mid \hat{\mu}_{m,n}, \hat{\tau}_{m,n} \right)$. There is substantial variation in the timing of reactions. The response self-exciting response of market orders is nearly instantaneous, whereas the weak connections from limit orders and cancellations to market orders operate at timescales on the order of seconds.
+		The model permits a detailed view of the timescale of interactions between event nodes via the impulse responses. I define the median impulse response as the impulse response function evaluated at the posterior median point estimate, $\hat{\phi}_{m,n}(t) = \phi_{m,n} \left( t \mid \hat{\mu}_{m,n}, \hat{\tau}_{m,n} \right)$. There is substantial variation in the timing of reactions. The response self-exciting response of market orders is nearly instantaneous, whereas the weak connections from limit orders and cancellations to market orders operate at timescales on the order of seconds.
 
-		Figure \ref{fig:impulse_full_sample} plots the median impulse responses of four pairs of connections discussed above. I plot the responses in log time to facilitate interpretation. In log time, the response is normally distributed. The plots on the left show the response to market orders that worsen the offer of limit orders at the offer (above) as well as limit orders that improve the offer (below). Both reactions peak between one microsecond ($10^{-6}$ seconds) and one millisecond ($10^{-3}$ seconds), where their probability-mass concentrates, and of the four connections shown, these are the fastest. It is interesting to note that the response by limit orders that improve the offer is faster than the response of limit order at the offer, consistent with offers queueing behind a newly established best price.
+		Figure \ref{fig:impulse_full_sample} plots the median impulse responses of four pairs of connections discussed above. I plot the responses in log time to facilitate interpretation (in log time, the response is normally distributed). The plots on the left show the response to market orders that worsen the offer of limit orders at the offer (above) and limit orders that improve the offer (below). Both reactions peak between one microsecond ($10^{-6}$ seconds) and one millisecond ($10^{-3}$ seconds), where their probability-mass concentrates, and of the four connections shown, these are the fastest. It is interesting to note that the response by limit orders that improve the offer is faster than the response of limit order at the offer, consistent with offers queueing behind a newly established best price.
 
 		% fig:impulse_full_sample
 		\begin{figure}[p]
@@ -379,11 +378,11 @@
 			\label{fig:impulse_full_sample}
 		\end{figure}
 
-		The left side of Figure \ref{fig:impulse_full_sample} shows the response of cancellations to market orders that worsen the offer (above) and to limit orders that improve the offer (below). The impulse response of deletions to market orders attains a maximum intensity around one millisecond, while the intensity of cancellation orders limit orders reaches a peak between one millisecond and one second. Thus, so-called ``flickering orders'' are in fact permitted to sit for a relatively extended period before being canceled. The reverse response of limit orders following cancellations (not shown) occurs nearly instantaneously, suggesting that such events are effectively replace orders.
+		The right side of Figure \ref{fig:impulse_full_sample} shows the response of cancellations to market orders that worsen the offer (above) and to limit orders that improve the offer (below). The impulse response of deletions to market orders attains a maximum intensity around one millisecond, while the intensity of cancellation orders to limit orders reaches a peak between one millisecond and one second. Thus, flickering orders are in fact permitted to sit for a relatively extended period before being canceled. The reverse response of limit orders following cancellations (not shown) occurs nearly instantaneously, suggesting that such events are, effectively, replace orders.
 
-		It is worth briefly contrasting these results with results based on exponential impulse response functions. An exponential impulse response function creates an immediate increase in the intensity of child events. In contrast, with a logarithmic-normal impulse response, there is a lag between the time of a parent event and the time child event intensity spikes. Measured at timescales on the order of minutes (or even seconds), the distinction appears unimportant. As these results demonstrate, however, interactions between order book events take place on timescales measured in milliseconds, and on this timescale the difference is meaningful.
+		It is worth contrasting these results with exponential impulse response functions. An exponential impulse response function creates an immediate increase in the intensity of child events. In contrast, with a logarithmic-normal impulse response, there is a lag between the time of a parent event and the time child event intensity spikes. Measured at timescales on the order of minutes (or even seconds), the distinction appears unimportant. As these results demonstrate, however, interactions between order book events take place on timescales measured in milliseconds, and on this timescale the difference is meaningful.
 
-		Figure \ref{fig:intensity_SIG} gives a better sense of the character of the impulse response by showing an example of a fitted intensity for SIG. The intensity is estimated using the posterior median of the model parameters. The top panel shows the estimated intensity of market sell orders that decrease the best bid between 10:30 and 11:00, and the bottom panel display a scatterplot of all events during the same period with market sell events highlighted in blue. At this scale, the fitted intensity appears as a sequence of spikes that are principally induced by events off of the highlighted node. The spikes sometimes--but not always--precede events on the channel. All of the large spikes between 10:30 and 10:40 are followed by market sell orders, but the isolated spike around 10:48, which appears at the end of an intense cluster of activity, is not immediately followed by an event.
+		Figure \ref{fig:intensity_SIG} gives a different sense of the character of the impulse response by showing an example of a fitted intensity for SIG. The intensity is estimated using the posterior median of the model parameters. The top panel shows the estimated intensity of market sell orders that decrease the best bid between 10:30 and 11:00, and the bottom panel display a scatterplot of all events during the same period with market sell events highlighted. At this scale, the fitted intensity appears as a sequence of ``spikes'' that are principally induced by events off of the highlighted node. The spikes sometimes---but not always---precede events on this channel. All of the large spikes between 10:30 and 10:40 are followed by market sell orders, but the isolated spike around 10:48, which appears at the end of an intense cluster of activity, is not immediately followed by an event.
 
 		% fig:intensity_SIG
 		\begin{figure}[p]
@@ -397,108 +396,112 @@
 		\end{figure}
 
 	\subsection{Likelihood \& Stability}
-		The features identified by the model thus far are encouraging, but do they explain the data well? Next, I briefly examine the issues of model fit and stability. The log-likelihood in \eqref{eqn:likelihood} measures model fit. In particular, I compare the log-likelihood of model estimates to a standard (homogeneous) Poisson process with a constant intensity vector, which serves as a “baseline” model. The maximum of the absolute values of the eigenvalues of the connection matrix determines the stability of the model. Models with a stability value higher than one are unstable: with positive probability, they generate an infinite number of events in a finite amount of time. At the other extreme, a model with a stability value of zero is a homogeneous Poisson process.
+		The features identified by the model thus far are intriguing, but do they explain the data well? Next, I briefly examine the issues of model fit and stability.
 
-		Figure \ref{fig:distributions} compares the fit of the network model versus the baseline model. For each stock, the point-estimator of the network model is the approximate posterior median of the Gibbs sample described above. Setting the weight matrix to zero and computing the approximate median of the posterior distribution by direct sampling produces a Bayesian point-estimator of the baseline model. I compute the values in the histogram as follows. For each stock, I randomly select 100 subsamples consisting of 180 events each from the same dataset used to construct the point estimates. On each of the subsamples, I compute the ratio of the log-likelihood of the network and baseline models divided by the number of events in the sample and record the average of this value across subsamples. The resulting histogram shows that the network model improves on the baseline model by approximately 4 ``bits per event'': the minimum improvement is 1.5 bits per events, and the maximum exceeds 7.0. These results quantify the extent to which a complex interaction of events determines order book dynamics.
+		\subsubsection{Likelihood}
+			Figure \ref{fig:distributions} compares the fit of the network model versus the baseline model. I take log-likelihood (calculated in \eqref{eqn:likelihood}) as a measure of model fit. In particular, I compare the log-likelihood of the network model estimates to a standard (homogeneous) Poisson process with a constant intensity vector, which serves as a “baseline” model. For each stock, the point estimate of the network model is the approximate posterior median of the Gibbs sample described above. Setting the weight matrix to zero and computing the approximate median of the posterior distribution by direct sampling produces a Bayesian point estimate of the baseline model. I compute the values in the histogram as follows. For each stock, I randomly select 100 subsamples consisting of 180 events each from the same dataset used to construct the point estimates. On each of the subsamples, I compute the ratio of the log-likelihood of the network and baseline models divided by the number of events in the sample and record the average of this value across subsamples. The resulting histogram shows that the network model improves on the baseline model by approximately 4 ``bits per event'': the minimum improvement is 1.5 bits per events, and the maximum exceeds 7.0. These results quantify the extent to which a complex interaction of events determines order book dynamics.
 
-		% fig:distributions
-		\begin{figure}[p]
-			\small
-			\linespread{1}
-			\centering
-			% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			% \caption{Distribution of Likelihood \& Stability}
-			\includegraphics[width=\textwidth]{chapter4/distributions}
-			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Distribution of likelihood \& stability]{Distribution of likelihood \& stability. The figure shows histograms of the likelihood and stability of model estimates across the full sample. To compute the likelihood, I select random subsamples from the full sample of daily events on which the model was estimated and average the likelihood across subsamples. The values shown are the differences between the inhomogeneous and homogeneous model divided by the total number of events in each subsample. Stability is computed as the absolute value of the largest eigenvalues of the connection weight matrix. Values below one are stable; values at and above one are unstable.  The figure demonstrates that the network model produces a better in-sample fit to the data and that the model estimates are stable in almost all cases.}
-			\label{fig:distributions}
-		\end{figure}
+			% fig:distributions
+			\begin{figure}[p]
+				\small
+				\linespread{1}
+				\centering
+				% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+				% \caption{Distribution of Likelihood \& Stability}
+				\includegraphics[width=\textwidth]{chapter4/distributions}
+				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+				\caption[Distribution of likelihood \& stability]{Distribution of likelihood \& stability. The figure shows histograms of the likelihood and stability of model estimates across the full sample. To compute the likelihood, I select random subsamples from the full sample of daily events on which the model was estimated and average the likelihood across subsamples. The values shown are the differences between the inhomogeneous and homogeneous model divided by the total number of events in each subsample. Stability is computed as the absolute value of the largest eigenvalues of the connection weight matrix. Values below one are stable; values at and above one are unstable.  The figure demonstrates that the network model produces a better in-sample fit to the data and that the model estimates are stable in almost all cases.}
+				\label{fig:distributions}
+			\end{figure}
 
-		The wide range of values in Figure \ref{fig:distributions} demonstrates that the network model fits some stocks better than others. Figure \ref{fig:likelihood_scatter} compares the fit of the model to characteristics of each stock’s order book. Specifically, for each stock, I use the same message data used to identify order book events to calculate four attributes of the message data. The characteristics are defined as follows: $Volume$ is the total number of shares traded as identified by execution messages, including executions against hidden orders; $Price$ is the average midprice across all order book updates; $Volatility$ is the standard deviation of $Price$; $Spread$ is the average bid-ask spread across all order book updates. The scatterplots in Figure \ref{fig:likelihood_scatter} demonstrate that the quality of the network model fit depends on these characteristics. The model appears to work better for stocks with higher trade volumes, lower average prices, lower price volatility, and smaller bid-ask spreads.
+			The wide range of values in Figure \ref{fig:distributions} demonstrates that the network model fits some stocks better than others. Figure \ref{fig:likelihood_scatter} compares the fit of the model to characteristics of the limit order book. Specifically, for each stock, I use the same message data used to identify order book events to calculate four order book attributes. The characteristics are defined as follows: $Volume$ is the total number of shares traded as identified by execution messages, including executions against hidden orders; $Price$ is the average midprice across all order book updates; $Volatility$ is the standard deviation of $Price$; $Spread$ is the average bid-ask spread across all order book updates. The scatterplots in Figure \ref{fig:likelihood_scatter} demonstrate that the quality of the network model fit depends on these characteristics. The model appears to work better for stocks with higher trade volumes, lower average prices, lower price volatility, and smaller bid-ask spreads.
 
-		Confirming model stability is essential for two reasons. First, because the network model is only physically meaningful if it is stable. Second, because an unstable model cannot serve as a useful order book simulator. Figure \ref{fig:distributions} presents a histogram of the stability values based on median point estimates. The median value is approximately 0.85, which is well below both the instability threshold (1.0) and estimates reported in studies of related models (e.g., REF). Two of the models have unstable dynamics according to this measure. Figure \ref{fig:stability_scatter} shows scatterplots of stability versus the microstructure characteristics from Figure \ref{fig:likelihood_scatter}. Stability appears to decrease with lower trading volume but is otherwise uncorrelated with the remaining variables. Overall, these results demonstrate that the model learns parameter values leading to highly inhomogeneous, but stable, dynamics.
+		\subsubsection{Stability}
+			Confirming model stability is essential because the network model is only physically meaningful (and useful as a simulator) if it is stable. The maximum of the absolute values of the eigenvalues of the connection matrix determines the stability of the model. Models with a maximum eigenvalue greater than one are unstable, meaning that with positive probability, they generate an infinite number of events in a finite amount of time. At the other extreme, a model with a maximum eigenvalue of zero is a homogeneous Poisson process.
 
-		% fig:likelihood_scatter
-		\begin{figure}[p]
-			\small
-			\linespread{1}
-			\centering
-			% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			% \caption{Likelihood vs. Order Book Characteristics}
-			\includegraphics[width=\textwidth]{chapter4/likelihood_scatter}
-			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Likelihood versus order book characteristics]{Likelihood versus order book characteristics. The figure shows scatterplots of the likelihood of estimated models versus properties of the order books calculated from the message data used to identified order book events (i.e., the same day and hours). Volume is the total number of shares traded, including executions against hidden orders; Price is the average midprice across order book updates; Volatility is the standard deviation of Price; Spread is the average bid-ask spread across order book updates. The likelihood is the difference in likelihood between the network model and a standard Poisson model divided by the number of events.}
-			\label{fig:likelihood_scatter}
-		\end{figure}
+ 			Figure \ref{fig:distributions} presents a histogram of these eigenvalues based on median point estimates. The median value is approximately 0.85, which is well below both the instability threshold. Only 2 of the 401 the models have unstable dynamics according to this measure. Figure \ref{fig:stability_scatter} shows scatterplots of stability versus the microstructure characteristics from Figure \ref{fig:likelihood_scatter}. Stability appears to decrease with lower trading volume but is otherwise uncorrelated with the remaining variables. Overall, these results demonstrate that the model learns parameter values leading to highly inhomogeneous, but stable, dynamics.
 
-		% fig:stability_scatter
-		\begin{figure}[p]
-			\small
-			\linespread{1}
-			\centering
-			% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			% \caption{Stability vs. Order Book Characteristics}
-			\includegraphics[width=\textwidth]{chapter4/stability_scatter}
-			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Stability versus order book characteristics]{Stability versus order book characteristics. The figure shows scatterplots of the stability of estimated models versus properties of the order books calculated from the message data used to identified order book events (i.e., the same day and hours). Volume is the total number of shares traded, including executions against hidden orders; Price is the average midprice across order book updates; Volatility is the standard deviation of Price; Spread is the average bid-ask spread across order book updates. Stability is the maximum absolute value of the estimated connection weight matrix.}
-			\label{fig:stability_scatter}
-		\end{figure}
+			% fig:likelihood_scatter
+			\begin{figure}[p]
+				\small
+				\linespread{1}
+				\centering
+				% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+				% \caption{Likelihood vs. Order Book Characteristics}
+				\includegraphics[width=\textwidth]{chapter4/likelihood_scatter}
+				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+				\caption[Likelihood versus order book characteristics]{Likelihood versus order book characteristics. The figure shows scatterplots of the likelihood of estimated models versus properties of the order books calculated from the message data used to identified order book events (i.e., the same day and hours). Volume is the total number of shares traded, including executions against hidden orders; Price is the average midprice across order book updates; Volatility is the standard deviation of Price; Spread is the average bid-ask spread across order book updates. The likelihood is the difference in likelihood between the network model and a standard Poisson model divided by the number of events.}
+				\label{fig:likelihood_scatter}
+			\end{figure}
 
+			% fig:stability_scatter
+			\begin{figure}[p]
+				\small
+				\linespread{1}
+				\centering
+				% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+				% \caption{Stability vs. Order Book Characteristics}
+				\includegraphics[width=\textwidth]{chapter4/stability_scatter}
+				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+				\caption[Stability versus order book characteristics]{Stability versus order book characteristics. The figure shows scatterplots of the stability of estimated models versus properties of the order books calculated from the message data used to identified order book events (i.e., the same day and hours). Volume is the total number of shares traded, including executions against hidden orders; Price is the average midprice across order book updates; Volatility is the standard deviation of Price; Spread is the average bid-ask spread across order book updates. Stability is the maximum absolute value of the estimated connection weight matrix.}
+				\label{fig:stability_scatter}
+			\end{figure}
 
-		The results thus far demonstrate that including interactions between events improves model fit relative to a baseline model. They also show that some interaction terms are stronger than others, in both an absolute and relative sense. We can further analyze the importance of interactions terms by answering the following question: “How much does the model fit change if I turn off the weaker connections?” I answer this question by performing a simple experiment. For a given stock I select a set of threshold values based on the distribution of the estimated matrix weights. Under the minimum threshold, the model includes nearly all of the of the interaction terms, while at the maximum the model reduces to the baseline homogeneous Poisson process. For each threshold, I measure the in-sample and out-of-sample likelihood using subsamples as described above.
+		\subsubsection{Threshold Analysis}
+			The results thus far demonstrate that including interactions between events improves model fit relative to a baseline model. They also show that some interaction terms are stronger than others, in both an absolute and relative sense. We can further analyze the importance of interactions terms by answering the following question: ``How much does the model fit change if I turn off the weaker connections?'' I answer this question by performing a simple experiment. For a given stock I select a set of threshold values based on the distribution of the estimated matrix weights. Under the minimum threshold, the model includes nearly all of the of the interaction terms, while at the maximum the model reduces to the baseline homogeneous Poisson process. For each threshold, I measure the in-sample and out-of-sample likelihood using subsamples as described above.
 
-		Figures \ref{fig:threshold_LLY} and \ref{fig:threshold_SIG} demonstrate the results for two randomly selected stocks (LLY and SIG). The plots display similar patterns: including weights whose logarithm is less than -4—-which amounts to ignoring around half the interaction terms--has little or no effect on the fit of the model. In fact, retaining weights above 0.1 (about a quarter of the interaction terms) achieves the majority of the benefit of the network structure. These observations provide a new perspective on Figure \ref{fig:weights_full_sample}. Figure \ref{fig:weights_threshold} recreates the plot of the median connection matrix, but this time applies a hard threshold of -2 to the logarithm of the raw weights. The interaction terms that survive are those that were identified earlier, meaning that these are in fact the essential elements of typical order book dynamics.
+			Figures \ref{fig:threshold_LLY} and \ref{fig:threshold_SIG} demonstrate the results for two randomly selected stocks (LLY and SIG). The plots display similar patterns: including weights whose logarithm is less than -4---approximately half of the interaction terms---has little or no effect on the fit of the model. In fact, retaining weights above 0.1 (about a quarter of the interaction terms) achieves the majority of the benefit of the network structure. These observations provide a new perspective on Figure \ref{fig:weights_full_sample}. Figure \ref{fig:weights_threshold} recreates the plot of the median connection matrix, but this time applies a hard threshold of -2 to the logarithm of the raw weights. The interaction terms that survive are those that were identified earlier, meaning that these are in fact the essential elements of typical order book dynamics.
 
-		% fig:threshold_analysis
-		% \begin{figure}[p]
-		% 	\small
-		% 	\linespread{1}
-		% 	\centering
-		% % 	\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-		% % 	\caption{Threshold Analysis (LLY)}
-		% 	\includegraphics[width=\textwidth]{chapter4/threshold_analysis}
-		% 	\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-		% 	\caption[Threshold anaylsis with LLY and SIG]{Threshold anaylsis with LLY and SIG. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
-		% \label{fig:threshold_analysis}
-		% \end{figure}
+			% fig:threshold_analysis
+			% \begin{figure}[p]
+			% 	\small
+			% 	\linespread{1}
+			% 	\centering
+			% % 	\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+			% % 	\caption{Threshold Analysis (LLY)}
+			% 	\includegraphics[width=\textwidth]{chapter4/threshold_analysis}
+			% 	\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
+			% 	\caption[Threshold anaylsis with LLY and SIG]{Threshold anaylsis with LLY and SIG. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+			% \label{fig:threshold_analysis}
+			% \end{figure}
 
-		% fig:threshold_LLY
-		\begin{figure}[p]
-			\small
-			\linespread{1}
-			\centering
-			\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			\includegraphics[width=\textwidth]{chapter4/threshold_LLY}
-			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Threshold analysis for LLY]{Threshold analysis for LLY. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
-			\label{fig:threshold_LLY}
-		\end{figure}
+			% fig:threshold_LLY
+			\begin{figure}[p]
+				\small
+				\linespread{1}
+				\centering
+				\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+				\includegraphics[width=\textwidth]{chapter4/threshold_LLY}
+				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+				\caption[Threshold analysis for LLY]{Threshold analysis for LLY. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+				\label{fig:threshold_LLY}
+			\end{figure}
 
-		% fig:threshold_SIG
-		\begin{figure}[p]
-			\small
-			\linespread{1}
-			\centering
-			\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			\includegraphics[width=\textwidth]{chapter4/threshold_SIG}
-			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Threshold analysis for SIG]{Threshold analysis for SIG. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
-			\label{fig:threshold_SIG}
-		\end{figure}
+			% fig:threshold_SIG
+			\begin{figure}[p]
+				\small
+				\linespread{1}
+				\centering
+				\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+				\includegraphics[width=\textwidth]{chapter4/threshold_SIG}
+				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+				\caption[Threshold analysis for SIG]{Threshold analysis for SIG. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+				\label{fig:threshold_SIG}
+			\end{figure}
 
-		% fig:weights_threshold
-		\begin{figure}[p]
-			\small
-			\linespread{1}
-			\centering
-			% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
-			% \caption{Composite Weights with Threshold}
-			\includegraphics[width=\textwidth]{chapter4/weights_threshold}
-			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Composite weights with threshold]{Composite weights with threshold. Shows the median estimate of connections weights after applying 20\% threshold.}
-			\label{fig:weights_threshold}
-		\end{figure}
+			% fig:weights_threshold
+			\begin{figure}[p]
+				\small
+				\linespread{1}
+				\centering
+				% \captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
+				% \caption{Composite Weights with Threshold}
+				\includegraphics[width=\textwidth]{chapter4/weights_threshold}
+				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
+				\caption[Composite weights with threshold]{Composite weights with threshold. Shows the median estimate of connections weights after applying 20\% threshold.}
+				\label{fig:weights_threshold}
+			\end{figure}
 
 
 \section{Conclusion}
-	This chapter set out to develop an event-driven model of limit order book dynamics that might serve as the basis of a limit order book simulator. I adapt a mutually-exciting Poisson process model and analyze the model by applying a Bayesian inference procedure to a large cross section of stocks in the S\&P 500. The model simultaneously captures a variety of interesting connections between order book events at the the top of the book, and uniquely reveals the timescale of these interactions. The proposed model is almost always stable, and leads to enormous improvements in model fit relative to a baseline Poisson model. Most of the benefits of the model appear to derive from the top 20\% of model connections. The model permits numerous possible improvements and additions that might reveal additional features of order book dyanmics and enhance its useful as the basis of a simulator.
+	This chapter set out to develop an event-driven model of limit order book dynamics that might serve as the basis of a limit order book simulator. I adapt a mutually-exciting Poisson process model and analyze the model by applying a Bayesian inference procedure to a large cross section of stocks in the S\&P 500. The model simultaneously captures a variety of interesting connections between order book events at the the top of the book, and uniquely reveals the timescale of these interactions. The proposed model is stable, and leads to sizeable improvements in model fit relative to a baseline Poisson model. Most of the benefits of the model appear to derive from the top 20-25\% of model connections. The model permits numerous possible future improvements and additions that might reveal additional features of order book dyanmics and enhance its usefulness as the basis of a order book simulator.
