@@ -73,7 +73,7 @@
 					\STATE $S_{\text{out}} \gets S_{\text{out}} \cup S$
 					\UNTIL{$S = \emptyset$}
 			\end{algorithmic}
-			\caption{Generative model for a mutually-exciting Poisson process}
+			\caption{Generative model for a self-exciting Poisson process}
 			\label{algo:hawkes}
 		\end{algorithm}
 
@@ -157,7 +157,7 @@
 			\bottomrule
 			\end{tabular*}
 			\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Order book event definitions]{The table describes the order book events. \textit{Count} is the median number of events per stocky-day. \textit{Frequency} is the percent of orders of that type per stock-day. \textit{Shares} is the average number of shares per event.}
+			\caption[Order book event definitions]{The table describes the order book events. \textit{Count} is the median number of events per stock-day. \textit{Frequency} is the percent of events of that type per stock-day. \textit{Shares} is the average number of shares per event.}
 			\label{tab:event_definitions}
 		\end{table}
 
@@ -183,7 +183,7 @@
 			\centering
 			\includegraphics[width=\textwidth]{chapter4/impulse_examples}
 			\captionsetup{skip=-20pt, labelsep=colon, font=footnotesize, width=\linewidth}
-			\caption[Examples of the impulse response]{Examples of the impulse response. On the left, $\mu$ determines the apex of the response for fixed $\tau=0$. On the right, $\tau$ determines the dispersion of the response for fixed $\mu=0$. In both cases, $\Delta t_{max} = 1$.}
+			\caption[Examples of logistic-normal impulse responses]{Examples of logistic-normal impulse responses. On the left, $\mu$ determines the apex of the response for fixed $\tau=0$. On the right, $\tau$ determines the dispersion of the response for fixed $\mu=0$. In both cases, $\Delta t_{max} = 1$.}
 			\label{fig:impulse_examples}
 		\end{figure}
 
@@ -303,7 +303,7 @@
 			\bottomrule
 		\end{tabular*}
 		\captionsetup{position=below, font=footnotesize, justification=justified, width=\linewidth}
-		\caption[Summary statistics for the ITCH message data]{Summary statistics for the ITCH message data. The table describes the distribution of message counts across the full sample. \textit{Frequency} is the percent of all messages of that type. All other values are computed are numbers of observations per stock-day.}
+		\caption[Summary statistics for ITCH message data]{Summary statistics for ITCH message data. The table describes the distribution of message counts across the full sample. \textit{Frequency} is the percent of all messages of that type. All other values are computed are numbers of observations per stock-day.}
 		\label{tab:message_counts}
 	\end{table}
 
@@ -320,7 +320,7 @@
 		\centering
 		\includegraphics[width=\textwidth]{chapter4/seasonalities}
 		\captionsetup{skip=-20pt, labelsep=colon, font=footnotesize, width=\linewidth, justification=justified}
-		\caption[Message activity seasonalities]{The figure describes patterns in the timing of message activity for the full sample. The top figure shows the distribution of \textit{add}, \textit{delete}, and \textit{execute} messages within each trading day. The bottom figure shows the distribution of messages within each second.}
+		\caption[Patterns in order book message activity]{Patterns in order book message activity. The figure describes intra-day seasonalities in the arrival of messages averaged across the full sample. The top figure shows the distribution of \textit{add}, \textit{delete}, and \textit{execute} messages within each trading day. The bottom figure shows the distribution of messages within each second.}
 		\label{fig:seasonalities}
 	\end{figure}
 
@@ -350,7 +350,7 @@
 			\centering
 			\includegraphics[width=\textwidth]{chapter4/weights_full_sample}
 			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Median of event connection point estimates: full sample]{Median of event connection point estimates: full sample. The figure shows the median connection strength between event types across the full sample of stocks. Larger values indicate stronger connections, which are expected to generate a greater number of child events. (Left) The median of connection weight estimates using the raw weight matrix estimates. This figure identifies the most important connections in an absolute sense. (Right) The median connection weight matrix after normalizing parent-child weights by the estimated background rate of child events. This figure identifies the most important connections in a relative sense.}
+			\caption[Median connection weight point estimates]{Median connection weight point estimates. The figure shows the median connection strength between event types across the full sample of stocks. Larger values indicate stronger connections, which are expected to generate a greater number of child events. (Left) The median of connection weight estimates using the raw weight matrix estimates. This figure identifies the most important connections in an absolute sense. (Right) The median connection weight matrix after normalizing parent-child weights by the estimated background rate of child events. This figure identifies the most important connections in a relative sense.}
 			\label{fig:weights_full_sample}
 		\end{sidewaysfigure}
 
@@ -376,7 +376,7 @@
 			% \caption{Median Impulse Responses}
 			\includegraphics[width=\textwidth]{chapter4/impulse_full_sample}
 			\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-			\caption[Median impulse responses]{Median impulse responses. The figure shows the median impulse response for selected parent-child event connection pairs across the full sample. The horizontal axis is logarithmic time to improve interoperability. The figure demonstrates that important connections operate at timescales from one microsecond to one second, that estimates of connections pairs are typically symmetric, and that the model identifies the response to parents as a localized "spike" in the probability of child events.}
+			\caption[Median impulse response point estimates]{Median impulse response point estimates. The figure shows the median impulse response for selected parent-child event connection pairs across the full sample. The horizontal axis is logarithmic time to improve interoperability. The figure demonstrates that important connections operate at timescales from one microsecond to one second, that estimates of connections pairs are typically symmetric, and that the model identifies the response to parents as a localized "spike" in the probability of child events.}
 			\label{fig:impulse_full_sample}
 		\end{figure}
 
@@ -393,11 +393,11 @@
 			\centering
 			\includegraphics[width=\textwidth]{chapter4/intensity_SIG}
 			\captionsetup{skip=-20pt, labelsep=colon, font=footnotesize, width=\linewidth}
-			\caption[Fitted intensity: SIG]{The top figure shows the estimated intensity of market buy orders that move the best ask from 10:30 to 11:00 on July 24, 2013. The bottom figure shows when events occurred on each of the network nodes during the same period.}
+			\caption[Example of a daily fitted intensity: SIG]{Example of a daily fitted intensity: SIG. The top figure shows the estimated intensity of market buy orders that move the best ask from 10:30 to 11:00 on July 24, 2013 for SIG. The bottom figure indicates event arrivals on each of the network nodes during the same period.}
 			\label{fig:intensity_SIG}
 		\end{figure}
 
-	\subsection{Likelihood \& Stability}
+	\subsection{Further Analysis}
 		The features identified by the model thus far are intriguing, but do they explain the data well? Next, I briefly examine the issues of model fit and stability.
 
 		\subsubsection{Likelihood}
@@ -412,7 +412,7 @@
 				% \caption{Distribution of Likelihood \& Stability}
 				\includegraphics[width=\textwidth]{chapter4/distributions}
 				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-				\caption[Distribution of likelihood \& stability]{Distribution of likelihood \& stability. The figure shows histograms of the likelihood and stability of model estimates across the full sample. To compute the likelihood, I select random subsamples from the full sample of daily events on which the model was estimated and average the likelihood across subsamples. The values shown are the differences between the inhomogeneous and homogeneous model divided by the total number of events in each subsample. Stability is computed as the absolute value of the largest eigenvalues of the connection weight matrix. Values below one are stable; values at and above one are unstable.  The figure demonstrates that the network model produces a better in-sample fit to the data and that the model estimates are stable in almost all cases.}
+				\caption[Distributions of likelihood \& stability]{Distributions of likelihood \& stability. The figure shows histograms of the likelihood and stability of model estimates across the full sample. To compute the likelihood, I select random subsamples from the full sample of daily events on which the model was estimated and average the likelihood across subsamples. The values shown are the differences between the inhomogeneous and homogeneous model divided by the total number of events in each subsample. Stability is computed as the absolute value of the largest eigenvalues of the connection weight matrix. Values below one are stable; values at and above one are unstable.  The figure demonstrates that the network model produces a better in-sample fit to the data and that the model estimates are stable in almost all cases.}
 				\label{fig:distributions}
 			\end{figure}
 
@@ -449,7 +449,7 @@
 				\label{fig:stability_scatter}
 			\end{figure}
 
-		\subsubsection{Threshold Analysis}
+		\subsubsection{Model Selection}
 			The results thus far demonstrate that including interactions between events improves model fit relative to a baseline model. They also show that some interaction terms are stronger than others, in both an absolute and relative sense. We can further analyze the importance of interactions terms by answering the following question: ``How much does the model fit change if I turn off the weaker connections?'' I answer this question by performing a simple experiment. For a given stock I select a set of threshold values based on the distribution of the estimated matrix weights. Under the minimum threshold, the model includes nearly all of the of the interaction terms, while at the maximum the model reduces to the baseline homogeneous Poisson process. For each threshold, I measure the in-sample and out-of-sample likelihood using subsamples as described above.
 
 			Figures \ref{fig:threshold_LLY} and \ref{fig:threshold_SIG} demonstrate the results for two randomly selected stocks (LLY and SIG). The plots display similar patterns: including weights whose logarithm is less than -4---approximately half of the interaction terms---has little or no effect on the fit of the model. In fact, retaining weights above 0.1 (about a quarter of the interaction terms) achieves the majority of the benefit of the network structure. These observations provide a new perspective on Figure \ref{fig:weights_full_sample}. Figure \ref{fig:weights_threshold} recreates the plot of the median connection matrix, but this time applies a hard threshold of -2 to the logarithm of the raw weights. The interaction terms that survive are those that were identified earlier, meaning that these are in fact the essential elements of typical order book dynamics.
@@ -475,7 +475,7 @@
 				\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
 				\includegraphics[width=\textwidth]{chapter4/threshold_LLY}
 				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-				\caption[Threshold analysis for LLY]{Threshold analysis for LLY. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+				\caption[Likelihood versus connection weight threshold: LLY]{Likelihood versus connection weight threshold: LLY. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
 				\label{fig:threshold_LLY}
 			\end{figure}
 
@@ -487,7 +487,7 @@
 				\captionsetup{labelsep=colon, font=footnotesize, justification=centerfirst, width=\linewidth}
 				\includegraphics[width=\textwidth]{chapter4/threshold_SIG}
 				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-				\caption[Threshold analysis for SIG]{Threshold analysis for SIG. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
+				\caption[Likelihood versus connection weight threshold: SIG]{Likelihood versus connection weight threshold: SIG. The figure shows the improvement in the likelihood of the network model compared to a standard Poisson model for various thresholds levels. (Top) For each threshold level, the likelihood improvement is computed using the estimated connection weights with all weights below the threshold set to zero. The blue curve shows results using events from the same day the model is estimated on; the orange curve shows results computed on the following day. (Below) A histogram of the connection weights. The figure demonstrates that the ability of the model to fit the data is largely invariant to weights below the median estimated weight and that the model fits out-of-sample data as well as in-sample data.}
 				\label{fig:threshold_SIG}
 			\end{figure}
 
@@ -500,7 +500,7 @@
 				% \caption{Composite Weights with Threshold}
 				\includegraphics[width=\textwidth]{chapter4/weights_threshold}
 				\captionsetup{skip=-20pt, position=below, font=footnotesize, justification=justified, width=\linewidth}
-				\caption[Composite weights with threshold]{Composite weights with threshold. Shows the median estimate of connections weights after applying 20\% threshold.}
+				\caption[Median connection weight point estimates with threshold]{Median connection weight point estimates with threshold. The figure shows the median estimate of connections weights after applying a 20\% hard threshold.}
 				\label{fig:weights_threshold}
 			\end{figure}
 
